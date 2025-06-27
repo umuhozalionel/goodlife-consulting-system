@@ -4,12 +4,14 @@ import { Calendar } from "lucide-react"
 export default function HeroSection() {
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
+      {
+        <div className="bg-[url('/Images/landing-header.jpg')] bg-cover bg-center ..."></div>
+      }
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/placeholder.svg?height=800&width=1200')`,
-        }}
+       style={{
+  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/Images/Landing-header.jpg')`,
+}}
       />
 
       {/* Rwandan Pattern Overlay */}
