@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Calendar } from "lucide-react"
+import { Calendar, Pencil } from "lucide-react"
 
 export default function HeroSection() {
   return (
@@ -35,7 +35,7 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* Content Block */}
+      {/* Hero Content */}
       <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
           Empowering Rwanda's
@@ -45,16 +45,28 @@ export default function HeroSection() {
           Professional growth through purpose-driven training.
         </p>
 
-        {/* Navigation Button to Calendar Page */}
-        <Link href="/calendar">
-          <Button
-            size="lg"
-            className="bg-terracotta-600 hover:bg-terracotta-700 text-white rounded-full px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-          >
-            <Calendar className="mr-2 h-5 w-5" />
-            View Training Calendar
-          </Button>
-        </Link>
+        {/* Buttons */}
+        <div className="flex flex-col md:flex-row gap-4 justify-center">
+          <Link href="/calendar">
+            <Button
+              size="lg"
+              className="bg-terracotta-600 hover:bg-terracotta-700 text-white rounded-full px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <Calendar className="mr-2 h-5 w-5" />
+              View Training Calendar
+            </Button>
+          </Link>
+
+          <Link href="/register">
+            <Button
+              size="lg"
+              className="bg-green-700 hover:bg-green-800 text-white rounded-full px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <Pencil className="mr-2 h-5 w-5" />
+              Register Now
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Scroll Indicator */}
