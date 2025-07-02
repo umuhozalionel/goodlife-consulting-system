@@ -1,3 +1,7 @@
-export default function Page() {
-  return <div className="p-6 text-2xl">Coming soon...</div>
+export default function CalendarPage() {
+  return (
+    <div className="p-10 text-center text-3xl font-semibold text-terracotta-700">
+      📅 The Full Training Calendar will appear here soon.
+    </div>
+  )
 }

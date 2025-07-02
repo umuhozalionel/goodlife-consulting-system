@@ -1,17 +1,22 @@
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "lucide-react"
 
 export default function HeroSection() {
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {
-        <div className="bg-[url('/Images/landing-header.jpg')] bg-cover bg-center ..."></div>
-      }
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden"
+    >
+      {/* Background Image with Gradient Overlay */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-       style={{
-  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('/Images/landing-header.jpg')`,
-}}
+        style={{
+          backgroundImage: `linear-gradient(
+            rgba(0, 0, 0, 0.4),
+            rgba(0, 0, 0, 0.4)
+          ), url('/Images/landing-header.jpg')`,
+        }}
       />
 
       {/* Rwandan Pattern Overlay */}
@@ -20,17 +25,17 @@ export default function HeroSection() {
           className="w-full h-full"
           style={{
             backgroundImage: `repeating-linear-gradient(
-            45deg,
-            transparent,
-            transparent 10px,
-            rgba(210, 105, 30, 0.1) 10px,
-            rgba(210, 105, 30, 0.1) 20px
-          )`,
+              45deg,
+              transparent,
+              transparent 10px,
+              rgba(210, 105, 30, 0.1) 10px,
+              rgba(210, 105, 30, 0.1) 20px
+            )`,
           }}
         />
       </div>
 
-      {/* Content */}
+      {/* Content Block */}
       <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
           Empowering Rwanda's
@@ -39,13 +44,17 @@ export default function HeroSection() {
         <p className="text-xl md:text-2xl mb-8 text-gray-200 max-w-2xl mx-auto">
           Professional growth through purpose-driven training.
         </p>
-        <Button
-          size="lg"
-          className="bg-terracotta-600 hover:bg-terracotta-700 text-white rounded-full px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-        >
-          <Calendar className="mr-2 h-5 w-5" />
-          View Training Calendar
-        </Button>
+
+        {/* Navigation Button to Calendar Page */}
+        <Link href="/calendar">
+          <Button
+            size="lg"
+            className="bg-terracotta-600 hover:bg-terracotta-700 text-white rounded-full px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            <Calendar className="mr-2 h-5 w-5" />
+            View Training Calendar
+          </Button>
+        </Link>
       </div>
 
       {/* Scroll Indicator */}
