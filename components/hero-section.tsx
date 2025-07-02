@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Calendar, Pencil } from "lucide-react"
+import { Calendar, Pencil, ImageIcon } from "lucide-react"
 
 export default function HeroSection() {
   return (
@@ -45,8 +45,9 @@ export default function HeroSection() {
           Professional growth through purpose-driven training.
         </p>
 
-        {/* Buttons */}
+        {/* Action Buttons */}
         <div className="flex flex-col md:flex-row gap-4 justify-center">
+          {/* Calendar */}
           <Link href="/calendar">
             <Button
               size="lg"
@@ -57,6 +58,18 @@ export default function HeroSection() {
             </Button>
           </Link>
 
+          {/* Gallery */}
+          <Link href="/gallery">
+            <Button
+              size="lg"
+              className="bg-gradient-to-br from-green-600 to-terracotta-600 hover:from-green-700 hover:to-terracotta-700 text-white rounded-full px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <ImageIcon className="mr-2 h-5 w-5" />
+              View Gallery
+            </Button>
+          </Link>
+
+          {/* Registration */}
           <Link href="/register">
             <Button
               size="lg"
