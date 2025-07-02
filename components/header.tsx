@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import {
   NavigationMenu,
@@ -122,12 +123,16 @@ export default function Header() {
             </NavigationMenuList>
           </NavigationMenu>
 
-          {/* CTA Button */}
-          <Button className="hidden md:flex bg-terracotta-600 hover:bg-terracotta-700 text-white rounded-full px-6">
-            Register
-          </Button>
+          {/* Register Now Button */}
+          <Link href="/register">
+            <Button
+              className="hidden md:flex bg-green-700 hover:bg-green-800 text-white rounded-full px-6 py-3 text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300"
+            >
+              📝 Register Now
+            </Button>
+          </Link>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Toggle */}
           <Button
             variant="ghost"
             size="icon"
@@ -160,9 +165,11 @@ export default function Header() {
               <a href="#contact" className="block px-4 py-2 text-gray-700 hover:bg-terracotta-50 rounded-md">
                 Contact
               </a>
-              <Button className="w-full mt-4 bg-terracotta-600 hover:bg-terracotta-700 text-white rounded-full">
-                Register
-              </Button>
+              <Link href="/register">
+                <Button className="w-full mt-4 bg-green-700 hover:bg-green-800 text-white rounded-full px-4 py-3 font-semibold">
+                  📝 Register Now
+                </Button>
+              </Link>
             </nav>
           </div>
         )}
