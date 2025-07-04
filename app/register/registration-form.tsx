@@ -80,21 +80,24 @@ export default function Component() {
   }
 
   return (
-    <div className="min-h-screen bg-fixed bg-center bg-cover bg-no-repeat bg-[url('/images/home-desk-design.jpg')]">
+    <div className="min-h-screen bg-fixed bg-center bg-cover bg-no-repeat bg-[url('/images/4858838.jpg')]">
       <div className="min-h-screen backdrop-blur-sm flex items-start justify-center py-12 px-6">
         <div className="w-full max-w-2xl">
-          {/* Hero Title */}
-          <div className="text-center max-w-4xl mx-auto mb-12">
-            <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-amber-400 to-emerald-500 bg-clip-text text-transparent drop-shadow-lg">
-              Goodlife Consulting Partners
-            </h1>
-            <p className="text-xl md:text-2xl mb-2 text-amber-300 drop-shadow-md">
-              Professional Training Programs Registration
-            </p>
-            <p className="text-lg text-emerald-200 opacity-90 drop-shadow-sm">
-              Invest in your future with our comprehensive training solutions
-            </p>
-          </div>
+
+          {/* Hero Section Styled Like Footer */}
+          <Card className="bg-gradient-to-r from-emerald-50 to-amber-50 border border-emerald-100 shadow-sm mb-12">
+            <CardContent className="text-center py-10 px-6">
+              <h1 className="text-4xl md:text-6xl font-bold text-emerald-800 mb-4">
+                Goodlife Consulting Partners
+              </h1>
+              <p className="text-xl md:text-2xl text-amber-700 mb-2">
+                Professional Training Programs Registration
+              </p>
+              <p className="text-lg text-emerald-700">
+                Invest in your future with our comprehensive training solutions
+              </p>
+            </CardContent>
+          </Card>
 
           {/* Registration Form */}
           <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur">
@@ -218,12 +221,12 @@ export default function Component() {
                   <Label htmlFor="preferredDate" className="text-emerald-800 font-medium flex items-center gap-2">
                     <Calendar className="w-4 h-4" />📅 Preferred Date
                   </Label>
-                  <Input
+                                    <Input
                     id="preferredDate"
                     name="preferredDate"
                     type="date"
                     required
-                                        className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
+                    className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
                   />
                 </div>
 
@@ -258,7 +261,9 @@ export default function Component() {
             <Card className="bg-gradient-to-r from-emerald-50 to-amber-50 border-emerald-200">
               <CardContent className="pt-6">
                 <h3 className="text-xl font-semibold text-emerald-800 mb-4">📞 Need Assistance?</h3>
-                <p className="text-amber-700 mb-2">For help with registration or program inquiries, reach our team at:</p>
+                <p className="text-amber-700 mb-2">
+                  For help with registration or program inquiries, reach our team at:
+                </p>
                 <div className="space-y-2">
                   <p className="font-medium text-emerald-700">📧 mugishajuniorfred@gmail.com</p>
                   <p className="font-medium text-emerald-700">📱 +250 788 845 062</p>
@@ -266,6 +271,7 @@ export default function Component() {
               </CardContent>
             </Card>
           </div>
+
         </div>
       </div>
     </div>
