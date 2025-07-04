@@ -62,8 +62,8 @@ export default function AboutSection() {
                     <Phone className="h-5 w-5 text-terracotta-600 mt-1 flex-shrink-0" />
                     <div>
                       <p className="font-medium text-gray-900">Phone</p>
-                      <p className="text-gray-600">+250 787 402 302</p>
-                      <p className="text-gray-600">+250 781 670 648</p>
+                      <p className="text-gray-600">+250 790 363 700</p>
+                      <p className="text-gray-600">Toll free: 9001</p>
                     </div>
                   </div>
 
@@ -71,7 +71,7 @@ export default function AboutSection() {
                     <Mail className="h-5 w-5 text-forest-600 mt-1 flex-shrink-0" />
                     <div>
                       <p className="font-medium text-gray-900">Email</p>
-                      <p className="text-gray-600">mugishajuniorfred@gmail.com</p>
+                      <p className="text-gray-600">gcp@goodlifeconsultingpartners.org</p>
                     </div>
                   </div>
                 </div>

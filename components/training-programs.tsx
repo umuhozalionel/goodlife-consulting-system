@@ -16,7 +16,7 @@ const programs = [
     icon: Users,
     color: "forest",
     programs: [
-      "Human Resource",
+      "Human Resource Managment",
       "HR Strategy",
       "Talent Acquisition",
       "Performance Management",
