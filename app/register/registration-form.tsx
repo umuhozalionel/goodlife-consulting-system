@@ -80,7 +80,7 @@ export default function Component() {
   }
 
   return (
-    <div className="min-h-screen bg-fixed bg-center bg-cover bg-no-repeat bg-[url('/images/landing-header.jpg')]">
+    <div className="min-h-screen bg-fixed bg-center bg-cover bg-no-repeat bg-[url('/images/home-desk-design.jpg')]">
       <div className="min-h-screen backdrop-blur-sm flex items-start justify-center py-12 px-6">
         <div className="w-full max-w-2xl">
           {/* Hero Title */}
