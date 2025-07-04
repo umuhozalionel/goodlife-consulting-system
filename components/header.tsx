@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -24,12 +25,15 @@ import { useToast } from "@/components/ui/use-toast"
 import { languages } from "@/lib/i18n"
 
 export default function Header() {
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const router = useRouter()
   const pathname = usePathname()
   const isRegisterPage = pathname === "/register"
-  const [language, setLanguage] = useState("EN")
+
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [isLangOpen, setIsLangOpen] = useState(false)
+  const [language, setLanguage] = useState("EN")
+  const [query, setQuery] = useState("")
   const { toast } = useToast()
 
   useEffect(() => {
@@ -37,8 +41,6 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
-
-  const toggleLang = () => setIsLangOpen(!isLangOpen)
 
   return (
     <header
@@ -59,25 +61,32 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Desktop Nav */}
+          {/* Navigation */}
           <NavigationMenu className="hidden lg:flex">
             <NavigationMenuList>
-              {["home", "about", "calendar", "testimonials", "contact"].map((section) => (
-                <NavigationMenuItem key={section}>
-                  <NavigationMenuLink
-                    href={`/#${section}`}
-                    className="px-4 py-2 text-gray-700 hover:text-terracotta-600 transition-colors"
-                  >
-                    {section.charAt(0).toUpperCase() + section.slice(1)}
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              ))}
+              {/* Home */}
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="/#home"
+                  className="px-4 py-2 text-gray-700 hover:text-terracotta-600 transition-colors"
+                >
+                  Home
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+
+              {/* Training Programs */}
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="px-4 py-2 text-gray-700 hover:text-terracotta-600">
                   Training Programs
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <div className="w-64 p-4 space-y-2">
+                    <Link
+                      href="/register"
+                      className="block px-3 py-2 text-sm text-white font-semibold bg-green-700 hover:bg-green-800 rounded-md text-center"
+                    >
+                      📝 Register
+                    </Link>
                     {[
                       "All Training Programs",
                       "Corporate Trainings",
@@ -97,25 +106,49 @@ export default function Header() {
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
+
+              {/* Other sections */}
+              {["about", "calendar", "testimonials", "contact"].map((section) => (
+                <NavigationMenuItem key={section}>
+                  <NavigationMenuLink
+                    href={`/#${section}`}
+                    className="px-4 py-2 text-gray-700 hover:text-terracotta-600 transition-colors"
+                  >
+                    {section.charAt(0).toUpperCase() + section.slice(1)}
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              ))}
             </NavigationMenuList>
           </NavigationMenu>
 
-          {/* Right Side Buttons */}
-          <div className="hidden md:flex items-center gap-3">
-            {/* Search */}
-            <Link href="/search">
-              <Button variant="ghost" size="icon" className="text-gray-600 hover:text-green-700">
+          {/* Right Side */}
+          <div className="hidden md:flex items-center gap-4 relative group">
+            {/* Hover Search */}
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-gray-600 hover:text-green-700"
+              >
                 <Search className="w-5 h-5" />
               </Button>
-            </Link>
+              <div className="absolute right-0 top-12 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-300 z-50">
+                <Input
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Search training topics..."
+                  className="w-64 border rounded-md px-4 py-2 text-sm shadow-lg"
+                />
+              </div>
+            </div>
 
-            {/* Language Dropdown */}
+            {/* Language Selector */}
             <div className="relative">
               <Button
                 variant="ghost"
                 size="sm"
                 className="flex items-center gap-1 text-gray-600 hover:text-green-700"
-                onClick={toggleLang}
+                onClick={() => setIsLangOpen(!isLangOpen)}
               >
                 <Globe className="w-4 h-4" />
                 {language}
@@ -157,7 +190,7 @@ export default function Header() {
             )}
           </div>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Toggle */}
           <Button
             variant="ghost"
             size="icon"
