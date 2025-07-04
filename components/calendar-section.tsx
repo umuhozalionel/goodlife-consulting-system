@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -93,7 +94,9 @@ export default function CalendarSection() {
     <section id="calendar" className="py-20 bg-gradient-to-br from-gray-50 to-terracotta-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Upcoming Training Calendar</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+            Upcoming Training Calendar
+          </h2>
           <div className="w-24 h-1 bg-gradient-to-r from-terracotta-500 to-forest-500 mx-auto rounded-full mb-8" />
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Join our upcoming training sessions and take the next step in your professional development journey.
@@ -172,9 +175,13 @@ export default function CalendarSection() {
                     <span className="text-sm">{training.location}</span>
                   </div>
                 </div>
-                <Button className="w-full bg-gradient-to-r from-terracotta-600 to-forest-600 hover:from-terracotta-700 hover:to-forest-700 text-white rounded-full font-semibold transition-all duration-300">
-                  Register Now
-                </Button>
+
+                {/* Register Button redirects to /register */}
+                <Link href="/register">
+                  <Button className="w-full bg-gradient-to-r from-terracotta-600 to-forest-600 hover:from-terracotta-700 hover:to-forest-700 text-white rounded-full font-semibold transition-all duration-300">
+                    Register Now
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}

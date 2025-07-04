@@ -14,12 +14,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-  <head>
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <title>Goodlife Consulting Partners</title>
-  </head>
-  <body>{children}</body>
-</html>
+      <head>
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <title>Goodlife Consulting Partners</title>
+      </head>
+      <body className="antialiased text-gray-900 bg-white">
+        {children}
+      </body>
+    </html>
   )
 }

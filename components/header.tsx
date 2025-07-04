@@ -12,12 +12,22 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu"
-import { Menu, X } from "lucide-react"
+import {
+  Menu,
+  X,
+  Search,
+  Globe,
+  User2,
+  ChevronDown,
+} from "lucide-react"
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [language, setLanguage] = useState("EN")
   const pathname = usePathname()
+  const isRegisterPage = pathname === "/register"
+  const [isLangOpen, setIsLangOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10)
@@ -25,7 +35,7 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const isRegisterPage = pathname === "/register"
+  const toggleLang = () => setIsLangOpen(!isLangOpen)
 
   return (
     <header
@@ -66,33 +76,81 @@ export default function Header() {
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
                   <div className="w-64 p-4 space-y-2">
-                    {["All Training Programs", "Corporate Trainings", "Leadership", "Digital", "Languages", "Communication"].map(
-                      (label, index) => (
-                        <NavigationMenuLink
-                          key={index}
-                          href="/#programs"
-                          className="block px-3 py-2 text-sm text-gray-700 font-medium hover:bg-terracotta-50 rounded-md"
-                        >
-                          {label}
-                        </NavigationMenuLink>
-                      )
-                    )}
+                    {[
+                      "All Training Programs",
+                      "Corporate Trainings",
+                      "Leadership",
+                      "Digital",
+                      "Languages",
+                      "Communication",
+                    ].map((label, index) => (
+                      <NavigationMenuLink
+                        key={index}
+                        href="/#programs"
+                        className="block px-3 py-2 text-sm text-gray-700 font-medium hover:bg-terracotta-50 rounded-md"
+                      >
+                        {label}
+                      </NavigationMenuLink>
+                    ))}
                   </div>
                 </NavigationMenuContent>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
 
-          {/* Register Now Button (Hides on /register) */}
-          {!isRegisterPage && (
-            <Link href="/register">
-              <Button className="hidden md:flex bg-green-700 hover:bg-green-800 text-white rounded-full px-6 py-3 text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300">
-                📝 Register Now
-              </Button>
-            </Link>
-          )}
+          {/* Right-side Buttons */}
+          <div className="hidden md:flex items-center gap-3">
 
-          {/* Mobile Menu Toggle */}
+            {/* Search */}
+            <Button variant="ghost" size="icon" className="text-gray-600 hover:text-green-700">
+              <Search className="w-5 h-5" />
+            </Button>
+
+            {/* Language */}
+            <div className="relative">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="flex items-center gap-1 text-gray-600 hover:text-green-700"
+                onClick={toggleLang}
+              >
+                <Globe className="w-4 h-4" />
+                {language}
+                <ChevronDown className="w-4 h-4" />
+              </Button>
+
+              {isLangOpen && (
+                <div className="absolute top-10 right-0 bg-white border shadow-md rounded-md z-50 w-32">
+                  {["EN", "FR", "RW"].map((lang) => (
+                    <button
+                      key={lang}
+                      onClick={() => {
+                        setLanguage(lang)
+                        setIsLangOpen(false)
+                      }}
+                      className={`w-full text-left px-4 py-2 text-sm hover:bg-emerald-50 ${
+                        language === lang ? "text-emerald-700 font-semibold" : "text-gray-700"
+                      }`}
+                    >
+                      {lang === "EN" ? "English" : lang === "FR" ? "Français" : "Kinyarwanda"}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* My Account */}
+            {!isRegisterPage && (
+              <Link href="/login">
+                <Button className="bg-green-700 hover:bg-green-800 text-white rounded-full px-6 py-3 text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300">
+                  <User2 className="w-4 h-4 mr-2" />
+                  My Account
+                </Button>
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile Toggle */}
           <Button
             variant="ghost"
             size="icon"
@@ -117,10 +175,11 @@ export default function Header() {
                 </Link>
               ))}
 
+              {/* My Account */}
               {!isRegisterPage && (
-                <Link href="/register">
+                <Link href="/login">
                   <Button className="w-full mt-4 bg-green-700 hover:bg-green-800 text-white rounded-full px-4 py-3 font-semibold">
-                    📝 Register Now
+                    👤 My Account
                   </Button>
                 </Link>
               )}
