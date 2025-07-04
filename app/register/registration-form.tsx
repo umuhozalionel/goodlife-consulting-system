@@ -265,8 +265,8 @@ export default function Component() {
                   For help with registration or program inquiries, reach our team at:
                 </p>
                 <div className="space-y-2">
-                  <p className="font-medium text-emerald-700">📧 mugishajuniorfred@gmail.com</p>
-                  <p className="font-medium text-emerald-700">📱 +250 788 845 062</p>
+                  <p className="font-medium text-emerald-700">📧 gcp@goodlifeconsultingpartners.org</p>
+                  <p className="font-medium text-emerald-700">📱 +250 790 363 700</p>
                 </div>
               </CardContent>
             </Card>
