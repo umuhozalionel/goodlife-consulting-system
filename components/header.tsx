@@ -64,7 +64,6 @@ export default function Header() {
           {/* Navigation */}
           <NavigationMenu className="hidden lg:flex">
             <NavigationMenuList>
-              {/* Home */}
               <NavigationMenuItem>
                 <NavigationMenuLink
                   href="/#home"
@@ -74,7 +73,6 @@ export default function Header() {
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
-              {/* Training Programs */}
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="px-4 py-2 text-gray-700 hover:text-terracotta-600">
                   Training Programs
@@ -107,7 +105,6 @@ export default function Header() {
                 </NavigationMenuContent>
               </NavigationMenuItem>
 
-              {/* Other sections */}
               {["about", "calendar", "testimonials", "contact"].map((section) => (
                 <NavigationMenuItem key={section}>
                   <NavigationMenuLink
@@ -122,9 +119,9 @@ export default function Header() {
           </NavigationMenu>
 
           {/* Right Side */}
-          <div className="hidden md:flex items-center gap-4 relative group">
-            {/* Hover Search */}
-            <div className="relative">
+          <div className="hidden md:flex items-center gap-4 relative">
+            {/* Search Button with local group */}
+            <div className="relative group">
               <Button
                 variant="ghost"
                 size="icon"
@@ -179,12 +176,11 @@ export default function Header() {
               )}
             </div>
 
-            {/* My Account */}
+            {/* Icon-Only My Account */}
             {!isRegisterPage && (
               <Link href="/login">
-                <Button className="bg-green-700 hover:bg-green-800 text-white rounded-full px-6 py-3 text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300">
-                  <User2 className="w-4 h-4 mr-2" />
-                  My Account
+                <Button className="bg-green-700 hover:bg-green-800 text-white rounded-full p-2 shadow-md hover:shadow-lg transition-all duration-300">
+                  <User2 className="w-5 h-5" />
                 </Button>
               </Link>
             )}
@@ -217,7 +213,7 @@ export default function Header() {
               {!isRegisterPage && (
                 <Link href="/login">
                   <Button className="w-full mt-4 bg-green-700 hover:bg-green-800 text-white rounded-full px-4 py-3 font-semibold">
-                    👤 My Account
+                    👤
                   </Button>
                 </Link>
               )}

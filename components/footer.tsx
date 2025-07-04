@@ -1,4 +1,12 @@
-import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from "lucide-react"
+import {
+  Facebook,
+  Twitter,
+  Linkedin,
+  Instagram,
+  Mail,
+  Phone,
+  MapPin,
+} from "lucide-react"
 
 export default function Footer() {
   return (
@@ -17,20 +25,39 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed">
-              Empowering Rwanda's future leaders through expert-led training programs and professional development
-              solutions.
+              Empowering Rwanda's future leaders through expert-led training programs and professional development solutions.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="w-8 h-8 bg-terracotta-600 rounded-full flex items-center justify-center hover:bg-terracotta-700 transition-colors">
+              <a
+                href="https://facebook.com/goodlifeconsultingrwanda"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 bg-terracotta-600 rounded-full flex items-center justify-center hover:bg-terracotta-700 transition-colors"
+              >
                 <Facebook className="h-4 w-4" />
               </a>
-              <a href="#" className="w-8 h-8 bg-forest-600 rounded-full flex items-center justify-center hover:bg-forest-700 transition-colors">
+              <a
+                href="https://twitter.com/goodlifeconsultingrwanda"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 bg-forest-600 rounded-full flex items-center justify-center hover:bg-forest-700 transition-colors"
+              >
                 <Twitter className="h-4 w-4" />
               </a>
-              <a href="#" className="w-8 h-8 bg-terracotta-600 rounded-full flex items-center justify-center hover:bg-terracotta-700 transition-colors">
+              <a
+                href="https://linkedin.com/in/goodlifeconsultingrwanda"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 bg-terracotta-600 rounded-full flex items-center justify-center hover:bg-terracotta-700 transition-colors"
+              >
                 <Linkedin className="h-4 w-4" />
               </a>
-              <a href="#" className="w-8 h-8 bg-forest-600 rounded-full flex items-center justify-center hover:bg-forest-700 transition-colors">
+              <a
+                href="https://instagram.com/goodlifeconsultingrwanda"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-8 h-8 bg-forest-600 rounded-full flex items-center justify-center hover:bg-forest-700 transition-colors"
+              >
                 <Instagram className="h-4 w-4" />
               </a>
             </div>
