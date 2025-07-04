@@ -71,6 +71,18 @@ export default function Header() {
                   <div className="w-64 p-4 space-y-2">
                     <NavigationMenuLink
                       href="#programs"
+                      className="block px-3 py-2 text-sm font-semibold text-gray-800 hover:bg-terracotta-50 rounded-md"
+                    >
+                      📚 All Training Programs
+                    </NavigationMenuLink>
+                    <NavigationMenuLink
+                      href="#programs"
+                      className="block px-3 py-2 text-sm text-gray-700 hover:bg-terracotta-50 rounded-md"
+                    >
+                      Corporate Trainings
+                    </NavigationMenuLink>
+                    <NavigationMenuLink
+                      href="#programs"
                       className="block px-3 py-2 text-sm text-gray-700 hover:bg-terracotta-50 rounded-md"
                     >
                       Leadership
