@@ -12,6 +12,19 @@ const programs = [
     badge: "Popular",
   },
   {
+    category: "Corporate Trainings",
+    icon: Users,
+    color: "forest",
+    programs: [
+      "Human Resource",
+      "HR Strategy",
+      "Talent Acquisition",
+      "Performance Management",
+      "Workplace Ethics",
+    ],
+    badge: "Growing",
+  },
+  {
     category: "Digital & Innovation",
     icon: Laptop,
     color: "forest",

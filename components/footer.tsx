@@ -21,28 +21,16 @@ export default function Footer() {
               solutions.
             </p>
             <div className="flex space-x-4">
-              <a
-                href="#"
-                className="w-8 h-8 bg-terracotta-600 rounded-full flex items-center justify-center hover:bg-terracotta-700 transition-colors"
-              >
+              <a href="#" className="w-8 h-8 bg-terracotta-600 rounded-full flex items-center justify-center hover:bg-terracotta-700 transition-colors">
                 <Facebook className="h-4 w-4" />
               </a>
-              <a
-                href="#"
-                className="w-8 h-8 bg-forest-600 rounded-full flex items-center justify-center hover:bg-forest-700 transition-colors"
-              >
+              <a href="#" className="w-8 h-8 bg-forest-600 rounded-full flex items-center justify-center hover:bg-forest-700 transition-colors">
                 <Twitter className="h-4 w-4" />
               </a>
-              <a
-                href="#"
-                className="w-8 h-8 bg-terracotta-600 rounded-full flex items-center justify-center hover:bg-terracotta-700 transition-colors"
-              >
+              <a href="#" className="w-8 h-8 bg-terracotta-600 rounded-full flex items-center justify-center hover:bg-terracotta-700 transition-colors">
                 <Linkedin className="h-4 w-4" />
               </a>
-              <a
-                href="#"
-                className="w-8 h-8 bg-forest-600 rounded-full flex items-center justify-center hover:bg-forest-700 transition-colors"
-              >
+              <a href="#" className="w-8 h-8 bg-forest-600 rounded-full flex items-center justify-center hover:bg-forest-700 transition-colors">
                 <Instagram className="h-4 w-4" />
               </a>
             </div>
@@ -52,36 +40,12 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-lg mb-4">Quick Links</h4>
             <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#home" className="text-gray-400 hover:text-terracotta-400 transition-colors">
-                  Home
-                </a>
-              </li>
-              <li>
-                <a href="#about" className="text-gray-400 hover:text-terracotta-400 transition-colors">
-                  About
-                </a>
-              </li>
-              <li>
-                <a href="#programs" className="text-gray-400 hover:text-terracotta-400 transition-colors">
-                  Training Programs
-                </a>
-              </li>
-              <li>
-                <a href="#calendar" className="text-gray-400 hover:text-terracotta-400 transition-colors">
-                  Calendar
-                </a>
-              </li>
-              <li>
-                <a href="#testimonials" className="text-gray-400 hover:text-terracotta-400 transition-colors">
-                  Testimonials
-                </a>
-              </li>
-              <li>
-                <a href="#contact" className="text-gray-400 hover:text-terracotta-400 transition-colors">
-                  Contact
-                </a>
-              </li>
+              <li><a href="#home" className="text-gray-400 hover:text-terracotta-400 transition-colors">Home</a></li>
+              <li><a href="#about" className="text-gray-400 hover:text-terracotta-400 transition-colors">About</a></li>
+              <li><a href="#programs" className="text-gray-400 hover:text-terracotta-400 transition-colors">Training Programs</a></li>
+              <li><a href="#calendar" className="text-gray-400 hover:text-terracotta-400 transition-colors">Calendar</a></li>
+              <li><a href="#testimonials" className="text-gray-400 hover:text-terracotta-400 transition-colors">Testimonials</a></li>
+              <li><a href="#contact" className="text-gray-400 hover:text-terracotta-400 transition-colors">Contact</a></li>
             </ul>
           </div>
 
@@ -89,31 +53,13 @@ export default function Footer() {
           <div>
             <h4 className="font-bold text-lg mb-4">Training Programs</h4>
             <ul className="space-y-2 text-sm">
-              <li>
-                <a href="#programs" className="text-gray-400 hover:text-forest-400 transition-colors">
-                  Leadership & Management
-                </a>
-              </li>
-              <li>
-                <a href="#programs" className="text-gray-400 hover:text-forest-400 transition-colors">
-                  Digital & Innovation
-                </a>
-              </li>
-              <li>
-                <a href="#programs" className="text-gray-400 hover:text-forest-400 transition-colors">
-                  Communication Skills
-                </a>
-              </li>
-              <li>
-                <a href="#programs" className="text-gray-400 hover:text-forest-400 transition-colors">
-                  Languages
-                </a>
-              </li>
-              <li>
-                <a href="#programs" className="text-gray-400 hover:text-forest-400 transition-colors">
-                  Financial Literacy
-                </a>
-              </li>
+              <li><a href="#programs" className="text-gray-400 hover:text-forest-400 transition-colors">Leadership & Management</a></li>
+              <li><a href="#programs" className="text-gray-400 hover:text-forest-400 transition-colors">Corporate Trainings</a></li>
+              <li><a href="#programs" className="text-gray-400 hover:text-forest-400 transition-colors">Human Resource</a></li>
+              <li><a href="#programs" className="text-gray-400 hover:text-forest-400 transition-colors">Digital & Innovation</a></li>
+              <li><a href="#programs" className="text-gray-400 hover:text-forest-400 transition-colors">Communication Skills</a></li>
+              <li><a href="#programs" className="text-gray-400 hover:text-forest-400 transition-colors">Languages</a></li>
+              <li><a href="#programs" className="text-gray-400 hover:text-forest-400 transition-colors">Financial Literacy</a></li>
             </ul>
           </div>
 
@@ -127,11 +73,11 @@ export default function Footer() {
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-forest-500 flex-shrink-0" />
-                <span className="text-gray-400">+250 787 402 302</span>
+                <span className="text-gray-400">+250 790 363 700</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-terracotta-500 flex-shrink-0" />
-                <span className="text-gray-400">mugishajuniorfred@gmail.com</span>
+                <span className="text-gray-400">gcp@goodlifeconsultingpartners.org</span>
               </div>
             </div>
           </div>
@@ -141,7 +87,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 mt-12 pt-8 text-center">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-400 text-sm">© 2025 Goodlife Consulting Partners. All rights reserved.</p>
-            <p className="text-gray-500 text-sm">Powered by Goodlife Partners Ltd</p>
+            <p className="text-gray-500 text-sm">Powered by Bravonet Technologies Ltd</p>
           </div>
         </div>
       </div>
