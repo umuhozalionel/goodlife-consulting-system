@@ -20,14 +20,17 @@ import {
   User2,
   ChevronDown,
 } from "lucide-react"
+import { useToast } from "@/components/ui/use-toast"
+import { languages } from "@/lib/i18n"
 
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [language, setLanguage] = useState("EN")
   const pathname = usePathname()
   const isRegisterPage = pathname === "/register"
+  const [language, setLanguage] = useState("EN")
   const [isLangOpen, setIsLangOpen] = useState(false)
+  const { toast } = useToast()
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10)
@@ -56,7 +59,7 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Nav */}
           <NavigationMenu className="hidden lg:flex">
             <NavigationMenuList>
               {["home", "about", "calendar", "testimonials", "contact"].map((section) => (
@@ -69,7 +72,6 @@ export default function Header() {
                   </NavigationMenuLink>
                 </NavigationMenuItem>
               ))}
-
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="px-4 py-2 text-gray-700 hover:text-terracotta-600">
                   Training Programs
@@ -98,15 +100,16 @@ export default function Header() {
             </NavigationMenuList>
           </NavigationMenu>
 
-          {/* Right-side Buttons */}
+          {/* Right Side Buttons */}
           <div className="hidden md:flex items-center gap-3">
-
             {/* Search */}
-            <Button variant="ghost" size="icon" className="text-gray-600 hover:text-green-700">
-              <Search className="w-5 h-5" />
-            </Button>
+            <Link href="/search">
+              <Button variant="ghost" size="icon" className="text-gray-600 hover:text-green-700">
+                <Search className="w-5 h-5" />
+              </Button>
+            </Link>
 
-            {/* Language */}
+            {/* Language Dropdown */}
             <div className="relative">
               <Button
                 variant="ghost"
@@ -121,18 +124,22 @@ export default function Header() {
 
               {isLangOpen && (
                 <div className="absolute top-10 right-0 bg-white border shadow-md rounded-md z-50 w-32">
-                  {["EN", "FR", "RW"].map((lang) => (
+                  {Object.entries(languages).map(([code, label]) => (
                     <button
-                      key={lang}
+                      key={code}
                       onClick={() => {
-                        setLanguage(lang)
+                        setLanguage(code)
                         setIsLangOpen(false)
+                        toast({
+                          title: "Language Selected",
+                          description: `You switched to ${label}`,
+                        })
                       }}
                       className={`w-full text-left px-4 py-2 text-sm hover:bg-emerald-50 ${
-                        language === lang ? "text-emerald-700 font-semibold" : "text-gray-700"
+                        language === code ? "text-emerald-700 font-semibold" : "text-gray-700"
                       }`}
                     >
-                      {lang === "EN" ? "English" : lang === "FR" ? "Français" : "Kinyarwanda"}
+                      {label}
                     </button>
                   ))}
                 </div>
@@ -150,7 +157,7 @@ export default function Header() {
             )}
           </div>
 
-          {/* Mobile Toggle */}
+          {/* Mobile Menu Toggle */}
           <Button
             variant="ghost"
             size="icon"
@@ -174,8 +181,6 @@ export default function Header() {
                   {section.charAt(0).toUpperCase() + section.slice(1)}
                 </Link>
               ))}
-
-              {/* My Account */}
               {!isRegisterPage && (
                 <Link href="/login">
                   <Button className="w-full mt-4 bg-green-700 hover:bg-green-800 text-white rounded-full px-4 py-3 font-semibold">

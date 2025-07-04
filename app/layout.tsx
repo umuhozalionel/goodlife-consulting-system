@@ -1,10 +1,11 @@
-import type { Metadata } from 'next'
-import './globals.css'
+import type { Metadata } from "next"
+import "./globals.css"
+import { ToastProvider } from "@/components/ToastProvider"
 
 export const metadata: Metadata = {
-  title: 'Goodlife Consulting Partners',
+  title: "Goodlife Consulting Partners",
   description: "Empowering Rwanda's future leaders through professional training and development",
-  generator: 'Next.js',
+  generator: "Next.js",
 }
 
 export default function RootLayout({
@@ -20,6 +21,7 @@ export default function RootLayout({
         <title>Goodlife Consulting Partners</title>
       </head>
       <body className="antialiased text-gray-900 bg-white">
+        <ToastProvider />
         {children}
       </body>
     </html>
