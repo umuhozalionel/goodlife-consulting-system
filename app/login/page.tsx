@@ -1,29 +1,58 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Mail, Lock, Loader2, Github } from "lucide-react"
 import { FaGoogle, FaApple } from "react-icons/fa"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
+  const { toast } = useToast()
+
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulated login logic (replace with actual backend call)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
+    try {
+      const res = await fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+        headers: { "Content-Type": "application/json" },
+      })
 
-    setIsLoading(false)
+      const data = await res.json()
+
+      if (data.status === "success") {
+        toast({
+          title: "Login Successful",
+          description: `Welcome back, ${data.email}`,
+        })
+        router.push("/") // 🔁 Redirect to homepage (update later to dashboard)
+      } else {
+        throw new Error(data.message || "Invalid credentials")
+      }
+    } catch (err: any) {
+      toast({
+        title: "Login Failed",
+        description: err.message,
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-white to-terracotta-100 px-4">
       <div className="w-full max-w-md space-y-8">
-        {/* Branding */}
         <div className="text-center">
           <div className="inline-flex items-center space-x-2 mb-4">
             <div className="w-10 h-10 bg-gradient-to-br from-terracotta-500 to-forest-500 rounded-xl flex items-center justify-center">
@@ -34,7 +63,6 @@ export default function LoginPage() {
           <p className="text-sm text-gray-600">Welcome back! Sign in to manage your training progress.</p>
         </div>
 
-        {/* Login Form */}
         <form onSubmit={handleLogin} className="bg-white p-6 rounded-lg shadow-md space-y-6">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -43,6 +71,8 @@ export default function LoginPage() {
               <Input
                 type="email"
                 id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 className="pl-10"
                 placeholder="your@email.com"
@@ -57,6 +87,8 @@ export default function LoginPage() {
               <Input
                 type="password"
                 id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 required
                 className="pl-10"
                 placeholder="••••••••"
@@ -80,7 +112,6 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        {/* OAuth Buttons */}
         <div className="text-center space-y-2">
           <p className="text-gray-500 text-sm">or continue with</p>
           <div className="flex justify-center gap-4">
