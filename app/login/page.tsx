@@ -4,7 +4,8 @@ import { useState } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { Mail, Lock, Loader2, Apple, Github, Google } from "lucide-react"
+import { Mail, Lock, Loader2, Github } from "lucide-react"
+import { FaGoogle, FaApple } from "react-icons/fa"
 
 export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -13,7 +14,7 @@ export default function LoginPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    // Simulate login (replace with actual logic)
+    // Simulated login logic (replace with actual backend call)
     await new Promise((resolve) => setTimeout(resolve, 1500))
 
     setIsLoading(false)
@@ -33,7 +34,7 @@ export default function LoginPage() {
           <p className="text-sm text-gray-600">Welcome back! Sign in to manage your training progress.</p>
         </div>
 
-        {/* Form */}
+        {/* Login Form */}
         <form onSubmit={handleLogin} className="bg-white p-6 rounded-lg shadow-md space-y-6">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
@@ -79,15 +80,15 @@ export default function LoginPage() {
           </Button>
         </form>
 
-        {/* OAuth Buttons (Optional / Future Use) */}
+        {/* OAuth Buttons */}
         <div className="text-center space-y-2">
           <p className="text-gray-500 text-sm">or continue with</p>
           <div className="flex justify-center gap-4">
             <Button variant="ghost" size="icon" className="hover:text-green-600">
-              <Google className="h-5 w-5" />
+              <FaGoogle className="h-5 w-5" />
             </Button>
             <Button variant="ghost" size="icon" className="hover:text-black">
-              <Apple className="h-5 w-5" />
+              <FaApple className="h-5 w-5" />
             </Button>
             <Button variant="ghost" size="icon" className="hover:text-gray-700">
               <Github className="h-5 w-5" />
