@@ -1,21 +1,23 @@
-// lib/firebase.ts
+import { NextResponse } from "next/server"
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { auth } from "@/lib/firebase"
 
-import { initializeApp } from "firebase/app"
-import { getAuth } from "firebase/auth"
-import { getFirestore } from "firebase/firestore"
+export async function POST(req: Request) {
+  try {
+    const { email, password } = await req.json()
 
-// ✅ Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDZzW9M5E8mQEPu7jyh3x113uSMEFd4BJc",
-  authDomain: "goodlife-consulting.firebaseapp.com",
-  projectId: "goodlife-consulting",
-  storageBucket: "goodlife-consulting.appspot.com", // NOTE: Corrected `.app` to `.appspot`
-  messagingSenderId: "549935392152",
-  appId: "1:549935392152:web:ca8e47cd04486d114977ed",
-  measurementId: "G-N5FYF7GDGL",
+    const userCredential = await signInWithEmailAndPassword(auth, email, password)
+    const user = userCredential.user
+
+    return NextResponse.json({
+      status: "success",
+      uid: user.uid,
+      email: user.email,
+    })
+  } catch (error: any) {
+    return NextResponse.json(
+      { status: "error", message: error.message },
+      { status: 401 }
+    )
+  }
 }
-
-// ✅ Initialize Firebase app and export services
-const app = initializeApp(firebaseConfig)
-export const auth = getAuth(app)
-export const db = getFirestore(app)

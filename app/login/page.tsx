@@ -29,13 +29,14 @@ export default function LoginPage() {
       })
 
       const data = await res.json()
+      console.log("Login response:", data)
 
       if (data.status === "success") {
         toast({
           title: "Login Successful",
           description: `Welcome back, ${data.email}`,
         })
-        router.push("/") // 🔁 Redirect to homepage (update later to dashboard)
+        router.push("/dashboard") // 🔁 Redirect to dashboard after login
       } else {
         throw new Error(data.message || "Invalid credentials")
       }
