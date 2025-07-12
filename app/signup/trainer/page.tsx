@@ -37,18 +37,26 @@ export default function TrainerAuthPage() {
       })
 
       const data = await res.json()
-      if (data.status === "success") {
+      if (data.status === "success" && data.uid) {
         toast({
           title: mode === "login" ? "Login Successful" : "Account Created",
           description: `Welcome ${mode === "login" ? "back" : "aboard"}, ${data.email}`,
         })
 
+        // ✅ Confirm role before redirecting
         const roleRes = await fetch(`/api/role?uid=${data.uid}`)
         const roleData = await roleRes.json()
-        const userRole = roleData.status === "success" ? roleData.role : "trainer"
+        const role = roleData.status === "success" ? roleData.role : null
 
         setTimeout(() => {
-          router.push(userRole === "trainer" ? "/admin/dashboard" : "/dashboard")
+          if (role === "trainer") {
+            router.push("/admin/dashboard")
+          } else if (role === "trainee") {
+            router.push("/dashboard")
+          } else {
+            console.warn("Undefined role, sending to auth fallback")
+            router.push("/auth")
+          }
         }, 1200)
       } else {
         throw new Error(data.message || "Unexpected error")

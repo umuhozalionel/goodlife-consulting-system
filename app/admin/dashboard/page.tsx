@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { getAuth, signOut } from "firebase/auth"
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 import { Loader2 } from "lucide-react"
@@ -14,35 +14,46 @@ export default function AdminDashboard() {
   const [accessGranted, setAccessGranted] = useState(false)
 
   useEffect(() => {
-    const verifyAdminAccess = async () => {
-      const auth = getAuth()
-      const user = auth.currentUser
+    const auth = getAuth()
+
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      console.log("🔥 onAuthStateChanged fired")
 
       if (!user) {
-        router.push("/auth")
-        return
+        console.warn("User is null — waiting for session to hydrate")
+        return // Don't redirect yet
       }
 
-      const ref = doc(db, "users", user.uid)
-      const snap = await getDoc(ref)
+      console.log("✅ Firebase user detected:", user)
 
-      if (!snap.exists()) {
-        router.push("/dashboard")
-        return
+      try {
+        const ref = doc(db, "users", user.uid)
+        const snap = await getDoc(ref)
+
+        console.log("📄 Firestore snap:", snap.exists(), snap.data())
+
+        if (!snap.exists()) {
+          console.warn("User doc missing — not redirecting yet")
+          return
+        }
+
+        const { role } = snap.data()
+        console.log("🧠 Role retrieved:", role)
+
+        if (role === "trainer") {
+          setAccessGranted(true)
+        } else {
+          console.warn("Role mismatch — should redirect to /dashboard")
+        }
+      } catch (error) {
+        console.error("❌ Error verifying user:", error)
+      } finally {
+        setLoading(false)
       }
+    })
 
-      const { role } = snap.data()
-      if (role === "trainer") {
-        setAccessGranted(true)
-      } else {
-        router.push("/dashboard")
-      }
-
-      setLoading(false)
-    }
-
-    verifyAdminAccess()
-  }, [router])
+    return () => unsubscribe()
+  }, [])
 
   if (loading) {
     return (
@@ -51,8 +62,6 @@ export default function AdminDashboard() {
       </main>
     )
   }
-
-  if (!accessGranted) return null
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-br from-white to-terracotta-50">
