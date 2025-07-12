@@ -2,19 +2,14 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
+import { doc, setDoc } from "firebase/firestore"
+import { db } from "@/lib/firebase"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { Loader2, Mail, Lock, User2, Github } from "lucide-react"
-import { FaGoogle, FaApple } from "react-icons/fa"
+import { Loader2, Mail, Lock, User2 } from "lucide-react"
 import { useToast } from "@/components/ui/use-toast"
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth"
-import { doc, setDoc } from "firebase/firestore"
-import { db } from "@/lib/firebase"
 
 export default function TrainerAuthPage() {
   const [mode, setMode] = useState<"login" | "signup">("login")
@@ -32,49 +27,34 @@ export default function TrainerAuthPage() {
 
     try {
       const auth = getAuth()
-      let uid = ""
+      let uid: string
 
-      let user
       if (mode === "signup") {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-        user = userCredential.user
-        uid = user.uid
-
-        await setDoc(doc(db, "users", uid), {
-          name,
-          email,
-          role: "trainer",
-        })
+        const cred = await createUserWithEmailAndPassword(auth, email, password)
+        uid = cred.user.uid
+        await setDoc(doc(db, "users", uid), { name, email, role: "trainer" })
       } else {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password)
-        user = userCredential.user
-        uid = user.uid
+        const cred = await signInWithEmailAndPassword(auth, email, password)
+        uid = cred.user.uid
       }
 
-      // ✅ FIXED: Use actual uid, not THE_UID
-      const roleRes = await fetch(`/api/role?uid=${uid}`)
-      const roleData = await roleRes.json()
+      const token = await auth.currentUser!.getIdToken()
 
-      console.log("🔥 UID:", uid)
-      console.log("🧠 Role API:", roleData)
+      await fetch("/api/sessionLogin", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      })
 
-      const role = roleData.status === "success" ? roleData.role : null
-
-      if (role === "trainer") {
-        router.push("/admin/dashboard")
-      } else if (role === "trainee") {
-        router.push("/dashboard")
-      } else {
-        router.push("/auth")
-      }
+      router.replace("/admin/dashboard")
 
       toast({
-        title: mode === "signup" ? "Account Created" : "Login Successful",
-        description: `Welcome ${mode === "signup" ? "aboard" : "back"}, ${email}`,
+        title: "Welcome!",
+        description: mode === "signup" ? "Trainer account created" : "Trainer logged in",
       })
     } catch (err: any) {
       toast({
-        title: "Authentication Error",
+        title: "Auth Error",
         description: err.message,
         variant: "destructive",
       })
@@ -84,112 +64,82 @@ export default function TrainerAuthPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-white via-terracotta-50 to-forest-100">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-terracotta-700">
-            {mode === "login" ? "Trainer Login" : "Trainer Signup"}
-          </h1>
-          <p className="text-sm text-gray-600">
-            {mode === "login"
-              ? "Sign in to manage your training dashboard."
-              : "Create your trainer account and lead sessions."}
-          </p>
-        </div>
+    <main className="min-h-screen flex items-center justify-center bg-terracotta-50">
+      <form onSubmit={handleAuth} className="bg-white p-8 rounded shadow-md w-full max-w-md space-y-6">
+        <h2 className="text-2xl font-bold text-terracotta-700 text-center">
+          {mode === "login" ? "Trainer Login" : "Trainer Signup"}
+        </h2>
 
-        <form onSubmit={handleAuth} className="bg-white p-6 rounded-lg shadow-md space-y-6">
-          {mode === "signup" && (
-            <div>
-              <Label htmlFor="name">Full Name</Label>
-              <div className="relative">
-                <User2 className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                <Input
-                  type="text"
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  className="pl-10"
-                  placeholder="Jane Trainer"
-                />
-              </div>
-            </div>
-          )}
-
+        {mode === "signup" && (
           <div>
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="name">Full Name</Label>
             <div className="relative">
-              <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <User2 className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="name"
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 required
+                placeholder="Jane Trainer"
                 className="pl-10"
-                placeholder="trainer@goodlife.com"
               />
             </div>
           </div>
+        )}
 
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <div className="relative">
-              <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-              <Input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="pl-10"
-                placeholder="••••••••"
-              />
-            </div>
-          </div>
-
-          <Button type="submit" disabled={isLoading} className="w-full">
-            {isLoading ? (
-              <span className="flex items-center justify-center">
-                <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                {mode === "login" ? "Logging in..." : "Creating account..."}
-              </span>
-            ) : mode === "login" ? "Log In" : "Sign Up"}
-          </Button>
-
-          <div className="text-right">
-            <button type="button" className="text-sm text-gray-500 underline hover:text-red-600">
-              Forgot password?
-            </button>
-          </div>
-        </form>
-
-        <div className="text-center space-y-3">
-          <p className="text-sm text-gray-500">Or continue with</p>
-          <div className="flex justify-center gap-4">
-            <Button variant="ghost" size="icon" className="hover:text-green-600">
-              <FaGoogle className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon" className="hover:text-black">
-              <FaApple className="h-5 w-5" />
-            </Button>
-            <Button variant="ghost" size="icon" className="hover:text-gray-700">
-              <Github className="h-5 w-5" />
-            </Button>
+        <div>
+          <Label htmlFor="email">Email</Label>
+          <div className="relative">
+            <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="trainer@goodlife.com"
+              className="pl-10"
+            />
           </div>
         </div>
+
+        <div>
+          <Label htmlFor="password">Password</Label>
+          <div className="relative">
+            <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+            <Input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="••••••••"
+              className="pl-10"
+            />
+          </div>
+        </div>
+
+        <Button type="submit" disabled={isLoading} className="w-full">
+          {isLoading ? (
+            <span className="flex items-center justify-center">
+              <Loader2 className="h-5 w-5 animate-spin mr-2" />
+              {mode === "login" ? "Logging in…" : "Signing up…"}
+            </span>
+          ) : mode === "login" ? "Log In" : "Sign Up"}
+        </Button>
 
         <p className="text-center text-sm text-gray-600">
-          {mode === "login" ? "Don't have a trainer account?" : "Already registered?"}{" "}
+          {mode === "login" ? "New here?" : "Already registered?"}{" "}
           <button
             type="button"
             onClick={() => setMode(mode === "login" ? "signup" : "login")}
-            className="text-terracotta-600 font-semibold hover:underline ml-1"
+            className="text-terracotta-700 font-semibold hover:underline"
           >
             {mode === "login" ? "Sign Up" : "Log In"}
           </button>
         </p>
-      </div>
+      </form>
     </main>
   )
 }

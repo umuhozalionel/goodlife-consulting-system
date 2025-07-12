@@ -10,47 +10,30 @@ import { Button } from "@/components/ui/button"
 
 export default function TrainerDashboardPage() {
   const router = useRouter()
-
-  // undefined = not yet known, null = definitely not logged in, User = logged in
   const [user, setUser] = useState<User | null | undefined>(undefined)
   const [roleLoading, setRoleLoading] = useState(true)
   const [role, setRole] = useState<string | null>(null)
 
-  // Step 1: Watch Firebase Auth initialization
   useEffect(() => {
-    const auth = getAuth()
-    const unsub = onAuthStateChanged(auth, (u) => {
+    const unsub = onAuthStateChanged(getAuth(), (u) => {
       setUser(u)
     })
     return () => unsub()
   }, [])
 
-  // Step 2: Once we know user (could be null), handle redirect or fetch role
   useEffect(() => {
-    // still waiting on auth init
     if (user === undefined) return
-
-    // no user → send to /auth
     if (user === null) {
       router.replace("/auth")
       return
     }
 
-    // we have a real user → fetch their role
     ;(async () => {
       try {
-        console.log("🔥 Checking role for UID:", user.uid)
-        const snapshot = await getDoc(doc(db, "users", user.uid))
-
-        if (!snapshot.exists()) {
-          throw new Error("User record not found")
-        }
-
-        const fetchedRole = snapshot.data()?.role
-        console.log("🧠 Role fetched:", fetchedRole)
-        setRole(fetchedRole || null)
-      } catch (err) {
-        console.error("🔴 Role fetch error:", err)
+        const snap = await getDoc(doc(db, "users", user.uid))
+        if (!snap.exists()) throw new Error("User record not found")
+        setRole(snap.data()?.role || null)
+      } catch {
         router.replace("/auth")
       } finally {
         setRoleLoading(false)
@@ -58,7 +41,6 @@ export default function TrainerDashboardPage() {
     })()
   }, [user, router])
 
-  // Still loading either auth or role
   if (user === undefined || roleLoading) {
     return (
       <main className="min-h-screen flex items-center justify-center">
@@ -67,21 +49,17 @@ export default function TrainerDashboardPage() {
     )
   }
 
-  // Authenticated but wrong role → bounce
   if (role !== "trainer") {
-    const redirectTo = role === "trainee" ? "/dashboard" : "/auth"
-    router.replace(redirectTo)
+    const dest = role === "trainee" ? "/dashboard" : "/auth"
+    router.replace(dest)
     return null
   }
 
-  // Perfect: authenticated + trainer role
   return (
     <main className="min-h-screen p-8 bg-terracotta-50">
-      <h1 className="text-3xl font-bold text-terracotta-700">
-        🎓 Trainer Panel
-      </h1>
+      <h1 className="text-3xl font-bold text-terracotta-700">🎓 Trainer Panel</h1>
       <p className="mt-4 text-gray-700">
-        Manage your programs, review feedback, and guide your trainees here.
+        Welcome back! Manage your sessions, view trainees, and update content here.
       </p>
 
       <Button
