@@ -120,7 +120,7 @@ export default function Header() {
 
           {/* Right Side */}
           <div className="hidden md:flex items-center gap-4 relative">
-            {/* Search Button with local group */}
+            {/* Search Button */}
             <div className="relative group">
               <Button
                 variant="ghost"
@@ -176,9 +176,9 @@ export default function Header() {
               )}
             </div>
 
-            {/* Icon-Only My Account */}
+            {/* Account Icon → Redirect to /auth */}
             {!isRegisterPage && (
-              <Link href="/login">
+              <Link href="/auth">
                 <Button className="bg-green-700 hover:bg-green-800 text-white rounded-full p-2 shadow-md hover:shadow-lg transition-all duration-300">
                   <User2 className="w-5 h-5" />
                 </Button>
@@ -211,7 +211,7 @@ export default function Header() {
                 </Link>
               ))}
               {!isRegisterPage && (
-                <Link href="/login">
+                <Link href="/auth">
                   <Button className="w-full mt-4 bg-green-700 hover:bg-green-800 text-white rounded-full px-4 py-3 font-semibold">
                     👤
                   </Button>

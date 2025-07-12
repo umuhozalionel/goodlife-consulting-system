@@ -26,7 +26,7 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-bold text-terracotta-700">Welcome to your dashboard</h1>
         <p className="text-gray-600">
           You're officially logged in, and we’re ready to roll. In future updates, this page can show your
-          testimonials, training progress, or admin tools based on your user role.
+          testimonials, training progress. You can enjoy the silence!!
         </p>
       </div>
     </main>
