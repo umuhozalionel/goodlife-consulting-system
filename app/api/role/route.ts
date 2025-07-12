@@ -1,27 +1,23 @@
 import { NextResponse } from "next/server"
-import { doc, getDoc } from "firebase/firestore"
 import { db } from "@/lib/firebase"
+import { doc, getDoc } from "firebase/firestore"
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url)
     const uid = searchParams.get("uid")
 
-    if (!uid) {
-      return NextResponse.json({ status: "error", message: "UID not provided" }, { status: 400 })
-    }
+    if (!uid) throw new Error("UID is required")
 
-    const userRef = doc(db, "users", uid)
-    const userSnap = await getDoc(userRef)
+    const snap = await getDoc(doc(db, "users", uid))
+    if (!snap.exists()) throw new Error("User not found")
 
-    if (!userSnap.exists()) {
-      return NextResponse.json({ status: "error", message: "User not found" }, { status: 404 })
-    }
-
-    const { role } = userSnap.data()
-
+    const role = snap.data().role
     return NextResponse.json({ status: "success", role })
   } catch (error: any) {
-    return NextResponse.json({ status: "error", message: error.message }, { status: 500 })
+    return NextResponse.json(
+      { status: "error", message: error.message },
+      { status: 500 }
+    )
   }
 }

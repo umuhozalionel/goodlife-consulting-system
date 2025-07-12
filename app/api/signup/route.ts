@@ -7,9 +7,11 @@ export async function POST(req: Request) {
   try {
     const { name, email, password, role = "trainee" } = await req.json()
 
+    // ✅ Create user in Firebase Auth
     const userCredential = await createUserWithEmailAndPassword(auth, email, password)
     const user = userCredential.user
 
+    // ✅ Store user profile in Firestore
     await setDoc(doc(db, "users", user.uid), {
       uid: user.uid,
       name,
@@ -18,8 +20,16 @@ export async function POST(req: Request) {
       createdAt: serverTimestamp(),
     })
 
-    return NextResponse.json({ status: "success", uid: user.uid, email })
+    return NextResponse.json({
+      status: "success",
+      uid: user.uid,
+      email: user.email,
+    })
   } catch (error: any) {
-    return NextResponse.json({ status: "error", message: error.message }, { status: 500 })
+    console.error("Signup error:", error.message) // 🔍 Helpful for debugging
+    return NextResponse.json(
+      { status: "error", message: error.message },
+      { status: 500 }
+    )
   }
 }

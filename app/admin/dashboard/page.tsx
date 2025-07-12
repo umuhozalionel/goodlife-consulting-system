@@ -2,10 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { getAuth } from "firebase/auth"
+import { getAuth, signOut } from "firebase/auth"
 import { doc, getDoc } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 import { Loader2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function AdminDashboard() {
   const router = useRouter()
@@ -51,7 +52,7 @@ export default function AdminDashboard() {
     )
   }
 
-  if (!accessGranted) return null // block render if not allowed
+  if (!accessGranted) return null
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-4 bg-gradient-to-br from-white to-terracotta-50">
@@ -68,6 +69,16 @@ export default function AdminDashboard() {
           <p>✅ Add or edit training categories</p>
           <p>✅ View registered trainees</p>
         </div>
+
+        <Button
+          className="mt-6 px-6 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          onClick={async () => {
+            await signOut(getAuth())
+            router.push("/auth")
+          }}
+        >
+          Sign Out
+        </Button>
       </div>
     </main>
   )
