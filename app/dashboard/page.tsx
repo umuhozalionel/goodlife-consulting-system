@@ -1,34 +1,68 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { getAuth, onAuthStateChanged, User } from "firebase/auth"
+import { doc, getDoc } from "firebase/firestore"
+import { db } from "@/lib/firebase"
 import { Loader2 } from "lucide-react"
 
-export default function DashboardPage() {
-  const [isMounted, setIsMounted] = useState(false)
+export default function TraineeDashboardPage() {
+  const router = useRouter()
+  const [user, setUser] = useState<User | null | undefined>(undefined)
+  const [roleLoading, setRoleLoading] = useState(true)
+  const [role, setRole] = useState<string | null>(null)
 
   useEffect(() => {
-    // Simulate loading or session check
-    const timeout = setTimeout(() => setIsMounted(true), 800)
-    return () => clearTimeout(timeout)
+    const unsub = onAuthStateChanged(getAuth(), (u) => {
+      setUser(u)
+    })
+    return () => unsub()
   }, [])
 
-  if (!isMounted) {
+  useEffect(() => {
+    if (user === undefined) return
+    if (user === null) {
+      router.replace("/auth")
+      return
+    }
+
+    ;(async () => {
+      try {
+        console.log("🔥 Checking role for UID:", user.uid)
+        const snap = await getDoc(doc(db, "users", user.uid))
+        if (!snap.exists()) throw new Error("User record not found")
+        setRole(snap.data()?.role || null)
+      } catch {
+        router.replace("/auth")
+      } finally {
+        setRoleLoading(false)
+      }
+    })()
+  }, [user, router])
+
+  if (user === undefined || roleLoading) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-white">
-        <Loader2 className="h-6 w-6 text-terracotta-700 animate-spin" />
+      <main className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-emerald-700" />
       </main>
     )
   }
 
+  if (role !== "trainee") {
+    const dest = role === "trainer" ? "/admin/dashboard" : "/auth"
+    router.replace(dest)
+    return null
+  }
+
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-white to-terracotta-100 px-4">
-      <div className="w-full max-w-2xl text-center space-y-6">
-        <h1 className="text-3xl font-bold text-terracotta-700">Welcome to your dashboard</h1>
-        <p className="text-gray-600">
-          You're officially logged in, and we’re ready to roll. In future updates, this page can show your
-          testimonials, training progress. You can enjoy the silence!!
-        </p>
-      </div>
+    <main className="min-h-screen p-8 bg-emerald-50">
+      <h1 className="text-3xl font-bold text-emerald-700">
+        🧑‍🎓 Trainee Dashboard
+      </h1>
+      <p className="mt-4 text-gray-700">
+        Welcome back! Here are your courses, feedback, and progress stats.
+      </p>
     </main>
   )
 }

@@ -20,9 +20,19 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url)
     const uid = searchParams.get("uid")
 
-    console.log("🔍 Role check for UID:", uid)
+    console.log("🔍 Role check triggered for UID:", uid)
+
+    // ⛔ Reject static placeholder UID
+    if (uid === "THE_UID") {
+      console.error("🚫 Static test UID detected — rejected immediately")
+      return NextResponse.json(
+        { status: "error", message: "Static UID 'THE_UID' is invalid in production." },
+        { status: 403 }
+      )
+    }
 
     if (!uid) {
+      console.warn("⚠️ UID missing from query")
       return NextResponse.json(
         { status: "error", message: "UID is required" },
         { status: 400 }
@@ -43,18 +53,18 @@ export async function GET(req: Request) {
     const role = snap.data()?.role
 
     if (!role) {
-      console.warn("⚠️ Role is missing in document:", snap.data())
+      console.warn("⚠️ Role is missing in Firestore data:", snap.data())
       return NextResponse.json(
         { status: "error", message: "Role is undefined" },
         { status: 400 }
       )
     }
 
-    console.log("✅ Role found:", role)
+    console.log("✅ Role retrieved successfully:", role)
 
     return NextResponse.json({ status: "success", role })
   } catch (error: any) {
-    console.error("🔥 /api/role error:", error.message)
+    console.error("🔥 Internal error in /api/role:", error.message)
     return NextResponse.json(
       { status: "error", message: error.message },
       { status: 500 }
