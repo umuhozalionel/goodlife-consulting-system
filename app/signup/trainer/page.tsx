@@ -9,6 +9,10 @@ import { Mail, Lock, User2, Loader2, Github } from "lucide-react"
 import { FaGoogle, FaApple } from "react-icons/fa"
 import { useToast } from "@/components/ui/use-toast"
 
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
+import { doc, setDoc } from "firebase/firestore"
+import { db } from "@/lib/firebase"
+
 export default function TrainerAuthPage() {
   const [mode, setMode] = useState<"login" | "signup">("login")
   const [email, setEmail] = useState("")
@@ -23,43 +27,41 @@ export default function TrainerAuthPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    const endpoint = mode === "login" ? "/api/login" : "/api/signup"
-    const payload =
-      mode === "login"
-        ? { email, password }
-        : { name, email, password, role: "trainer" }
-
     try {
-      const res = await fetch(endpoint, {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: { "Content-Type": "application/json" },
+      const auth = getAuth()
+      let uid = ""
+      if (mode === "signup") {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+        uid = userCredential.user.uid
+
+        // ✅ Save role to Firestore
+        await setDoc(doc(db, "users", uid), {
+          name,
+          email,
+          role: "trainer",
+        })
+      } else {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password)
+        uid = userCredential.user.uid
+      }
+
+      toast({
+        title: mode === "signup" ? "Account Created" : "Login Successful",
+        description: `Welcome ${mode === "signup" ? "aboard" : "back"}, ${email}`,
       })
 
-      const data = await res.json()
-      if (data.status === "success" && data.uid) {
-        toast({
-          title: mode === "login" ? "Login Successful" : "Account Created",
-          description: `Welcome ${mode === "login" ? "back" : "aboard"}, ${data.email}`,
-        })
+      // ✅ Fetch role from backend
+      const roleRes = await fetch(`/api/role?uid=${uid}`)
+      const roleData = await roleRes.json()
+      const role = roleData.status === "success" ? roleData.role : null
 
-        // ✅ Confirm role before redirecting
-        const roleRes = await fetch(`/api/role?uid=${data.uid}`)
-        const roleData = await roleRes.json()
-        const role = roleData.status === "success" ? roleData.role : null
-
-        setTimeout(() => {
-          if (role === "trainer") {
-            router.push("/admin/dashboard")
-          } else if (role === "trainee") {
-            router.push("/dashboard")
-          } else {
-            console.warn("Undefined role, sending to auth fallback")
-            router.push("/auth")
-          }
-        }, 1200)
+      if (role === "trainer") {
+        router.push("/admin/dashboard")
+      } else if (role === "trainee") {
+        router.push("/dashboard")
       } else {
-        throw new Error(data.message || "Unexpected error")
+        console.warn("Undefined role, sending to auth fallback")
+        router.push("/auth")
       }
     } catch (err: any) {
       toast({

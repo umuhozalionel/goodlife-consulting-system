@@ -18,44 +18,48 @@ export default function AdminDashboard() {
 
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       console.log("🔥 onAuthStateChanged fired")
-
       if (!user) {
-        console.warn("User is null — waiting for session to hydrate")
-        return // Don't redirect yet
+        console.warn("🚫 No user detected — redirecting to /auth")
+        router.push("/auth")
+        return
       }
 
-      console.log("✅ Firebase user detected:", user)
+      console.log("✅ Firebase user detected:", user.uid)
 
       try {
         const ref = doc(db, "users", user.uid)
         const snap = await getDoc(ref)
 
-        console.log("📄 Firestore snap:", snap.exists(), snap.data())
+        console.log("📄 Firestore snap exists:", snap.exists())
+        console.log("📄 Firestore snap data:", snap.data())
 
         if (!snap.exists()) {
-          console.warn("User doc missing — not redirecting yet")
+          console.warn("⚠️ Firestore document missing — redirecting to /auth")
+          router.push("/auth")
           return
         }
 
         const { role } = snap.data()
-        console.log("🧠 Role retrieved:", role)
+        console.log("🧠 Retrieved role:", role)
 
         if (role === "trainer") {
           setAccessGranted(true)
         } else {
-          console.warn("Role mismatch — should redirect to /dashboard")
+          console.warn("⛔ Role mismatch — redirecting to /dashboard")
+          router.push("/dashboard")
         }
-      } catch (error) {
-        console.error("❌ Error verifying user:", error)
+      } catch (error: any) {
+        console.error("🔥 Error during role verification:", error)
+        router.push("/auth")
       } finally {
         setLoading(false)
       }
     })
 
     return () => unsubscribe()
-  }, [])
+  }, [router])
 
-  if (loading) {
+  if (loading || !accessGranted) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-white">
         <Loader2 className="h-6 w-6 animate-spin text-terracotta-700" />
