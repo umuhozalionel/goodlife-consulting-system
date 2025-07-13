@@ -1,4 +1,4 @@
-export default function TrainerDemoPage() {
+function TrainerDemoPanel() {
   return (
     <main className="min-h-screen p-8 bg-terracotta-50">
       <h1 className="text-3xl font-bold text-terracotta-700">📣 Trainer Demo Panel</h1>
@@ -23,7 +23,9 @@ export default function TrainerDemoPage() {
       </div>
     </main>
   )
-}export default function TrainerPreviewPage() {
+}
+
+export default function TrainerPreviewPage() {
   return (
     <main className="min-h-screen p-8 bg-terracotta-50 text-gray-900">
       <h1 className="text-3xl font-bold text-terracotta-700">🎯 Trainer Experience Demo</h1>
