@@ -50,7 +50,7 @@ export default function TraineeAuthPage() {
 
         setTimeout(() => {
           router.push("/dashboard")
-        }, 1500)
+        }, 1200)
       } else {
         await signInWithEmailAndPassword(auth, email, password)
 
@@ -59,7 +59,9 @@ export default function TraineeAuthPage() {
           description: `Welcome back, ${email}!`,
         })
 
-        router.push("/dashboard")
+        setTimeout(() => {
+          router.push("/dashboard")
+        }, 1200)
       }
     } catch (err: any) {
       toast({

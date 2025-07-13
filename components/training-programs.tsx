@@ -1,3 +1,6 @@
+"use client"
+
+import Link from "next/link"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -10,19 +13,21 @@ const programs = [
     color: "terracotta",
     programs: ["Business Management", "Project Management", "Leadership Skills", "Time Management"],
     badge: "Popular",
+    link: "/training/leadership",
   },
   {
     category: "Corporate Trainings",
     icon: Users,
     color: "forest",
     programs: [
-      "Human Resource Managment",
+      "Human Resource Management",
       "HR Strategy",
       "Talent Acquisition",
       "Performance Management",
       "Workplace Ethics",
     ],
     badge: "Growing",
+    link: "/training/corporate",
   },
   {
     category: "Digital & Innovation",
@@ -36,6 +41,7 @@ const programs = [
       "Cybersecurity",
     ],
     badge: "New",
+    link: "/training/digital",
   },
   {
     category: "Communication & Personal Growth",
@@ -43,6 +49,7 @@ const programs = [
     color: "terracotta",
     programs: ["Public Speaking", "Communication Skills", "Counseling"],
     badge: null,
+    link: "/training/communication",
   },
   {
     category: "Languages & Social Impact",
@@ -50,6 +57,7 @@ const programs = [
     color: "forest",
     programs: ["English", "French", "Kiswahili", "Climate Change", "Financial Literacy"],
     badge: "Comprehensive",
+    link: "/training/languages",
   },
 ]
 
@@ -69,7 +77,6 @@ export default function TrainingPrograms() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {programs.map((program, index) => {
             const IconComponent = program.icon
-            const colorClass = program.color === "terracotta" ? "terracotta" : "forest"
 
             return (
               <Card
@@ -115,16 +122,18 @@ export default function TrainingPrograms() {
                       </li>
                     ))}
                   </ul>
-                  <Button
-                    variant="outline"
-                    className={`w-full border-2 ${
-                      program.color === "terracotta"
-                        ? "border-terracotta-200 text-terracotta-700 hover:bg-terracotta-50"
-                        : "border-forest-200 text-forest-700 hover:bg-forest-50"
-                    } rounded-full font-semibold transition-all duration-300`}
-                  >
-                    Learn More
-                  </Button>
+                  <Link href={program.link}>
+                    <Button
+                      variant="outline"
+                      className={`w-full border-2 ${
+                        program.color === "terracotta"
+                          ? "border-terracotta-200 text-terracotta-700 hover:bg-terracotta-50"
+                          : "border-forest-200 text-forest-700 hover:bg-forest-50"
+                      } rounded-full font-semibold transition-all duration-300`}
+                    >
+                      Learn More
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             )
