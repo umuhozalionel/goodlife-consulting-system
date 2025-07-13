@@ -10,7 +10,7 @@ export default function HeroSection() {
       id="home"
       className="relative min-h-screen flex items-center justify-center overflow-hidden"
     >
-      {/* Background Image with Gradient Overlay */}
+      {/* 🌄 Background Image with Gradient Overlay */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
@@ -21,7 +21,7 @@ export default function HeroSection() {
         }}
       />
 
-      {/* Rwandan Pattern Overlay */}
+      {/* 🧵 Rwandan Pattern Overlay */}
       <div className="absolute inset-0 opacity-10">
         <div
           className="w-full h-full"
@@ -37,7 +37,7 @@ export default function HeroSection() {
         />
       </div>
 
-      {/* Hero Content */}
+      {/* 🧠 Hero Content */}
       <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
         <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
           Empowering Rwanda's
@@ -47,7 +47,7 @@ export default function HeroSection() {
           Professional growth through purpose-driven training.
         </p>
 
-        {/* Action Buttons */}
+        {/* 🚀 Action Buttons */}
         <div className="flex flex-col md:flex-row gap-4 justify-center">
           {/* Register Now */}
           <Link href="/register">
@@ -81,10 +81,21 @@ export default function HeroSection() {
               View Gallery
             </Button>
           </Link>
+
+          {/* Explore Trainings — terracotta theme */}
+          <Link href="/training">
+            <Button
+              size="lg"
+              className="bg-terracotta-600 hover:bg-terracotta-700 text-white rounded-full px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <Pencil className="mr-2 h-5 w-5" />
+              Explore Trainings
+            </Button>
+          </Link>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* ⬇️ Scroll Indicator */}
       <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
         <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
           <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse" />
