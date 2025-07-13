@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Mail, Lock, User2, Loader2, Github } from "lucide-react"
 import { FaGoogle, FaApple } from "react-icons/fa"
 import { useToast } from "@/components/ui/use-toast"
-
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -33,28 +32,35 @@ export default function TrainerAuthPage() {
 
     try {
       const auth = getAuth()
-      let uid = ""
 
       if (mode === "signup") {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-        uid = userCredential.user.uid
+        const uid = userCredential.user.uid
 
         await setDoc(doc(db, "users", uid), {
           name,
           email,
           role: "trainer",
         })
+
+        toast({
+          title: "Trainer Registered",
+          description: `Welcome, ${name || email}!`,
+        })
+
+        setTimeout(() => {
+          router.push("/trainer/dashboard")
+        }, 1500)
       } else {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password)
-        uid = userCredential.user.uid
+        await signInWithEmailAndPassword(auth, email, password)
+
+        toast({
+          title: "Login Successful",
+          description: `Welcome back, ${email}!`,
+        })
+
+        router.push("/trainer/dashboard")
       }
-
-      toast({
-        title: mode === "signup" ? "Account Created" : "Login Successful",
-        description: `Welcome ${mode === "signup" ? "aboard" : "back"}, ${email}`,
-      })
-
-      router.push("/trainer/dashboard")
     } catch (err: any) {
       toast({
         title: "Authentication Error",
@@ -67,7 +73,7 @@ export default function TrainerAuthPage() {
   }
 
   return (
-    <main className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-white via-terracotta-50 to-forest-100">
+    <main className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-terracotta-100 via-white to-emerald-50">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-terracotta-700">
@@ -75,8 +81,8 @@ export default function TrainerAuthPage() {
           </h1>
           <p className="text-sm text-gray-600">
             {mode === "login"
-              ? "Sign in to manage your training dashboard."
-              : "Create your trainer account and lead sessions."}
+              ? "Access your sessions and manage your trainee group."
+              : "Create your account and start shaping powerful trainings."}
           </p>
         </div>
 
@@ -93,7 +99,7 @@ export default function TrainerAuthPage() {
                   onChange={(e) => setName(e.target.value)}
                   required
                   className="pl-10"
-                  placeholder="Jane Trainer"
+                  placeholder="Trainer Name"
                 />
               </div>
             </div>
@@ -141,16 +147,16 @@ export default function TrainerAuthPage() {
           </Button>
 
           <div className="text-right">
-            <button type="button" className="text-sm text-gray-500 underline hover:text-red-600">
+            <button type="button" className="text-sm text-gray-500 underline hover:text-terracotta-700">
               Forgot password?
             </button>
           </div>
         </form>
 
         <div className="text-center space-y-3">
-          <p className="text-sm text-gray-500">Or continue with</p>
+          <p className="text-sm text-gray-600">Or continue with</p>
           <div className="flex justify-center gap-4">
-            <Button variant="ghost" size="icon" className="hover:text-green-600">
+            <Button variant="ghost" size="icon" className="hover:text-terracotta-700">
               <FaGoogle className="h-5 w-5" />
             </Button>
             <Button variant="ghost" size="icon" className="hover:text-black">
@@ -167,9 +173,19 @@ export default function TrainerAuthPage() {
           <button
             type="button"
             onClick={() => setMode(mode === "login" ? "signup" : "login")}
-            className="text-terracotta-600 font-semibold hover:underline ml-1"
+            className="text-terracotta-700 font-semibold hover:underline ml-1"
           >
             {mode === "login" ? "Sign Up" : "Log In"}
+          </button>
+        </p>
+
+        <p className="text-center text-sm text-gray-600 mt-4">
+          <button
+            type="button"
+            onClick={() => router.push("/auth")}
+            className="text-terracotta-700 font-semibold hover:underline"
+          >
+            ← Back to Signing Page
           </button>
         </p>
       </div>

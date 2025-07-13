@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Mail, Lock, User2, Loader2, Github } from "lucide-react"
 import { FaGoogle, FaApple } from "react-icons/fa"
 import { useToast } from "@/components/ui/use-toast"
-
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -33,28 +32,35 @@ export default function TraineeAuthPage() {
 
     try {
       const auth = getAuth()
-      let uid = ""
 
       if (mode === "signup") {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-        uid = userCredential.user.uid
+        const uid = userCredential.user.uid
 
         await setDoc(doc(db, "users", uid), {
           name,
           email,
           role: "trainee",
         })
+
+        toast({
+          title: "Account Created",
+          description: `Welcome aboard, ${name || email}!`,
+        })
+
+        setTimeout(() => {
+          router.push("/dashboard")
+        }, 1500)
       } else {
-        const userCredential = await signInWithEmailAndPassword(auth, email, password)
-        uid = userCredential.user.uid
+        await signInWithEmailAndPassword(auth, email, password)
+
+        toast({
+          title: "Login Successful",
+          description: `Welcome back, ${email}!`,
+        })
+
+        router.push("/dashboard")
       }
-
-      toast({
-        title: mode === "signup" ? "Account Created" : "Login Successful",
-        description: `Welcome ${mode === "signup" ? "aboard" : "back"}, ${email}`,
-      })
-
-      router.push("/dashboard")
     } catch (err: any) {
       toast({
         title: "Authentication Error",
@@ -148,7 +154,7 @@ export default function TraineeAuthPage() {
         </form>
 
         <div className="text-center space-y-3">
-          <p className="text-sm text-gray-500">Or continue with</p>
+          <p className="text-sm text-gray-600">Or continue with</p>
           <div className="flex justify-center gap-4">
             <Button variant="ghost" size="icon" className="hover:text-green-600">
               <FaGoogle className="h-5 w-5" />
@@ -170,6 +176,16 @@ export default function TraineeAuthPage() {
             className="text-green-600 font-semibold hover:underline ml-1"
           >
             {mode === "login" ? "Sign Up" : "Log In"}
+          </button>
+        </p>
+
+        <p className="text-center text-sm text-gray-600 mt-4">
+          <button
+            type="button"
+            onClick={() => router.push("/auth")}
+            className="text-green-600 font-semibold hover:underline"
+          >
+            ← Back to Signing Page
           </button>
         </p>
       </div>
