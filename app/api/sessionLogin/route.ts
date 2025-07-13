@@ -3,7 +3,6 @@ import { getAuth as getAdminAuth } from "firebase-admin/auth"
 import { NextResponse } from "next/server"
 import { cookies } from "next/headers"
 
-// ✅ Initialize Firebase Admin SDK once
 if (getApps().length === 0) {
   initializeApp({
     credential: cert({
@@ -26,16 +25,14 @@ export async function POST(req: Request) {
       )
     }
 
-    // ✅ Verify the token server-side
     const decoded = await adminAuth.verifyIdToken(token)
     console.log("✅ Firebase token verified:", decoded.uid)
 
-    // ✅ Set secure session cookie
     cookies().set({
       name: "firebase_token",
       value: token,
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: false, // for local dev; set to true in production
       path: "/",
       maxAge: 60 * 60 * 24 * 5, // 5 days
       sameSite: "strict",
@@ -45,7 +42,7 @@ export async function POST(req: Request) {
   } catch (err: any) {
     console.error("🔥 Token verification failed:", err.message)
     return NextResponse.json(
-      { status: "error", message: "Invalid or expired token" },
+      { status: "error", message: err.message },
       { status: 403 }
     )
   }

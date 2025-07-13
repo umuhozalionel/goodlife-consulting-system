@@ -9,6 +9,14 @@ import { Mail, Lock, User2, Loader2, Github } from "lucide-react"
 import { FaGoogle, FaApple } from "react-icons/fa"
 import { useToast } from "@/components/ui/use-toast"
 
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth"
+import { doc, setDoc } from "firebase/firestore"
+import { db } from "@/lib/firebase"
+
 export default function TraineeAuthPage() {
   const [mode, setMode] = useState<"login" | "signup">("login")
   const [email, setEmail] = useState("")
@@ -23,36 +31,30 @@ export default function TraineeAuthPage() {
     e.preventDefault()
     setIsLoading(true)
 
-    const endpoint = mode === "login" ? "/api/login" : "/api/signup"
-    const payload =
-      mode === "login"
-        ? { email, password }
-        : { name, email, password, role: "trainee" }
-
     try {
-      const res = await fetch(endpoint, {
-        method: "POST",
-        body: JSON.stringify(payload),
-        headers: { "Content-Type": "application/json" },
+      const auth = getAuth()
+      let uid = ""
+
+      if (mode === "signup") {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password)
+        uid = userCredential.user.uid
+
+        await setDoc(doc(db, "users", uid), {
+          name,
+          email,
+          role: "trainee",
+        })
+      } else {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password)
+        uid = userCredential.user.uid
+      }
+
+      toast({
+        title: mode === "signup" ? "Account Created" : "Login Successful",
+        description: `Welcome ${mode === "signup" ? "aboard" : "back"}, ${email}`,
       })
 
-      const data = await res.json()
-      if (data.status === "success") {
-        toast({
-          title: mode === "login" ? "Login Successful" : "Account Created",
-          description: `Welcome ${mode === "login" ? "back" : "aboard"}, ${data.email}`,
-        })
-
-        const roleRes = await fetch(`/api/role?uid=${data.uid}`)
-        const roleData = await roleRes.json()
-        const userRole = roleData.status === "success" ? roleData.role : "trainee"
-
-        setTimeout(() => {
-          router.push(userRole === "trainer" ? "/admin/dashboard" : "/dashboard")
-        }, 1200)
-      } else {
-        throw new Error(data.message || "Authentication failed")
-      }
+      router.push("/dashboard")
     } catch (err: any) {
       toast({
         title: "Authentication Error",

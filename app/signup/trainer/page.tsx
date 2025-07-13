@@ -9,7 +9,11 @@ import { Mail, Lock, User2, Loader2, Github } from "lucide-react"
 import { FaGoogle, FaApple } from "react-icons/fa"
 import { useToast } from "@/components/ui/use-toast"
 
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth"
 import { doc, setDoc } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 
@@ -30,11 +34,11 @@ export default function TrainerAuthPage() {
     try {
       const auth = getAuth()
       let uid = ""
+
       if (mode === "signup") {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password)
         uid = userCredential.user.uid
 
-        // ✅ Save role to Firestore
         await setDoc(doc(db, "users", uid), {
           name,
           email,
@@ -50,19 +54,7 @@ export default function TrainerAuthPage() {
         description: `Welcome ${mode === "signup" ? "aboard" : "back"}, ${email}`,
       })
 
-      // ✅ Fetch role from backend
-      const roleRes = await fetch(`/api/role?uid=${uid}`)
-      const roleData = await roleRes.json()
-      const role = roleData.status === "success" ? roleData.role : null
-
-      if (role === "trainer") {
-        router.push("/admin/dashboard")
-      } else if (role === "trainee") {
-        router.push("/dashboard")
-      } else {
-        console.warn("Undefined role, sending to auth fallback")
-        router.push("/auth")
-      }
+      router.push("/trainer/dashboard")
     } catch (err: any) {
       toast({
         title: "Authentication Error",

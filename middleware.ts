@@ -6,6 +6,7 @@ export function middleware(req: NextRequest) {
   const isAdminPath = req.nextUrl.pathname.startsWith("/admin")
 
   if (isAdminPath && !token) {
+    console.warn("🚧 No firebase_token cookie — redirecting to /auth")
     return NextResponse.redirect(new URL("/auth", req.url))
   }
 

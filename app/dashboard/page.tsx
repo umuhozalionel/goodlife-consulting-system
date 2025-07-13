@@ -2,67 +2,76 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { getAuth, onAuthStateChanged, User } from "firebase/auth"
-import { doc, getDoc } from "firebase/firestore"
-import { db } from "@/lib/firebase"
+import { onAuthStateChanged, User } from "firebase/auth"
+import { auth } from "@/lib/firebase"
 import { Loader2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
 
 export default function TraineeDashboardPage() {
   const router = useRouter()
   const [user, setUser] = useState<User | null | undefined>(undefined)
-  const [roleLoading, setRoleLoading] = useState(true)
-  const [role, setRole] = useState<string | null>(null)
+  const [routingBlocked, setRoutingBlocked] = useState(true)
 
   useEffect(() => {
-    const unsub = onAuthStateChanged(getAuth(), (u) => {
+    const unsubscribe = onAuthStateChanged(auth, (u) => {
       setUser(u)
     })
-    return () => unsub()
+    return () => unsubscribe()
   }, [])
 
   useEffect(() => {
     if (user === undefined) return
     if (user === null) {
       router.replace("/auth")
-      return
+    } else {
+      setRoutingBlocked(false)
     }
-
-    ;(async () => {
-      try {
-        console.log("🔥 Checking role for UID:", user.uid)
-        const snap = await getDoc(doc(db, "users", user.uid))
-        if (!snap.exists()) throw new Error("User record not found")
-        setRole(snap.data()?.role || null)
-      } catch {
-        router.replace("/auth")
-      } finally {
-        setRoleLoading(false)
-      }
-    })()
   }, [user, router])
 
-  if (user === undefined || roleLoading) {
+  if (user === undefined || routingBlocked) {
     return (
-      <main className="min-h-screen flex items-center justify-center">
+      <main className="min-h-screen flex items-center justify-center bg-white">
         <Loader2 className="h-8 w-8 animate-spin text-emerald-700" />
       </main>
     )
   }
 
-  if (role !== "trainee") {
-    const dest = role === "trainer" ? "/admin/dashboard" : "/auth"
-    router.replace(dest)
-    return null
-  }
-
   return (
     <main className="min-h-screen p-8 bg-emerald-50">
-      <h1 className="text-3xl font-bold text-emerald-700">
-        🧑‍🎓 Trainee Dashboard
-      </h1>
-      <p className="mt-4 text-gray-700">
-        Welcome back! Here are your courses, feedback, and progress stats.
-      </p>
+      <h1 className="text-3xl font-bold text-emerald-700">🧑‍🎓 Trainee Dashboard</h1>
+
+      {user && (
+        <p className="mt-4 text-gray-700">
+          Welcome back, {user.displayName || user.email}! Here's your personal training space.
+        </p>
+      )}
+
+      <section className="mt-8 space-y-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold text-emerald-600">📘 Your Active Courses</h2>
+          <ul className="mt-2 list-disc list-inside text-gray-700">
+            <li>Goal Setting Fundamentals</li>
+            <li>Mindset & Productivity Boost</li>
+          </ul>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold text-emerald-600">📊 Progress Overview</h2>
+          <p className="mt-2 text-gray-700">You're 72% through your current track — keep going strong!</p>
+        </div>
+      </section>
+
+      <div className="mt-10">
+        <Button
+          variant="destructive"
+          onClick={async () => {
+            await auth.signOut()
+            router.replace("/auth")
+          }}
+        >
+          Sign Out
+        </Button>
+      </div>
     </main>
   )
 }

@@ -59,7 +59,7 @@ export default function TrainerDashboardPage() {
     <main className="min-h-screen p-8 bg-terracotta-50">
       <h1 className="text-3xl font-bold text-terracotta-700">🎓 Trainer Panel</h1>
       <p className="mt-4 text-gray-700">
-        Welcome back! Manage your programs, review feedback, and guide your trainees here.
+        Welcome back, Jane! Your programs, feedback, and trainees are ready.
       </p>
 
       <Button

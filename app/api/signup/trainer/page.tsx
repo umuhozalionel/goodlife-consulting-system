@@ -2,7 +2,11 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth"
 import { doc, setDoc } from "firebase/firestore"
 import { db } from "@/lib/firebase"
 import { Input } from "@/components/ui/input"
@@ -32,7 +36,11 @@ export default function TrainerAuthPage() {
       if (mode === "signup") {
         const cred = await createUserWithEmailAndPassword(auth, email, password)
         uid = cred.user.uid
-        await setDoc(doc(db, "users", uid), { name, email, role: "trainer" })
+        await setDoc(doc(db, "users", uid), {
+          name,
+          email,
+          role: "trainer",
+        })
       } else {
         const cred = await signInWithEmailAndPassword(auth, email, password)
         uid = cred.user.uid
@@ -40,21 +48,28 @@ export default function TrainerAuthPage() {
 
       const token = await auth.currentUser!.getIdToken()
 
-      await fetch("/api/sessionLogin", {
+      const res = await fetch("/api/sessionLogin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ token }),
       })
 
-      router.replace("/admin/dashboard")
+      const body = await res.json()
+      if (body.status === "success") {
+        setTimeout(() => {
+          router.replace("/admin/dashboard")
+        }, 300)
+      } else {
+        throw new Error(body.message)
+      }
 
       toast({
-        title: "Welcome!",
-        description: mode === "signup" ? "Trainer account created" : "Trainer logged in",
+        title: mode === "signup" ? "Account Created" : "Login Successful",
+        description: `Welcome ${mode === "signup" ? "aboard" : "back"}, Trainer!`,
       })
     } catch (err: any) {
       toast({
-        title: "Auth Error",
+        title: "Authentication Error",
         description: err.message,
         variant: "destructive",
       })
