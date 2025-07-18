@@ -1,7 +1,7 @@
 "use client"
 
 import Header from "@/components/Header"
-import RegistrationForm from "./registration-form"
+import RegistrationForm from "@/components/registration-form"
 
 export default function RegisterPage() {
   return (
