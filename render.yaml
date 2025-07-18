@@ -3,7 +3,7 @@ services:
     name: goodlife-consulting
     env: node
     plan: free
-    buildCommand: pnpm build
+    buildCommand: corepack enable && pnpm install && pnpm build
     startCommand: pnpm start
     rootDir: .
     envVars:
