@@ -1,4 +1,4 @@
-import Header from "@/components/Header"
+import Header from "../components/Header"
 import HeroSection from "@/components/hero-section"
 import AboutSection from "@/components/about-section"
 import TrainingPrograms from "@/components/training-programs"
