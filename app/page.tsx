@@ -18,8 +18,7 @@ export default function Home() {
       <AboutSection />
       <TrainingPrograms />
       <CalendarSection />
-      <LifeAtGoodlife /> {/* 💡 New section here */}
-      <WhyChooseUs />
+      <LifeAtGoodlife />
       <Testimonials />
       <ContactSection />
       <Footer />
