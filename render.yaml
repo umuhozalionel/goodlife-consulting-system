@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: goodlife-consulting
+    env: node
+    plan: free
+    buildCommand: pnpm build
+    startCommand: pnpm start
+    rootDir: .
+    envVars:
+      - key: FIREBASE_PROJECT_ID
+        value: goodlife-consulting
+      - key: FIREBASE_CLIENT_EMAIL
+        value: firebase-adminsdk-fbsvc@goodlife-consulting.iam.gserviceaccount.com
+      - key: FIREBASE_PRIVATE_KEY
+        value: "-----BEGIN PRIVATE KEY-----\\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC+Hw1ZLIrObwWu\\n9/KjFoGdBXObFacOqg6IcObgn58DCSXWBIReVKXF0y+EoFVaY003qRypgmQP47qD\\ni+ej6lp8Ls1r4ytZHgEqyYU6Dp60/0k+8arBgPGjEbYBm7h3Jmzou0bc4OA4iFDm\\nfEpFvwqkEDGjXUBToBhBsj8Ig4tITKpBnnqGJKt98I0zMUwHUPKEfU2gn9GSKIPI\\nGPfVyNYrI0FM77OZJei79cNVxOGnpKnjSm8PEu+udmrHmXk2OZWeX9fK4pwNxy6z\\nRQGuSyJDUQX7KBB+DTvEonHsL60bPdrPPEo2YLGyeRDzkOY2LziX5J1M7Be7nIBL\\nvkZra1bVAgMBAAECggEAJe7kJuqwN0gHhkWKb+fJrJ6t1j+XuWFMzQRZzG+MtnpY\\nxj7YeknBWZstW/TxkrtFaNmhEmElvdXeHOkJKrdTnntoGSKWP42xBex3XIIWQF6/\\nKoPlYf5sN/EMs31ybLOJ/1V+agukMSNhoNsjpo7bfKiOft3YO9cxf8oksXotjBsH\\nxBqpSVrfSW9iOR7038Ud2w0fXt4VHLFlYFzt3lJB2HqlS6PAZvzLgeNTg8ESH1z0\\ncTwfcqohxadDq865k/JFv0ENe4GYjepQ4VVDXXBEAGnkjsplo4MRQbjGaZqqum0o\\ntQ5G4FCU/Q/fcMSYYq2grxaigGBuTGWvQ9FPXuQ4cQKBgQDc6uDdaRKaz2czZeMP\\n9iUHHwnvB2gU87JXl45lPYxbEHqKl5c2SMfUqVGurQLRKgbGwPXENfLjqXKXWAtg\\npKjUNCuzcXJZ33xCkF1e5MCXmYbtL451Rghx8C/a3mqfUo3bKViN2u8ykAdEXFDg\\nMcoi1WZBim6V2GBldF2CYoTkbwKBgQDcUDF8xUfGM50XimeRh54k36LveY0syO+D\\nySAGgp6uHA8cO8ktxjPl5RYnKKEO/okPal289jnhlDnpxc6s/qf7GbkZsCW0cl4N\\n0S8e26Nqnt34DDo28V40eX0AukTF83Kek6m1VjUDwwtbpzmUUr7DmNhiq6TsiBSk\\ne74M8FGC+wKBgQDSbx3xajQhqSy55fTLcIFG7kcNHHYFdzlLfH9UarN2zxSbTdjp\\nCZzoMr0u8Xi8exbnXkj9NRJ/0BnqliCIV3DGakeyb38ootx/n3qBeM8H2WOQLXu6\\ntBI5TjyXdMQFraKYwCKtRX4SIOX7NSCI3oSYd8Qm7FF4hRsVqSmlmGjUGwKBgAOy\\npOH/PbEp9J0Miah7qj/cMRPr6l6yELMZkRwK3Tb26ZoDtuC5zu0w5ypJGEr0IsDL\\nfD9LsrUCk+ZEl693psIkMGMp/bgFo2Z/+FaAQUHs4LTlH6UEcBxZXavBdJ4N9AKN\\nX+/XPpSNlYc4S1MeAG2wBxHA58fAkPghy5LUBco5AoGAGtHxPxleN5UYo9RrE8vJ\\n1AM/vyP+W41jY0XKXWaaIuacD9DJ/Z3RVqC1ekwpVUlSiAsjBaKbX6I04xkOWKQX\\nA6DOSJa0TlxQQbxmLuN8TaTdXa1JGjgszeS1dL2V7eRQAs61G1TF+as03sXOkNi+\\nykzWu//940pR0zzczTVGK+g=\\n-----END PRIVATE KEY-----\\n"
