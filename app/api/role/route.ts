@@ -3,6 +3,13 @@ import { cert, getApps, initializeApp } from "firebase-admin/app"
 import { getFirestore } from "firebase-admin/firestore"
 import { NextResponse } from "next/server"
 
+// ✅ Debug log to verify environment variables
+console.log("🔥 Firebase ENV Vars:", {
+  project_id: process.env.FIREBASE_PROJECT_ID,
+  client_email: process.env.FIREBASE_CLIENT_EMAIL,
+  private_key: process.env.FIREBASE_PRIVATE_KEY?.slice(0, 30),
+})
+
 // ✅ Initialize Firebase Admin SDK only once
 if (getApps().length === 0) {
   initializeApp({
