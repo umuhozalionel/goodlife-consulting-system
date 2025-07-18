@@ -17,7 +17,7 @@ export default function HeroSection() {
           backgroundImage: `linear-gradient(
             rgba(0, 0, 0, 0.4),
             rgba(0, 0, 0, 0.4)
-          ), url('/Images/landing-header.jpg')`,
+          ), url('/images/landing-header.jpg')`,
         }}
       />
 
