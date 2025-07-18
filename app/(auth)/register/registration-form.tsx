@@ -1,186 +1,279 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { CheckCircle, Send } from "lucide-react"
+import {
+  User,
+  Mail,
+  Phone,
+  Globe,
+  GraduationCap,
+  Calendar,
+  MessageSquare,
+} from "lucide-react"
 
-export default function RegistrationForm() {
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+const countries = [
+  { code: "RW", name: "Rwanda", placeholder: "+250 7xx xxx xxx" },
+  { code: "KE", name: "Kenya", placeholder: "+254 xxx xxx xxx" },
+  { code: "UG", name: "Uganda", placeholder: "+256 xxx xxx xxx" },
+  { code: "TZ", name: "Tanzania", placeholder: "+255 xxx xxx xxx" },
+  { code: "US", name: "United States", placeholder: "+1 (xxx) xxx-xxxx" },
+  { code: "UK", name: "United Kingdom", placeholder: "+44 xxxx xxxxxx" },
+  { code: "CA", name: "Canada", placeholder: "+1 (xxx) xxx-xxxx" },
+  { code: "AU", name: "Australia", placeholder: "+61 xxx xxx xxx" },
+]
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true)
+const trainingPrograms = [
+  "Leadership Development",
+  "Project Management",
+  "Digital Marketing",
+  "Financial Management",
+  "Human Resources",
+  "Strategic Planning",
+  "Data Analytics",
+  "Customer Service Excellence",
+]
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+export default function Component() {
+  const [selectedCountry, setSelectedCountry] = useState("")
+  const [phonePlaceholder, setPhonePlaceholder] = useState("Select country first")
+  const [selectedProgram, setSelectedProgram] = useState("")
 
-    setIsLoading(false)
-    setIsSubmitted(true)
+  const handleCountryChange = (countryCode: string) => {
+    setSelectedCountry(countryCode)
+    const country = countries.find((c) => c.code === countryCode)
+    setPhonePlaceholder(country?.placeholder || "Phone number")
   }
 
-  if (isSubmitted) {
-    return (
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <Card className="border-0 shadow-xl">
-              <CardContent className="p-12">
-                <div className="w-20 h-20 bg-gradient-to-br from-forest-500 to-terracotta-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <CheckCircle className="h-10 w-10 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">Registration Successful!</h3>
-                <p className="text-gray-600 mb-6">
-                  Thank you for your interest in our training programs. We'll contact you within 24 hours to confirm
-                  your registration and provide further details.
-                </p>
-                <Button
-                  onClick={() => setIsSubmitted(false)}
-                  variant="outline"
-                  className="border-terracotta-200 text-terracotta-700 hover:bg-terracotta-50"
-                >
-                  Register Another Person
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-    )
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const data = {
+      fullName: formData.get("fullName"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      nationality: formData.get("nationality"),
+      country: selectedCountry,
+      program: formData.get("program"),
+      preferredDate: formData.get("preferredDate"),
+      message: formData.get("message"),
+    }
+    console.log("Form submitted with data:", data)
   }
 
   return (
-    <section className="py-20 bg-white">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Ready to Join?</h2>
-          <div className="w-24 h-1 bg-gradient-to-r from-terracotta-500 to-forest-500 mx-auto rounded-full mb-8" />
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            Take the first step towards your professional development. Register for our training programs today.
-          </p>
-        </div>
+    <div className="min-h-screen bg-fixed bg-center bg-cover bg-no-repeat bg-[url('/images/4858838.jpg')]">
+      <div className="min-h-screen backdrop-blur-sm flex items-start justify-center py-12 px-6">
+        <div className="w-full max-w-2xl">
 
-        <div className="max-w-2xl mx-auto">
-          <Card className="border-0 shadow-xl">
-            <CardHeader className="text-center pb-6">
-              <CardTitle className="text-2xl font-bold text-gray-900">Registration Form</CardTitle>
+          {/* Hero Section Styled Like Footer */}
+          <Card className="bg-gradient-to-r from-emerald-50 to-amber-50 border border-emerald-100 shadow-sm mb-12">
+            <CardContent className="text-center py-10 px-6">
+              <h1 className="text-4xl md:text-6xl font-bold text-emerald-800 mb-4">
+                Goodlife Consulting Partners
+              </h1>
+              <p className="text-xl md:text-2xl text-amber-700 mb-2">
+                Professional Training Programs Registration
+              </p>
+              <p className="text-lg text-emerald-700">
+                Invest in your future with our comprehensive training solutions
+              </p>
+            </CardContent>
+          </Card>
+
+          {/* Registration Form */}
+          <Card className="shadow-2xl border-0 bg-white/95 backdrop-blur">
+            <CardHeader className="text-center pb-8">
+              <CardTitle className="text-3xl font-bold text-emerald-800 mb-2">
+                🎓 Register for Training
+              </CardTitle>
+              <CardDescription className="text-lg text-amber-700">
+                Complete the form below to secure your spot in our professional training programs
+              </CardDescription>
             </CardHeader>
-            <CardContent className="p-8">
+
+            <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-                      Full Name *
-                    </Label>
-                    <Input
-                      id="name"
-                      name="name"
-                      required
-                      className="rounded-lg border-gray-300 focus:border-terracotta-500 focus:ring-terracotta-500"
-                      placeholder="Enter your full name"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-                      Email Address *
-                    </Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      required
-                      className="rounded-lg border-gray-300 focus:border-terracotta-500 focus:ring-terracotta-500"
-                      placeholder="Enter your email"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
-                      Phone Number *
-                    </Label>
-                    <Input
-                      id="phone"
-                      name="phone"
-                      type="tel"
-                      required
-                      className="rounded-lg border-gray-300 focus:border-terracotta-500 focus:ring-terracotta-500"
-                      placeholder="+250 xxx xxx xxx"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="program" className="text-sm font-medium text-gray-700">
-                      Training Program *
-                    </Label>
-                    <Select name="program" required>
-                      <SelectTrigger className="rounded-lg border-gray-300 focus:border-terracotta-500 focus:ring-terracotta-500">
-                        <SelectValue placeholder="Select a program" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="leadership">Leadership & Management</SelectItem>
-                        <SelectItem value="digital">Digital & Innovation</SelectItem>
-                        <SelectItem value="communication">Communication & Personal Growth</SelectItem>
-                        <SelectItem value="languages">Languages & Social Impact</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-
+                {/* Full Name */}
                 <div className="space-y-2">
-                  <Label htmlFor="date" className="text-sm font-medium text-gray-700">
-                    Preferred Date
+                  <Label htmlFor="fullName" className="text-emerald-800 font-medium flex items-center gap-2">
+                    <User className="w-4 h-4" />
+                    Full Name
                   </Label>
                   <Input
-                    id="date"
-                    name="date"
-                    type="date"
-                    className="rounded-lg border-gray-300 focus:border-terracotta-500 focus:ring-terracotta-500"
+                    id="fullName"
+                    name="fullName"
+                    placeholder="Enter your full name"
+                    required
+                    className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
                   />
                 </div>
 
+                {/* Email */}
                 <div className="space-y-2">
-                  <Label htmlFor="message" className="text-sm font-medium text-gray-700">
-                    Additional Message
+                  <Label htmlFor="email" className="text-emerald-800 font-medium flex items-center gap-2">
+                    <Mail className="w-4 h-4" />
+                    Email Address
+                  </Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="your.email@example.com"
+                    required
+                    className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
+                  />
+                </div>
+
+                {/* Country + Nationality */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="country" className="text-emerald-800 font-medium flex items-center gap-2">
+                      <Globe className="w-4 h-4" />
+                      Country
+                    </Label>
+                    <Select onValueChange={handleCountryChange} value={selectedCountry} name="country" required>
+                      <SelectTrigger className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500">
+                        <SelectValue placeholder="Select your country" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {countries.map((country) => (
+                          <SelectItem key={country.code} value={country.code}>
+                            {country.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="nationality" className="text-emerald-800 font-medium flex items-center gap-2">
+                      🌍 Nationality
+                    </Label>
+                    <Input
+                      id="nationality"
+                      name="nationality"
+                      placeholder="Your nationality"
+                      required
+                      className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
+                    />
+                  </div>
+                </div>
+
+                {/* Phone */}
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-emerald-800 font-medium flex items-center gap-2">
+                    <Phone className="w-4 h-4" />
+                    Phone Number
+                  </Label>
+                  <Input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    placeholder={phonePlaceholder}
+                    required
+                    className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
+                  />
+                </div>
+
+                {/* Program */}
+                <div className="space-y-2">
+                  <Label htmlFor="program" className="text-emerald-800 font-medium flex items-center gap-2">
+                    <GraduationCap className="w-4 h-4" />
+                    Selected Training Program
+                  </Label>
+                  <Select onValueChange={setSelectedProgram} value={selectedProgram} name="program" required>
+                    <SelectTrigger className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500">
+                      <SelectValue placeholder="Choose your training program" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {trainingPrograms.map((program) => (
+                        <SelectItem
+                          key={program}
+                          value={program.toLowerCase().replace(/\s+/g, "-")}
+                        >
+                          {program}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Preferred Date */}
+                <div className="space-y-2">
+                  <Label htmlFor="preferredDate" className="text-emerald-800 font-medium flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />📅 Preferred Date
+                  </Label>
+                                    <Input
+                    id="preferredDate"
+                    name="preferredDate"
+                    type="date"
+                    required
+                    className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
+                  />
+                </div>
+
+                {/* Message */}
+                <div className="space-y-2">
+                  <Label htmlFor="message" className="text-emerald-800 font-medium flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4" />
+                    Message or Additional Notes
                   </Label>
                   <Textarea
                     id="message"
                     name="message"
+                    placeholder="Any specific requirements, questions, or additional information..."
+                    className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500 min-h-[100px]"
                     rows={4}
-                    className="rounded-lg border-gray-300 focus:border-terracotta-500 focus:ring-terracotta-500"
-                    placeholder="Tell us about your goals or any specific requirements..."
                   />
                 </div>
 
+                {/* Submit Button */}
                 <Button
                   type="submit"
-                  disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-terracotta-600 to-forest-600 hover:from-terracotta-700 hover:to-forest-700 text-white rounded-full py-3 text-lg font-semibold transition-all duration-300"
+                  className="w-full bg-gradient-to-r from-emerald-600 to-amber-600 hover:from-emerald-700 hover:to-amber-700 text-white font-semibold py-3 rounded-xl text-lg transition-all duration-300 transform hover:scale-[1.02] shadow-lg"
                 >
-                  {isLoading ? (
-                    <div className="flex items-center">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2" />
-                      Submitting...
-                    </div>
-                  ) : (
-                    <div className="flex items-center">
-                      <Send className="mr-2 h-5 w-5" />
-                      Submit Registration
-                    </div>
-                  )}
+                  Submit Registration
                 </Button>
               </form>
             </CardContent>
           </Card>
+
+          {/* Contact Information */}
+          <div className="mt-12 text-center">
+            <Card className="bg-gradient-to-r from-emerald-50 to-amber-50 border-emerald-200">
+              <CardContent className="pt-6">
+                <h3 className="text-xl font-semibold text-emerald-800 mb-4">📞 Need Assistance?</h3>
+                <p className="text-amber-700 mb-2">
+                  For help with registration or program inquiries, reach our team at:
+                </p>
+                <div className="space-y-2">
+                  <p className="font-medium text-emerald-700">📧 gcp@goodlifeconsultingpartners.org</p>
+                  <p className="font-medium text-emerald-700">📱 +250 790 363 700</p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
         </div>
       </div>
-    </section>
+    </div>
   )
 }
