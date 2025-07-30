@@ -1,25 +1,24 @@
 "use client"
 
-import type React from "react"
 import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import { db } from "@/firebase"
+import { collection, addDoc } from "firebase/firestore"
 import {
+  Button,
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import {
+  Input,
+  Label,
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+  Textarea,
+} from "@/components/ui" // Adjust path as needed
 import {
   User,
   Mail,
@@ -29,9 +28,6 @@ import {
   Calendar,
   MessageSquare,
 } from "lucide-react"
-
-import { db } from "@/firebase"
-import { collection, addDoc } from "firebase/firestore"
 
 const countries = [
   { code: "RW", name: "Rwanda", placeholder: "+250 7xx xxx xxx" },
@@ -82,6 +78,8 @@ export default function Component() {
       submittedAt: new Date(),
     }
 
+    console.log("Submitting data:", data)
+
     try {
       await addDoc(collection(db, "registrations"), data)
       alert("✅ Registration submitted successfully!")
@@ -95,7 +93,6 @@ export default function Component() {
     <div className="min-h-screen bg-fixed bg-center bg-cover bg-no-repeat bg-[url('/images/4858838.jpg')]">
       <div className="min-h-screen backdrop-blur-sm flex items-start justify-center py-12 px-6">
         <div className="w-full max-w-2xl">
-
           <Card className="bg-gradient-to-r from-emerald-50 to-amber-50 border border-emerald-100 shadow-sm mb-12">
             <CardContent className="text-center py-10 px-6">
               <h1 className="text-4xl md:text-6xl font-bold text-emerald-800 mb-4">
@@ -128,13 +125,7 @@ export default function Component() {
                     <User className="w-4 h-4" />
                     Full Name
                   </Label>
-                  <Input
-                    id="fullName"
-                    name="fullName"
-                    placeholder="Enter your full name"
-                    required
-                    className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
-                  />
+                  <Input id="fullName" name="fullName" placeholder="Enter your full name" required />
                 </div>
 
                 {/* Email */}
@@ -143,14 +134,7 @@ export default function Component() {
                     <Mail className="w-4 h-4" />
                     Email Address
                   </Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="your.email@example.com"
-                    required
-                    className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
-                  />
+                  <Input id="email" name="email" type="email" placeholder="your.email@example.com" required />
                 </div>
 
                 {/* Country + Nationality */}
@@ -160,8 +144,8 @@ export default function Component() {
                       <Globe className="w-4 h-4" />
                       Country
                     </Label>
-                    <Select onValueChange={handleCountryChange} value={selectedCountry} name="country" required>
-                      <SelectTrigger className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500">
+                    <Select onValueChange={handleCountryChange} value={selectedCountry} required>
+                      <SelectTrigger>
                         <SelectValue placeholder="Select your country" />
                       </SelectTrigger>
                       <SelectContent>
@@ -177,13 +161,7 @@ export default function Component() {
                     <Label htmlFor="nationality" className="text-emerald-800 font-medium flex items-center gap-2">
                       🌍 Nationality
                     </Label>
-                    <Input
-                      id="nationality"
-                      name="nationality"
-                      placeholder="Your nationality"
-                      required
-                      className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
-                    />
+                    <Input id="nationality" name="nationality" placeholder="Your nationality" required />
                   </div>
                 </div>
 
@@ -193,14 +171,7 @@ export default function Component() {
                     <Phone className="w-4 h-4" />
                     Phone Number
                   </Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    placeholder={phonePlaceholder}
-                    required
-                    className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
-                  />
+                  <Input id="phone" name="phone" type="tel" placeholder={phonePlaceholder} required />
                 </div>
 
                 {/* Program */}
@@ -209,8 +180,8 @@ export default function Component() {
                     <GraduationCap className="w-4 h-4" />
                     Selected Training Program
                   </Label>
-                  <Select onValueChange={setSelectedProgram} value={selectedProgram} name="program" required>
-                    <SelectTrigger className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500">
+                  <Select onValueChange={setSelectedProgram} value={selectedProgram} required>
+                    <SelectTrigger>
                       <SelectValue placeholder="Choose your training program" />
                     </SelectTrigger>
                     <SelectContent>
@@ -229,13 +200,7 @@ export default function Component() {
                     <Calendar className="w-4 h-4" />
                     Preferred Date
                   </Label>
-                  <Input
-                    id="preferredDate"
-                    name="preferredDate"
-                    type="date"
-                    required
-                    className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
-                  />
+                  <Input id="preferredDate" name="preferredDate" type="date" required />
                 </div>
 
                 {/* Message */}
@@ -249,18 +214,16 @@ export default function Component() {
                     name="message"
                     placeholder="Any additional notes or questions?"
                     rows={4}
-                    className="rounded-xl border-emerald-200 focus:border-emerald-500 focus:ring-emerald-500"
                   />
                 </div>
 
                 {/* Submit Button */}
                 <div className="pt-6">
-                  <Button
+                  <button
                     type="submit"
                     className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 px-6 rounded-xl"
                   >
-                    Submit Registration
-                  </Button>
+                    Submit Registration                  </button>
                 </div>
               </form>
             </CardContent>
