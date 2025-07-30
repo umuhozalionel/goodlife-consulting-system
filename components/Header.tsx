@@ -211,33 +211,45 @@ export default function Header() {
         </div>
 
         {/* Auth Modal */}
-        {authModalOpen && (
-          <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-[100]">
-            <div className="bg-[url('/images/Auth.jpg')] bg-cover bg-center p-1 rounded-lg shadow-lg w-full max-w-xs">
-              <div className="bg-white/70 backdrop-blur-md p-6 rounded-lg text-center space-y-3">
-                <h2 className="text-lg font-semibold">Continue with</h2>
-                <Button
-                  onClick={() => handleAuthChoice("/auth?mode=signup")}
-                  className="w-full"
-                >
-                  Sign Up
-                </Button>
-                <Button
-                  onClick={() => handleAuthChoice("/auth?mode=signin")}
-                  className="w-full"
-                >
-                  Sign In
-                </Button>
-                <Button
-                  onClick={() => handleAuthChoice("/")}
-                  className="w-full mt-2 bg-gray-200 hover:bg-gray-300 text-gray-800"
-                >
-                  Back Home
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
+{authModalOpen && (
+  <div className="fixed inset-0 z-[100] flex items-center justify-center">
+    {/* 1. Full-screen background image */}
+    <img
+      src="/images/Auth.jpg"
+      alt="Auth background"
+      className="absolute inset-0 w-full h-full object-cover"
+    />
+
+    {/* 2. Dark blur overlay over the entire screen */}
+    <div className="absolute inset-0 bg-black/25 backdrop-blur-sm" />
+
+    {/* 3. Panel */}
+    <div className="relative bg-white/70 backdrop-blur-md p-6 rounded-lg shadow-lg w-full max-w-md space-y-4 text-center">
+      <h2 className="text-xl font-semibold">Continue with</h2>
+
+      <Button
+        onClick={() => handleAuthChoice("/auth?mode=signup")}
+        className="w-full"
+      >
+        Sign Up
+      </Button>
+
+      <Button
+        onClick={() => handleAuthChoice("/auth?mode=signin")}
+        className="w-full"
+      >
+        Sign In
+      </Button>
+
+      <Button
+        onClick={() => handleAuthChoice("/")}
+        className="w-full mt-2 bg-gray-200 hover:bg-gray-300 text-gray-800"
+      >
+        Back Home
+      </Button>
+    </div>
+  </div>
+)}
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
