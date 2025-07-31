@@ -1,16 +1,16 @@
-import type { Config } from "tailwindcss";
-import colors from "tailwindcss/colors";
+// tailwind.config.ts
+import type { Config } from "tailwindcss"
+import tailwindColors from "tailwindcss/colors"
+import customColors from "./src/theme/colors"
 
 const config: Config = {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./src/**/*.{ts,tsx}",
-    "*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  prefix: "",
   theme: {
     container: {
       center: true,
@@ -19,24 +19,33 @@ const config: Config = {
         "2xl": "1400px",
       },
     },
+    fontFamily: {
+      sans: ['"InterVariable"', "Arial", "Helvetica", "sans-serif"],
+    },
     extend: {
       colors: {
-        emerald: colors.emerald,
-        amber: colors.amber,
+        // Built-in Tailwind colors you need
+        emerald: tailwindColors.emerald,
+        amber: tailwindColors.amber,
 
+        // Your custom colors from ./src/theme/colors.ts
+        ...customColors,
+
+        // Override default Tailwind UI kit behavior: make "primary" charcoal
+        primary: {
+          DEFAULT: customColors.charcoal,
+          foreground: "#ffffff",
+        },
+        secondary: {
+          DEFAULT: tailwindColors.gray[700],
+          foreground: "#ffffff",
+        },
+        // CSS-variable based colors used by UI libraries (shadcn/daisyui/etc.)
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -56,30 +65,6 @@ const config: Config = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
-        },
-        terracotta: {
-          50: "#fdf4f0",
-          100: "#fbe6d9",
-          200: "#f6cab3",
-          300: "#f0a583",
-          400: "#e87851",
-          500: "#d2691e",
-          600: "#b85a1a",
-          700: "#9a4a16",
-          800: "#7d3d17",
-          900: "#663315",
-        },
-        forest: {
-          50: "#f0f9f0",
-          100: "#dcf2dc",
-          200: "#bce5bc",
-          300: "#8dd18d",
-          400: "#56b556",
-          500: "#228b22",
-          600: "#1e7a1e",
-          700: "#1a651a",
-          800: "#185118",
-          900: "#164316",
         },
       },
       borderRadius: {
@@ -104,6 +89,6 @@ const config: Config = {
     },
   },
   plugins: [require("tailwindcss-animate")],
-};
+}
 
-export default config;
+export default config

@@ -29,7 +29,7 @@ import { languages } from "@/lib/i18n";
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
-  const isRegisterPage = pathname === "/register";
+  const isRegisterPage = pathname === "signup/trainee";
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -100,7 +100,7 @@ export default function Header() {
                 <NavigationMenuContent>
                   <div className="w-64 p-4 space-y-2">
                     <Link
-                      href="/register"
+                      href="signup/trainee"
                       className="block px-3 py-2 text-sm text-white font-semibold bg-green-700 hover:bg-green-800 rounded-md text-center"
                     >
                       📝 Register

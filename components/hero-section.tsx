@@ -50,7 +50,7 @@ export default function HeroSection() {
         {/* 🚀 Action Buttons */}
         <div className="flex flex-col md:flex-row gap-4 justify-center">
           {/* Register Now */}
-          <Link href="/register">
+          <Link href="signup/trainee">
             <Button
               size="lg"
               className="bg-green-700 hover:bg-green-800 text-white rounded-full px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
