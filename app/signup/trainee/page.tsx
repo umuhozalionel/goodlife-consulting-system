@@ -1,55 +1,93 @@
-// app/trainee-auth/page.tsx
+// app/signup/trainee/page.tsx
 "use client";
 
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
-import { db } from "@/lib/firebase";
-import { doc, setDoc, collection, addDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+import { collection, addDoc, setDoc, doc } from "firebase/firestore";
 import { Loader2 } from "lucide-react";
 import { FaGoogle, FaApple } from "react-icons/fa";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { useToast } from "@/components/ui/use-toast";
 
 const countries = [
   { code: "RW", name: "Rwanda", placeholder: "+250 7xx xxx xxx" },
-  /* …other countries… */
+  { code: "KE", name: "Kenya", placeholder: "+254 xxx xxx xxx" },
+  { code: "UG", name: "Uganda", placeholder: "+256 xxx xxx xxx" },
+  { code: "TZ", name: "Tanzania", placeholder: "+255 xxx xxx xxx" },
+  { code: "US", name: "United States", placeholder: "+1 (xxx) xxx-xxxx" },
+  { code: "UK", name: "United Kingdom", placeholder: "+44 xxxx xxxxxx" },
+  { code: "CA", name: "Canada", placeholder: "+1 (xxx) xxx-xxxx" },
+  { code: "AU", name: "Australia", placeholder: "+61 xxx xxx xxx" },
 ];
-const programs = [/* …your programs… */];
-const sessions = [/* …your sessions… */];
+
+const trainingPrograms = [
+  "Leadership Development",
+  "Project Management",
+  "Digital Marketing",
+  "Financial Management",
+  "Human Resources",
+  "Strategic Planning",
+  "Data Analytics",
+  "Customer Service Excellence",
+];
+
 const genders = ["Male", "Female", "Other"];
+
+const sessions = [
+  "Spring 2025",
+  "Summer 2025",
+  "Fall 2025",
+  "Winter 2025",
+  "Spring 2026",
+];
 
 export default function TraineeAuthPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const auth = getAuth();
 
-  const [mode, setMode] = useState<"signup"|"signin">("signup");
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Common fields
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  // Signup-only fields
+  const [mode, setMode] = useState<"signup" | "signin">("signup");
   const [fullName, setFullName] = useState("");
   const [gender, setGender] = useState("");
-  const [country, setCountry] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [phonePlaceholder, setPhonePlaceholder] = useState(
+    "Select country first"
+  );
   const [phone, setPhone] = useState("");
-  const [phonePlaceholder, setPhonePlaceholder] = useState("Select country first");
-  const [program, setProgram] = useState("");
-  const [session, setSession] = useState("");
+  const [selectedProgram, setSelectedProgram] = useState("");
+  const [preferredSession, setPreferredSession] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCountryChange = (code: string) => {
-    setCountry(code);
-    const c = countries.find((c) => c.code === code);
-    setPhonePlaceholder(c?.placeholder ?? "");
+    setSelectedCountry(code);
+    const countryObj = countries.find((c) => c.code === code);
+    setPhonePlaceholder(countryObj?.placeholder || "");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,21 +96,68 @@ export default function TraineeAuthPage() {
 
     try {
       if (mode === "signup") {
-        const { user } = await createUserWithEmailAndPassword(auth, email, password);
-        const profile = { fullName, gender, email, country, phone, program, session, role: "trainee", createdAt: new Date() };
+        const result = await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+        const uid = result.user.uid;
 
-        await setDoc(doc(db, "users", user.uid), profile);
-        await addDoc(collection(db, "registrations"), profile);
+        const userData = {
+          fullName,
+          gender,
+          email,
+          phone,
+          country: selectedCountry,
+          program: selectedProgram,
+          session: preferredSession,
+          role: "trainee",
+          createdAt: new Date(),
+        };
 
-        toast({ title: "Sign Up Complete", description: `Welcome aboard, ${fullName}!` });
+        await setDoc(doc(db, "users", uid), userData);
+        await addDoc(collection(db, "registrations"), userData);
+
+        toast({
+          title: "Sign Up Complete",
+          description: `Welcome, ${fullName}!`,
+        });
       } else {
         await signInWithEmailAndPassword(auth, email, password);
-        toast({ title: "Sign In Successful", description: `Welcome back!` });
+        toast({
+          title: "Sign In Successful",
+          description: `Welcome back, ${email}!`,
+        });
       }
 
       setTimeout(() => router.push("/dashboard"), 1200);
     } catch (err: any) {
-      toast({ title: "Error", description: err.message, variant: "destructive" });
+      toast({
+        title: "Error",
+        description: err.message,
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      toast({
+        title: "Google Sign In Successful",
+        description: "Redirecting to dashboard…",
+      });
+      setTimeout(() => router.push("/dashboard"), 800);
+    } catch (err: any) {
+      toast({
+        title: "Google Sign In Error",
+        description: err.message,
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -80,118 +165,239 @@ export default function TraineeAuthPage() {
 
   return (
     <main className="min-h-screen flex">
-      {/* Left: form */}
-      <div className="w-full md:w-1/2 px-6 py-12 flex items-center">
+      {/* Left side: form */}
+      <div className="w-full md:w-1/2 px-6 py-12 flex items-center overflow-y-auto">
         <div className="w-full max-w-md mx-auto space-y-8">
-          {/* Hero header */}
-          <Card className="bg-gradient-to-r from-emerald-50 to-amber-50 border-emerald-100 shadow-sm">
-            <CardContent className="text-center py-8">
-              <h1 className="text-3xl font-bold text-emerald-800">Goodlife Consulting</h1>
-              <p className="text-lg text-amber-700">Professional Training Registration</p>
-              <p className="text-sm text-emerald-700">Invest in your future</p>
+          {/* Hero */}
+          <Card className="bg-gradient-to-r from-emerald-50 to-amber-50 border border-emerald-100 shadow-sm mb-8">
+            <CardContent className="text-center py-8 px-4">
+              <h1 className="text-3xl font-bold text-emerald-800 mb-2">
+                Goodlife Consulting Partners
+              </h1>
+              <p className="text-lg text-amber-700 mb-1">
+                Professional Training Programs Registration
+              </p>
+              <p className="text-sm text-emerald-700">
+                Invest in your future with our comprehensive training solutions
+              </p>
             </CardContent>
           </Card>
 
-          {/* Mode toggle */}
+          {/* Toggle */}
           <div className="flex justify-center space-x-4">
-            <Button size="sm" variant={mode==="signup"?"default":"ghost"} onClick={() => setMode("signup")}>Sign Up</Button>
-            <Button size="sm" variant={mode==="signin"?"default":"ghost"} onClick={() => setMode("signin")}>Sign In</Button>
+            <Button
+              variant={mode === "signup" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setMode("signup")}
+            >
+              Sign Up
+            </Button>
+            <Button
+              variant={mode === "signin" ? "default" : "ghost"}
+              size="sm"
+              onClick={() => setMode("signin")}
+            >
+              Sign In
+            </Button>
           </div>
 
-          {/* Form card */}
+          {/* Form Card */}
           <Card>
             <CardHeader className="text-center">
               <CardTitle className="text-2xl text-emerald-800 font-bold">
                 {mode === "signup" ? "Trainee Sign Up" : "Trainee Sign In"}
               </CardTitle>
               <CardDescription className="text-amber-700">
-                {mode === "signup" ? "Fill out to join our training." : "Sign in to continue."}
+                {mode === "signup"
+                  ? "Fill out the form to join our training."
+                  : "Sign in to continue to your dashboard."}
               </CardDescription>
             </CardHeader>
-
             <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form
+                onSubmit={handleSubmit}
+                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+              >
                 {mode === "signup" && (
                   <>
-                    <div>
+                    <div className="col-span-1">
                       <Label htmlFor="fullName">Full Name</Label>
-                      <Input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} required placeholder="John Doe" />
+                      <Input
+                        id="fullName"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        required
+                        placeholder="John Doe"
+                      />
                     </div>
 
-                    <div>
+                    <div className="col-span-1">
                       <Label htmlFor="gender">Gender</Label>
                       <Select onValueChange={setGender} value={gender}>
-                        <SelectTrigger><SelectValue placeholder="Select gender" /></SelectTrigger>
-                        <SelectContent>{genders.map(g => <SelectItem key={g} value={g}>{g}</SelectItem>)}</SelectContent>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select gender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {genders.map((g) => (
+                            <SelectItem key={g} value={g}>
+                              {g}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
                       </Select>
                     </div>
 
-                    <div>
+                    <div className="col-span-1">
                       <Label htmlFor="country">Country</Label>
-                      <Select onValueChange={handleCountryChange} value={country}>
-                        <SelectTrigger><SelectValue placeholder="Select country" /></SelectTrigger>
-                        <SelectContent>{countries.map(c => <SelectItem key={c.code} value={c.code}>{c.name}</SelectItem>)}</SelectContent>
+                      <Select
+                        onValueChange={handleCountryChange}
+                        value={selectedCountry}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select country" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {countries.map((c) => (
+                            <SelectItem key={c.code} value={c.code}>
+                              {c.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
                       </Select>
                     </div>
 
-                    <div>
+                    <div className="col-span-1">
                       <Label htmlFor="phone">Phone Number</Label>
-                      <Input id="phone" type="tel" value={phone} onChange={e => setPhone(e.target.value)} required placeholder={phonePlaceholder} />
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        required
+                        placeholder={phonePlaceholder}
+                      />
                     </div>
 
-                    <div>
+                    <div className="col-span-1">
                       <Label htmlFor="program">Training Program</Label>
-                      <Select onValueChange={setProgram} value={program}>
-                        <SelectTrigger><SelectValue placeholder="Choose a program" /></SelectTrigger>
-                        <SelectContent>{programs.map(p => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
+                      <Select
+                        onValueChange={setSelectedProgram}
+                        value={selectedProgram}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Choose a program" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {trainingPrograms.map((p) => (
+                            <SelectItem key={p} value={p}>
+                              {p}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
                       </Select>
                     </div>
 
-                    <div>
+                    <div className="col-span-1">
                       <Label htmlFor="session">Preferred Session</Label>
-                      <Select onValueChange={setSession} value={session}>
-                        <SelectTrigger><SelectValue placeholder="Choose session" /></SelectTrigger>
-                        <SelectContent>{sessions.map(s => <SelectItem key={s} value={s}>{s}</SelectItem>)}</SelectContent>
+                      <Select
+                        onValueChange={setPreferredSession}
+                        value={preferredSession}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Choose session" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {sessions.map((s) => (
+                            <SelectItem key={s} value={s}>
+                              {s}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
                       </Select>
                     </div>
                   </>
                 )}
 
-                {/* Email & Password (common) */}
-                <div>
+                <div className="col-span-1">
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} required placeholder="you@example.com" />
+                  <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    placeholder="you@example.com"
+                  />
                 </div>
-                <div>
+
+                <div className="col-span-1">
                   <Label htmlFor="password">Password</Label>
-                  <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} required placeholder="••••••••" />
+                  <Input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    placeholder="••••••••"
+                  />
                 </div>
 
-                {/* Submit */}
-                <Button type="submit" className="w-full justify-center" disabled={isLoading}>
-                  {isLoading
-                    ? <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                    : mode === "signup" ? "Sign Up" : "Sign In"}
-                </Button>
+                <div className="col-span-1 md:col-span-2">
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full"
+                  >
+                    {isLoading && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    {mode === "signup" ? "Sign Up" : "Sign In"}
+                  </Button>
+                </div>
 
-                {/* Social (signin only) */}
-                {mode === "signin" && (
-                  <div className="flex justify-center space-x-4 pt-4">
-                    <Button size="icon" variant="outline" onClick={() => toast({ title: "Google Auth TBD" })}><FaGoogle /></Button>
-                    <Button size="icon" variant="outline" onClick={() => toast({ title: "Apple Auth TBD" })}><FaApple /></Button>
-                  </div>
-                )}
+                <div className="col-span-1 md:col-span-2 flex items-center space-x-4">
+                  <span className="flex-grow h-px bg-gray-200" />
+                  <span className="text-sm text-gray-500">
+                    Or continue with
+                  </span>
+                  <span className="flex-grow h-px bg-gray-200" />
+                </div>
+
+                <div className="col-span-1 md:col-span-2 grid grid-cols-2 gap-4">
+                  <Button
+                    variant="outline"
+                    onClick={handleGoogleSignIn}
+                    disabled={isLoading}
+                  >
+                    <FaGoogle className="mr-2 h-4 w-4" />
+                    Google
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={() =>
+                      toast({
+                        title: "Not implemented",
+                        description: "Apple Sign In is not available yet.",
+                        variant: "destructive",
+                      })
+                    }
+                    disabled={isLoading}
+                  >
+                    <FaApple className="mr-2 h-4 w-4" />
+                    Apple
+                  </Button>
+                </div>
               </form>
             </CardContent>
           </Card>
         </div>
       </div>
 
-      {/* Right: full-height image */}
+      {/* Right side: illustration */}
       <div className="hidden md:block md:w-1/2 relative">
         <Image
-          src="/images/photorealistic-portrait-african-woman.jpg"
-          alt="Training background"
+          src="/images/group-three-female-friends-having-fun-together-outdoors.jpg"
+          alt="Signup Illustration"
           fill
           className="object-cover"
         />

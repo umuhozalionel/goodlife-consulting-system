@@ -2,13 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  onAuthStateChanged,
-  type User as FirebaseUser,
-  signOut,
-} from "firebase/auth";
-import { auth, db } from "@/lib/firebase";
+import { onAuthStateChanged, signOut, type User as FirebaseUser } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -27,15 +23,15 @@ export default function TraineeDashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<FirebaseUser | null | undefined>(undefined);
   const [profile, setProfile] = useState<TraineeProfile | null>(null);
-  const [loadingProfile, setLoadingProfile] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  // 1) Watch auth state
+  // 1. Watch Firebase auth state
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, (u) => setUser(u));
+    const unsub = onAuthStateChanged(auth, setUser);
     return () => unsub();
   }, []);
 
-  // 2) Once we know who the user is, fetch their Firestore doc
+  // 2. Fetch profile when user is known
   useEffect(() => {
     if (user === undefined) return;
     if (user === null) {
@@ -44,27 +40,27 @@ export default function TraineeDashboardPage() {
     }
 
     const fetchProfile = async () => {
-      setLoadingProfile(true);
+      setLoading(true);
       try {
-        const docRef = doc(db, "users", user.uid);
-        const snap = await getDoc(docRef);
+        const ref = doc(db, "users", user.uid);
+        const snap = await getDoc(ref);
         if (snap.exists()) {
           setProfile(snap.data() as TraineeProfile);
         } else {
-          console.warn("No profile found for", user.uid);
+          console.warn("No profile found for UID:", user.uid);
         }
-      } catch (err) {
-        console.error("Failed to load profile:", err);
+      } catch (error) {
+        console.error("Error loading profile:", error);
       } finally {
-        setLoadingProfile(false);
+        setLoading(false);
       }
     };
 
     fetchProfile();
   }, [user, router]);
 
-  // 3) Show loader until everything’s ready
-  if (user === undefined || loadingProfile) {
+  // 3. Show loading state
+  if (user === undefined || loading) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-white">
         <Loader2 className="h-8 w-8 animate-spin text-emerald-700" />
@@ -72,6 +68,7 @@ export default function TraineeDashboardPage() {
     );
   }
 
+  // 4. Render dashboard
   return (
     <main className="min-h-screen p-8 bg-emerald-50">
       <header className="flex justify-between items-center mb-8">
@@ -90,38 +87,20 @@ export default function TraineeDashboardPage() {
       {profile ? (
         <section className="space-y-6">
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-emerald-600">
-              Your Profile
-            </h2>
+            <h2 className="text-xl font-semibold text-emerald-600">Your Profile</h2>
             <ul className="mt-2 text-gray-700 space-y-1">
-              <li>
-                <strong>Name:</strong> {profile.fullName}
-              </li>
-              <li>
-                <strong>Email:</strong> {profile.email}
-              </li>
-              <li>
-                <strong>Program:</strong> {profile.program}
-              </li>
-              <li>
-                <strong>Session:</strong> {profile.session}
-              </li>
-              <li>
-                <strong>Country:</strong> {profile.country}
-              </li>
-              <li>
-                <strong>Phone:</strong> {profile.phone}
-              </li>
-              <li>
-                <strong>Gender:</strong> {profile.gender}
-              </li>
+              <li><strong>Name:</strong> {profile.fullName}</li>
+              <li><strong>Email:</strong> {profile.email}</li>
+              <li><strong>Program:</strong> {profile.program}</li>
+              <li><strong>Session:</strong> {profile.session}</li>
+              <li><strong>Country:</strong> {profile.country}</li>
+              <li><strong>Phone:</strong> {profile.phone}</li>
+              <li><strong>Gender:</strong> {profile.gender}</li>
             </ul>
           </div>
 
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-emerald-600">
-              📘 Your Active Courses
-            </h2>
+            <h2 className="text-xl font-semibold text-emerald-600">📘 Your Active Courses</h2>
             <ul className="mt-2 list-disc list-inside text-gray-700">
               <li>Goal Setting Fundamentals</li>
               <li>Mindset & Productivity Boost</li>
