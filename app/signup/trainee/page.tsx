@@ -60,11 +60,11 @@ const programs = [
 const genders = ['Male', 'Female', 'Other'];
 
 const sessions = [
-  'Spring 2025',
   'Summer 2025',
   'Fall 2025',
   'Winter 2025',
   'Spring 2026',
+  'Summer 2026',
 ];
 
 export default function TraineeAuthPage() {
@@ -73,7 +73,7 @@ export default function TraineeAuthPage() {
 
   const [mode, setMode] = useState<'signup' | 'signin'>('signup');
 
-  // Sign-Up fields
+  // sign-up fields
   const [fullName, setFullName] = useState('');
   const [gender, setGender] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
@@ -82,9 +82,11 @@ export default function TraineeAuthPage() {
   const [program, setProgram] = useState('');
   const [session, setSession] = useState('');
 
-  // Shared fields
+  // shared fields
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPasswords, setShowPasswords] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const onCountryChange = (code: string) => {
@@ -97,9 +99,31 @@ export default function TraineeAuthPage() {
     e.preventDefault();
     setLoading(true);
 
+    // strength & match
+    const pwd = password.trim();
+    const pattern = /(?=.*[A-Z])(?=.*\d)/;
+    if (pwd.length < 8 || !pattern.test(pwd)) {
+      toast({
+        title: 'Weak Password',
+        description:
+          'Use at least 8 characters, include an uppercase letter and a number.',
+        variant: 'destructive',
+      });
+      setLoading(false);
+      return;
+    }
+    if (pwd !== confirmPassword) {
+      toast({
+        title: 'Passwords Do Not Match',
+        description: 'Please ensure both passwords are identical.',
+        variant: 'destructive',
+      });
+      setLoading(false);
+      return;
+    }
+
     try {
       if (mode === 'signup') {
-        // Sign Up path
         const { user } = await createUserWithEmailAndPassword(auth, email, password);
         const data = {
           fullName,
@@ -116,11 +140,9 @@ export default function TraineeAuthPage() {
         await addDoc(collection(db, 'registrations'), data);
         toast({ title: 'Welcome!', description: `Hi ${fullName}` });
       } else {
-        // Sign In path
         await signInWithEmailAndPassword(auth, email, password);
         toast({ title: 'Welcome back!', description: email });
       }
-
       setTimeout(() => router.push('/dashboard'), 800);
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
@@ -144,7 +166,7 @@ export default function TraineeAuthPage() {
 
   return (
     <main className="min-h-screen md:flex">
-      {/* Left illustration panel */}
+      {/* left illustration */}
       <div className="hidden md:relative md:flex md:w-1/2 wave-mask">
         <Image
           src="/images/life-10.jpg"
@@ -152,19 +174,17 @@ export default function TraineeAuthPage() {
           fill
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-purple-600/80" />
+        <div className="absolute inset-0 bg-orange-600/80" />
         <div className="relative z-10 flex flex-col justify-center h-full p-16 text-white">
           <h1 className="mb-4 font-bold text-3xl">Goodlife Consulting</h1>
           <p className="text-lg mb-2">Professional Training Registration</p>
-          <p className="text-sm">
-            Invest in your future with our expert-led programs.
-          </p>
+          <p className="text-sm">Invest in your future with our expert-led programs.</p>
         </div>
       </div>
 
-      {/* Right form panel */}
-      <div className="relative w-full md:w-1/2 bg-white flex items-center justify-center p-8">
-        {/* Back Home button with arrow */}
+      {/* right form panel */}
+      <div className="relative w-full md:w-1/2 bg-white flex flex-col p-8">
+        {/* back home */}
         <Button asChild variant="ghost" className="absolute top-4 left-4">
           <Link href="/">
             <span className="flex items-center space-x-1 text-charcoal hover:text-gray-700">
@@ -174,8 +194,8 @@ export default function TraineeAuthPage() {
           </Link>
         </Button>
 
-        <div className="w-full max-w-lg space-y-10">
-          {/* Toggle Sign Up / Sign In */}
+        <div className="w-full max-w-lg flex flex-col space-y-10 md:mt-16 mx-auto">
+          {/* toggle */}
           <div className="flex justify-center space-x-6">
             <Button
               size="sm"
@@ -209,7 +229,6 @@ export default function TraineeAuthPage() {
               <form onSubmit={onSubmit} className="space-y-8">
                 {mode === 'signup' && (
                   <>
-                    {/* Full Name & Gender */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <Label htmlFor="fullName">Full Name</Label>
@@ -238,7 +257,6 @@ export default function TraineeAuthPage() {
                       </div>
                     </div>
 
-                    {/* Country & Phone */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <Label htmlFor="country">Country</Label>
@@ -272,7 +290,6 @@ export default function TraineeAuthPage() {
                       </div>
                     </div>
 
-                    {/* Program & Session */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <Label htmlFor="program">Training Program</Label>
@@ -308,7 +325,6 @@ export default function TraineeAuthPage() {
                   </>
                 )}
 
-                {/* Email & Password */}
                 <div className="space-y-6">
                   <div>
                     <Label htmlFor="email">Email</Label>
@@ -321,20 +337,57 @@ export default function TraineeAuthPage() {
                       placeholder="you@example.com"
                     />
                   </div>
+
+                  {/* Password */}
                   <div>
                     <Label htmlFor="password">Password</Label>
                     <Input
                       id="password"
-                      type="password"
+                      type={showPasswords ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       placeholder="••••••••"
                     />
                   </div>
+
+                  {/* Confirm Password */}
+                  <div>
+                    <Label htmlFor="confirmPassword">Re-type Password</Label>
+                    <Input
+                      id="confirmPassword"
+                      type={showPasswords ? 'text' : 'password'}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      required
+                      placeholder="••••••••"
+                    />
+                  </div>
+
+                  {/* Modern toggle for password visibility */}
+                  <div className="flex items-center space-x-3">
+                    <label
+                      htmlFor="showPasswords"
+                      className="inline-flex relative items-center cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        id="showPasswords"
+                        className="sr-only peer"
+                        checked={showPasswords}
+                        onChange={(e) => setShowPasswords(e.target.checked)}
+                      />
+                      <div className="w-11 h-6 bg-gray-200 rounded-full peer-focus:ring-4 peer-focus:ring-indigo-300 
+                                      peer-checked:bg-indigo-600 transition-all
+                                      peer-checked:after:translate-x-full peer-checked:after:border-white
+                                      after:content-[''] after:absolute after:top-1 after:left-1
+                                      after:bg-white after:border after:rounded-full after:h-4 after:w-4 
+                                      after:transition-all"></div>
+                      <span className="ml-3 text-sm font-medium text-gray-900">Show passwords</span>
+                    </label>
+                  </div>
                 </div>
 
-                {/* Primary Action */}
                 <Button
                   type="submit"
                   className="w-full flex items-center justify-center bg-charcoal text-white"
@@ -344,14 +397,12 @@ export default function TraineeAuthPage() {
                   {mode === 'signup' ? 'Create Account' : 'Sign In'}
                 </Button>
 
-                {/* OR Divider */}
                 <div className="flex items-center justify-center space-x-4">
                   <span className="block h-px w-16 bg-gray-200" />
                   <span className="text-gray-400 text-sm">OR</span>
                   <span className="block h-px w-16 bg-gray-200" />
                 </div>
 
-                {/* Social Sign-In */}
                 <div className="space-y-4">
                   <Button
                     variant="outline"
@@ -374,6 +425,12 @@ export default function TraineeAuthPage() {
               </form>
             </CardContent>
           </Card>
+
+          {/* Footer */}
+          <footer className="mt-auto text-xs text-gray-500 text-center">
+            <p>© 2025 Goodlife Consulting Partners. All rights reserved.</p>
+            <p>Powered by Bravonet Technologies Ltd</p>
+          </footer>
         </div>
       </div>
     </main>

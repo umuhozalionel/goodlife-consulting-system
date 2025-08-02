@@ -1,5 +1,4 @@
 // components/Header.tsx
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -26,10 +25,18 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { languages } from "@/lib/i18n";
 
+const trainingItems = [
+  { name: "Leadership & Management", href: "/training/leadership" },
+  { name: "Corporate Trainings", href: "/training/corporate" },
+  { name: "Digital & Innovation", href: "/training/digital" },
+  { name: "Communication & Personal Growth", href: "/training/communication" },
+  { name: "Languages & Social Impact", href: "/training/languages" },
+];
+
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
-  const isRegisterPage = pathname === "signup/trainee";
+  const isRegisterPage = pathname === "/signup/trainee";
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -39,20 +46,28 @@ export default function Header() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const { toast } = useToast();
 
-  // Header scroll effect
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setIsScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Navigate & close modal
+  const textColor = isScrolled ? "text-gray-900" : "text-white";
+  const hoverColor = isScrolled
+    ? "hover:text-terracotta-600"
+    : "hover:text-terracotta-400";
+
+  const dropdownBg = "bg-white";
+  const dropdownBorder = "border-gray-200";
+  const dropdownTextDefault = "text-gray-900";
+  const dropdownTextHover = "hover:text-terracotta-600";
+  const dropdownHoverBg = "hover:bg-gray-100";
+
   const handleAuthChoice = (path: string) => {
     setAuthModalOpen(false);
     router.push(path);
   };
 
-  // Close modal on Escape
   useEffect(() => {
     if (!authModalOpen) return;
     const onEsc = (e: KeyboardEvent) => {
@@ -65,21 +80,25 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white/95 backdrop-blur-sm shadow-lg" : "bg-white"
+        isScrolled ? "bg-white/80 backdrop-blur-sm shadow-lg" : "bg-black/50"
       }`}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <Link href="/" className="flex items-center space-x-4">
             <div className="w-10 h-10 bg-gradient-to-br from-terracotta-500 to-forest-500 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-lg">G</span>
+              <span className="text-white font-bold text-lg drop-shadow-sm">
+                G
+              </span>
             </div>
             <div className="hidden sm:block">
-              <h1 className="font-bold text-lg text-gray-900">Goodlife Consulting</h1>
-              <p className="text-xs text-gray-600">Partners</p>
+              <h1 className={`${textColor} font-bold text-lg drop-shadow-sm`}>
+                Goodlife Consulting
+              </h1>
+              <p className={`${textColor} text-xs drop-shadow-sm`}>Partners</p>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <NavigationMenu className="hidden lg:flex">
@@ -87,38 +106,29 @@ export default function Header() {
               <NavigationMenuItem>
                 <NavigationMenuLink
                   href="/#home"
-                  className="px-4 py-2 text-gray-700 hover:text-terracotta-600 transition-colors"
+                  className={`${textColor} ${hoverColor} px-4 py-2 transition-colors`}
                 >
                   Home
                 </NavigationMenuLink>
               </NavigationMenuItem>
 
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="px-4 py-2 text-gray-700 hover:text-terracotta-600">
+                <NavigationMenuTrigger
+                  className={`${textColor} ${hoverColor} px-4 py-2 bg-transparent hover:bg-transparent transition-colors`}
+                >
                   Training Programs
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <div className="w-64 p-4 space-y-2">
-                    <Link
-                      href="signup/trainee"
-                      className="block px-3 py-2 text-sm text-white font-semibold bg-green-700 hover:bg-green-800 rounded-md text-center"
-                    >
-                      📝 Register
-                    </Link>
-                    {[
-                      "All Training Programs",
-                      "Corporate Trainings",
-                      "Leadership",
-                      "Digital",
-                      "Languages",
-                      "Communication",
-                    ].map((label, i) => (
+                  <div
+                    className={`w-64 p-4 space-y-2 ${dropdownBg} border ${dropdownBorder} rounded-md`}
+                  >
+                    {trainingItems.map((item) => (
                       <NavigationMenuLink
-                        key={i}
-                        href="/#programs"
-                        className="block px-3 py-2 text-sm text-gray-700 font-medium hover:bg-terracotta-50 rounded-md"
+                        key={item.href}
+                        href={item.href}
+                        className={`block px-3 py-2 text-sm ${dropdownTextDefault} ${dropdownTextHover} ${dropdownHoverBg} rounded-md transition-colors`}
                       >
-                        {label}
+                        {item.name}
                       </NavigationMenuLink>
                     ))}
                   </div>
@@ -129,7 +139,7 @@ export default function Header() {
                 <NavigationMenuItem key={sec}>
                   <NavigationMenuLink
                     href={`/#${sec}`}
-                    className="px-4 py-2 text-gray-700 hover:text-terracotta-600 transition-colors"
+                    className={`${textColor} ${hoverColor} px-4 py-2 transition-colors`}
                   >
                     {sec.charAt(0).toUpperCase() + sec.slice(1)}
                   </NavigationMenuLink>
@@ -142,8 +152,12 @@ export default function Header() {
           <div className="hidden md:flex items-center gap-4 relative">
             {/* Search */}
             <div className="relative group">
-              <Button variant="ghost" size="icon" className="text-gray-600 hover:text-green-700">
-                <Search className="w-5 h-5" />
+              <Button
+                variant="ghost"
+                size="icon"
+                className={`${textColor} ${hoverColor}`}
+              >
+                <Search className="w-5 h-5 drop-shadow-sm" />
               </Button>
               <div className="absolute right-0 top-12 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-300 z-50">
                 <Input
@@ -160,12 +174,12 @@ export default function Header() {
               <Button
                 variant="ghost"
                 size="sm"
-                className="flex items-center gap-1 text-gray-600 hover:text-green-700"
+                className={`flex items-center gap-1 ${textColor} ${hoverColor}`}
                 onClick={() => setIsLangOpen(!isLangOpen)}
               >
-                <Globe className="w-4 h-4" />
+                <Globe className="w-4 h-4 drop-shadow-sm" />
                 {language}
-                <ChevronDown className="w-4 h-4" />
+                <ChevronDown className="w-4 h-4 drop-shadow-sm" />
               </Button>
               {isLangOpen && (
                 <div className="absolute top-10 right-0 bg-white border shadow-md rounded-md z-50 w-32">
@@ -175,10 +189,15 @@ export default function Header() {
                       onClick={() => {
                         setLanguage(code);
                         setIsLangOpen(false);
-                        toast({ title: "Language Selected", description: `Switched to ${label}` });
+                        toast({
+                          title: "Language Selected",
+                          description: `Switched to ${label}`,
+                        });
                       }}
                       className={`w-full text-left px-4 py-2 text-sm hover:bg-emerald-50 ${
-                        language === code ? "text-emerald-700 font-semibold" : "text-gray-700"
+                        language === code
+                          ? "text-emerald-700 font-semibold"
+                          : "text-gray-700"
                       }`}
                     >
                       {label}
@@ -199,66 +218,71 @@ export default function Header() {
             )}
           </div>
 
-          {/* Mobile Toggle */}
+          {/* Mobile Toggle (hidden on lg+) */}
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden"
+            className={`${textColor} lg:hidden`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {isMobileMenuOpen ? (
+              <X className="h-6 w-6 drop-shadow-sm" />
+            ) : (
+              <Menu className="h-6 w-6 drop-shadow-sm" />
+            )}
           </Button>
         </div>
 
         {/* Auth Modal */}
-{authModalOpen && (
-  <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-[100]">
-    {/* Outer wrapper showing the image */}
-    <div className="relative w-full max-w-xs rounded-lg overflow-hidden">
-      <img
-        src="/images/Auth.jpg"
-        alt="Auth background"
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-
-      {/* Semi-transparent content panel */}
-      <div className="relative bg-white/70 backdrop-blur-md p-6 space-y-4 text-center">
-        <h2 className="text-xl font-semibold">Continue with</h2>
-
-        <Button
-          onClick={() => handleAuthChoice("/auth?mode=signup")}
-          className="w-full"
-        >
-          Sign Up
-        </Button>
-
-        <Button
-          onClick={() => handleAuthChoice("/auth?mode=signin")}
-          className="w-full"
-        >
-          Sign In
-        </Button>
-
-        <Button
-          onClick={() => handleAuthChoice("/")}
-          className="w-full mt-2 bg-gray-200 hover:bg-gray-300 text-gray-800"
-        >
-          Back Home
-        </Button>
-      </div>
-    </div>
-  </div>
-)}
+        {authModalOpen && (
+          <div className="fixed inset-0 bg-black/20 backdrop-blur-sm flex items-center justify-center z-[100]">
+            <div className="relative w-full max-w-xs rounded-lg overflow-hidden">
+              <img
+                src="/images/Auth.jpg"
+                alt="Auth background"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="relative bg-white/70 backdrop-blur-md p-6 space-y-4 text-center">
+                <h2 className="text-xl font-semibold">Continue with</h2>
+                <Button
+                  onClick={() => handleAuthChoice("/auth?mode=signup")}
+                  className="w-full"
+                >
+                  Sign Up
+                </Button>
+                <Button
+                  onClick={() => handleAuthChoice("/auth?mode=signin")}
+                  className="w-full"
+                >
+                  Sign In
+                </Button>
+                <Button
+                  onClick={() => handleAuthChoice("/")}
+                  className="w-full mt-2 bg-gray-200 hover:bg-gray-300 text-gray-800"
+                >
+                  Back Home
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden bg-white border-t border-gray-200 py-4">
+          <div className="lg:hidden bg-black/50 border-t border-gray-700 py-4">
             <nav className="space-y-2">
-              {["home", "about", "programs", "calendar", "testimonials", "contact"].map((sec) => (
+              {[
+                "home",
+                "about",
+                "programs",
+                "calendar",
+                "testimonials",
+                "contact",
+              ].map((sec) => (
                 <Link
                   key={sec}
                   href={`/#${sec}`}
-                  className="block px-4 py-2 text-gray-700 hover:bg-terracotta-50 rounded-md"
+                  className={`${textColor} ${hoverColor} block px-4 py-2 rounded-md transition-colors`}
                 >
                   {sec.charAt(0).toUpperCase() + sec.slice(1)}
                 </Link>
