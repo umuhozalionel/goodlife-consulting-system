@@ -1,10 +1,11 @@
 // components/HeroSection.tsx
-"use client";
+'use client';
 
-import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { Calendar, ImageIcon, Pencil } from "lucide-react";
+import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 
 export default function HeroSection() {
   return (
@@ -12,90 +13,52 @@ export default function HeroSection() {
       id="home"
       className="relative flex items-center justify-center min-h-screen overflow-hidden"
     >
-      {/* Background image via next/image */}
-      <div className="absolute inset-0">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
         <Image
-          src="/images/medium-shot-happy-friends-outdoors.jpg"
-          alt="Happy friends outdoors during training"
+          src="/images/life-7.jpg"
+          alt="Training session outdoors"
           fill
           priority
           className="object-cover object-center"
         />
+        <div className="absolute inset-0 bg-black/60" />
       </div>
 
-      {/* Dark gradient overlay */}
-      <div className="absolute inset-0 bg-black/40" />
+      {/* Content Wrapper */}
+      <div className="relative z-10 w-full px-6 sm:px-12 max-w-screen-xl mx-auto flex flex-col justify-between h-full py-24 space-y-12">
+        {/* Welcome Text (left-aligned) */}
+        <div className="text-white text-left">
+          <p className="text-3xl sm:text-5xl font-medium text-emerald-300 tracking-wide mb-1">
+            Welcome to
+          </p>
+          <h2 className="text-5xl sm:text-7xl font-bold text-white drop-shadow-md">
+            Goodlife Consulting partners.
+          </h2>
+        </div>
 
-      {/* Rwandan-pattern overlay */}
-      <div
-        className="absolute inset-0 opacity-10"
-        style={{
-          backgroundImage:
-            "repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(210,105,30,0.1) 10px, rgba(210,105,30,0.1) 20px)",
-        }}
-      />
-
-      {/* Hero content */}
-      <div className="relative z-10 max-w-4xl px-4 mx-auto text-center text-white">
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-snug mb-4">
-          Empowering Rwanda’s{" "}
-          <span className="block text-terracotta-400">Future Leaders</span>
-        </h1>
-        <p className="text-lg sm:text-xl text-gray-200 mb-8">
-          Professional growth through purpose-driven training.
-        </p>
-
-        {/* CTAs */}
-        <div className="flex flex-wrap gap-4 justify-center">
-          <Link href="signup/trainee">
+        {/* Headline + CTA (right-aligned) */}
+        <div className="text-white text-right">
+          <h1 className="text-base sm:text-xl font-light italic text-white/90 leading-snug mb-4">
+            Empowering Rwanda’s Future Leaders<br />
+            Building Tomorrow’s Change-makers
+          </h1>
+          <Link href="/signup/trainee">
             <Button
               size="lg"
-              className="bg-green-700 hover:bg-green-800 focus-visible:ring focus-visible:ring-green-500"
+              className="bg-black hover:bg-neutral-900 text-white text-sm sm:text-base focus-visible:ring-white"
             >
-              <Pencil className="mr-2 h-5 w-5" />
-              Register Now
-            </Button>
-          </Link>
-
-          <Link href="/calendar">
-            <Button
-              size="lg"
-              className="border border-terracotta-600 text-terracotta-600 hover:bg-terracotta-50 focus-visible:ring focus-visible:ring-terracotta-300"
-            >
-              <Calendar className="mr-2 h-5 w-5" />
-              View Training Calendar
-            </Button>
-          </Link>
-
-          <Link href="/gallery">
-            <Button
-              size="lg"
-              className="border border-white text-white hover:bg-white/10 focus-visible:ring focus-visible:ring-white"
-            >
-              <ImageIcon className="mr-2 h-5 w-5" />
-              View Gallery
-            </Button>
-          </Link>
-
-          <Link href="/training">
-            <Button
-              size="lg"
-              className="border border-emerald-300 text-emerald-300 hover:bg-emerald-50 focus-visible:ring focus-visible:ring-emerald-200"
-            >
-              <Pencil className="mr-2 h-5 w-5" />
-              Explore Trainings
+              Apply Now
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
         </div>
-      </div>
 
-      {/* Scroll indicator */}
-      <div
-        aria-hidden="true"
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
-      >
-        <div className="w-6 h-10 border-2 border-white rounded-full flex items-start p-1 animate-bounce">
-          <span className="block w-1 h-3 bg-white rounded-full animate-pulse" />
+        {/* Scroll Indicator */}
+        <div className="flex justify-center mt-12 sm:mt-0">
+          <div className="w-6 h-10 border-2 border-white rounded-full flex items-start p-1 animate-bounce">
+            <span className="block w-1 h-3 bg-white rounded-full animate-pulse" />
+          </div>
         </div>
       </div>
     </section>
