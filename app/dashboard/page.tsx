@@ -35,7 +35,7 @@ export default function TraineeDashboardPage() {
   useEffect(() => {
     if (user === undefined) return;
     if (user === null) {
-      router.replace("/auth");
+      router.replace("/signup/trainee");
       return;
     }
 
@@ -77,7 +77,7 @@ export default function TraineeDashboardPage() {
           variant="destructive"
           onClick={async () => {
             await signOut(auth);
-            router.replace("/auth");
+            router.replace("/signup/trainee");
           }}
         >
           Sign Out

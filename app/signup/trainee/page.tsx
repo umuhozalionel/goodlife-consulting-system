@@ -1,4 +1,5 @@
 // app/signup/trainee/page.tsx
+
 'use client';
 
 import React, { useState } from 'react';
@@ -73,7 +74,7 @@ export default function TraineeAuthPage() {
 
   const [mode, setMode] = useState<'signup' | 'signin'>('signup');
 
-  // sign-up fields
+  // Sign-up fields
   const [fullName, setFullName] = useState('');
   const [gender, setGender] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
@@ -82,7 +83,7 @@ export default function TraineeAuthPage() {
   const [program, setProgram] = useState('');
   const [session, setSession] = useState('');
 
-  // shared fields
+  // Shared fields
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -99,20 +100,19 @@ export default function TraineeAuthPage() {
     e.preventDefault();
     setLoading(true);
 
-    // strength & match
+    // Password strength & match (only for sign-up)
     const pwd = password.trim();
-    const pattern = /(?=.*[A-Z])(?=.*\d)/;
-    if (pwd.length < 8 || !pattern.test(pwd)) {
+    const requiresUpperAndDigit = /(?=.*[A-Z])(?=.*\d)/;
+    if (mode === 'signup' && (pwd.length < 8 || !requiresUpperAndDigit.test(pwd))) {
       toast({
         title: 'Weak Password',
-        description:
-          'Use at least 8 characters, include an uppercase letter and a number.',
+        description: 'Use at least 8 characters, include an uppercase letter and a number.',
         variant: 'destructive',
       });
       setLoading(false);
       return;
     }
-    if (pwd !== confirmPassword) {
+    if (mode === 'signup' && pwd !== confirmPassword) {
       toast({
         title: 'Passwords Do Not Match',
         description: 'Please ensure both passwords are identical.',
@@ -145,7 +145,11 @@ export default function TraineeAuthPage() {
       }
       setTimeout(() => router.push('/dashboard'), 800);
     } catch (err: any) {
-      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      toast({
+        title: 'Error',
+        description: err.message,
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
@@ -158,44 +162,55 @@ export default function TraineeAuthPage() {
       toast({ title: 'Google Sign In', description: 'Success' });
       setTimeout(() => router.push('/dashboard'), 800);
     } catch (err: any) {
-      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      toast({
+        title: 'Error',
+        description: err.message,
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <main className="min-h-screen md:flex">
-      {/* left illustration */}
-      <div className="hidden md:relative md:flex md:w-1/2 wave-mask">
+    <main role="main" className="flex min-h-screen flex-col md:flex-row">
+      {/* Left Illustration */}
+      <aside className="relative hidden w-full md:flex md:w-1/2 wave-mask md:border-r md:border-gray-200">
         <Image
           src="/images/life-10.jpg"
-          alt="Team working"
+          alt="Team collaborating on training"
           fill
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-orange-600/80" />
-        <div className="relative z-10 flex flex-col justify-center h-full p-16 text-white">
-          <h1 className="mb-4 font-bold text-3xl">Goodlife Consulting</h1>
-          <p className="text-lg mb-2">Professional Training Registration</p>
-          <p className="text-sm">Invest in your future with our expert-led programs.</p>
+        <div className="absolute inset-0 bg-orange-600/70" />
+        <div className="relative z-10 flex flex-col justify-center p-16 text-white">
+          <h1 className="mb-4 text-3xl font-bold">Goodlife Consulting</h1>
+          <p className="mb-2 text-lg">Professional Training Registration</p>
+          <p className="text-sm">
+            Invest in your future with our expert-led programs.
+          </p>
         </div>
-      </div>
+      </aside>
 
-      {/* right form panel */}
-      <div className="relative w-full md:w-1/2 bg-white flex flex-col p-8">
-        {/* back home */}
-        <Button asChild variant="ghost" className="absolute top-4 left-4">
-          <Link href="/">
-            <span className="flex items-center space-x-1 text-charcoal hover:text-gray-700">
-              <ArrowLeft className="h-4 w-4" />
-              <span>Back Home</span>
-            </span>
+      {/* Right form panel */}
+      <section className="relative flex w-full flex-col bg-white p-8 md:w-1/2">
+        {/* Back Home button at top-left */}
+        <Button
+          asChild
+          variant="ghost"
+          className="absolute top-4 left-4 z-20"
+        >
+          <Link
+            href="/"
+            className="flex items-center space-x-1 text-charcoal hover:text-gray-700"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span>Back Home</span>
           </Link>
         </Button>
 
-        <div className="w-full max-w-lg flex flex-col space-y-10 md:mt-16 mx-auto">
-          {/* toggle */}
+        <div className="mx-auto mt-16 flex w-full max-w-lg flex-col space-y-10">
+          {/* Toggle */}
           <div className="flex justify-center space-x-6">
             <Button
               size="sm"
@@ -229,11 +244,12 @@ export default function TraineeAuthPage() {
               <form onSubmit={onSubmit} className="space-y-8">
                 {mode === 'signup' && (
                   <>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                       <div>
                         <Label htmlFor="fullName">Full Name</Label>
                         <Input
                           id="fullName"
+                          aria-required="true"
                           value={fullName}
                           onChange={(e) => setFullName(e.target.value)}
                           required
@@ -242,7 +258,12 @@ export default function TraineeAuthPage() {
                       </div>
                       <div>
                         <Label htmlFor="gender">Gender</Label>
-                        <Select value={gender} onValueChange={setGender} required>
+                        <Select
+                          id="gender"
+                          value={gender}
+                          onValueChange={setGender}
+                          required
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select gender" />
                           </SelectTrigger>
@@ -256,11 +277,11 @@ export default function TraineeAuthPage() {
                         </Select>
                       </div>
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                       <div>
                         <Label htmlFor="country">Country</Label>
                         <Select
+                          id="country"
                           value={selectedCountry}
                           onValueChange={onCountryChange}
                           required
@@ -282,6 +303,7 @@ export default function TraineeAuthPage() {
                         <Input
                           id="phone"
                           type="tel"
+                          aria-required="true"
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           required
@@ -289,11 +311,15 @@ export default function TraineeAuthPage() {
                         />
                       </div>
                     </div>
-
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                       <div>
                         <Label htmlFor="program">Training Program</Label>
-                        <Select value={program} onValueChange={setProgram} required>
+                        <Select
+                          id="program"
+                          value={program}
+                          onValueChange={setProgram}
+                          required
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select program" />
                           </SelectTrigger>
@@ -308,7 +334,12 @@ export default function TraineeAuthPage() {
                       </div>
                       <div>
                         <Label htmlFor="session">Session</Label>
-                        <Select value={session} onValueChange={setSession} required>
+                        <Select
+                          id="session"
+                          value={session}
+                          onValueChange={setSession}
+                          required
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select session" />
                           </SelectTrigger>
@@ -325,82 +356,83 @@ export default function TraineeAuthPage() {
                   </>
                 )}
 
+                {/* Shared fields */}
                 <div className="space-y-6">
                   <div>
                     <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       type="email"
+                      aria-required="true"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       placeholder="you@example.com"
                     />
                   </div>
-
-                  {/* Password */}
                   <div>
                     <Label htmlFor="password">Password</Label>
                     <Input
                       id="password"
                       type={showPasswords ? 'text' : 'password'}
+                      aria-required="true"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       placeholder="••••••••"
                     />
                   </div>
-
-                  {/* Confirm Password */}
-                  <div>
-                    <Label htmlFor="confirmPassword">Re-type Password</Label>
-                    <Input
-                      id="confirmPassword"
-                      type={showPasswords ? 'text' : 'password'}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                      placeholder="••••••••"
-                    />
-                  </div>
-
-                  {/* Modern toggle for password visibility */}
-                  <div className="flex items-center space-x-3">
-                    <label
-                      htmlFor="showPasswords"
-                      className="inline-flex relative items-center cursor-pointer"
-                    >
-                      <input
-                        type="checkbox"
-                        id="showPasswords"
-                        className="sr-only peer"
-                        checked={showPasswords}
-                        onChange={(e) => setShowPasswords(e.target.checked)}
+                  {mode === 'signup' && (
+                    <div>
+                      <Label htmlFor="confirmPassword">Confirm Password</Label>
+                      <Input
+                        id="confirmPassword"
+                        type={showPasswords ? 'text' : 'password'}
+                        aria-required="true"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                        placeholder="••••••••"
                       />
-                      <div className="w-11 h-6 bg-gray-200 rounded-full peer-focus:ring-4 peer-focus:ring-indigo-300 
-                                      peer-checked:bg-indigo-600 transition-all
-                                      peer-checked:after:translate-x-full peer-checked:after:border-white
-                                      after:content-[''] after:absolute after:top-1 after:left-1
-                                      after:bg-white after:border after:rounded-full after:h-4 after:w-4 
-                                      after:transition-all"></div>
-                      <span className="ml-3 text-sm font-medium text-gray-900">Show passwords</span>
-                    </label>
-                  </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Show passwords toggle */}
+                <div className="flex items-center space-x-2 mb-4">
+                  <label
+                    htmlFor="showPasswords"
+                    className="inline-flex items-center cursor-pointer"
+                  >
+                    <input
+                      id="showPasswords"
+                      type="checkbox"
+                      className="sr-only peer"
+                      checked={showPasswords}
+                      onChange={(e) => setShowPasswords(e.target.checked)}
+                      aria-label="Show passwords"
+                    />
+                    <div className="w-10 h-6 bg-gray-200 rounded-full transition-all peer-checked:bg-indigo-600 relative">
+                      <div className="absolute top-1 left-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-full" />
+                    </div>
+                    <span className="ml-2 text-sm text-gray-700">Show passwords</span>
+                  </label>
                 </div>
 
                 <Button
                   type="submit"
-                  className="w-full flex items-center justify-center bg-charcoal text-white"
+                  className="w-full flex items-center justify-center bg-charcoal text-white hover:bg-black focus:ring-2 focus:ring-indigo-500"
                   disabled={loading}
                 >
-                  {loading && <Loader2 className="animate-spin mr-2 h-4 w-4" />}
+                  {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {mode === 'signup' ? 'Create Account' : 'Sign In'}
                 </Button>
 
-                <div className="flex items-center justify-center space-x-4">
-                  <span className="block h-px w-16 bg-gray-200" />
-                  <span className="text-gray-400 text-sm">OR</span>
-                  <span className="block h-px w-16 bg-gray-200" />
+                <div className="relative flex items-center">
+                  <hr className="w-full border-gray-200" aria-hidden="true" />
+                  <span className="absolute inset-x-1/2 bg-white px-2 text-sm text-gray-400">
+                    OR
+                  </span>
                 </div>
 
                 <div className="space-y-4">
@@ -410,7 +442,7 @@ export default function TraineeAuthPage() {
                     className="w-full flex items-center justify-center space-x-2"
                     disabled={loading}
                   >
-                    <FaGoogle />
+                    <FaGoogle aria-hidden="true" />
                     <span>Continue with Google</span>
                   </Button>
                   <Button
@@ -418,7 +450,7 @@ export default function TraineeAuthPage() {
                     disabled
                     className="w-full flex items-center justify-center space-x-2"
                   >
-                    <FaApple />
+                    <FaApple aria-hidden="true" />
                     <span>Continue with Apple</span>
                   </Button>
                 </div>
@@ -426,13 +458,12 @@ export default function TraineeAuthPage() {
             </CardContent>
           </Card>
 
-          {/* Footer */}
-          <footer className="mt-auto text-xs text-gray-500 text-center">
+          <footer className="mt-auto text-center text-xs text-gray-500">
             <p>© 2025 Goodlife Consulting Partners. All rights reserved.</p>
             <p>Powered by Bravonet Technologies Ltd</p>
           </footer>
         </div>
-      </div>
+      </section>
     </main>
   );
 }
