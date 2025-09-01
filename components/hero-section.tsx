@@ -40,8 +40,8 @@ export default function HeroSection() {
         {/* Headline + CTA (right-aligned) */}
         <div className="text-white text-right">
           <h1 className="text-base sm:text-xl font-light italic text-white/90 leading-snug mb-4">
-            Empowering Rwanda’s Future Leaders<br />
-            Building Tomorrow’s Change-makers
+            Empowering young Rwanda’s Future Leaders
+Building Tomorrow’s Change-makers
           </h1>
           <Link href="/signup/trainee">
             <Button
