@@ -5,27 +5,34 @@ import { MapPin, FileText, Phone, Mail } from "lucide-react";
 
 export default function AboutSection() {
   return (
-    <section
-      id="about"
-      className="py-20 bg-gradient-to-br from-forest-50 to-terracotta-50"
-    >
-      <div className="container mx-auto px-4">
-        {/* Hero media */}
-        <div className="mb-12">
-          {/* Replace with your video or image */}
-          <img
-            src="/images/about-hero.jpg"
-            alt="Welcome to Goodlife Consulting Partners"
-            className="mx-auto w-full h-auto rounded-lg"
+    <section id="about" className="relative overflow-hidden py-20 bg-gray-50">
+      {/* Video background inset with ash border */}
+      <div className="absolute inset-0 m-6 rounded-2xl overflow-hidden">
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="/images/about-hero.jpg"
+          className="w-full h-full object-cover"
+        >
+          <source
+            src="/videos/36c6-5860-4eab-9378-01f509998ae2.mp4"
+            type="video/mp4"
           />
-        </div>
+          Your browser does not support the video tag.
+        </video>
+        <div className="absolute inset-0 bg-black/50" />
+      </div>
 
+      {/* Main content above video */}
+      <div className="relative z-10 container mx-auto px-4">
         {/* Intro text */}
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+        <div className="max-w-3xl mx-auto text-center mb-16 text-white">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
             About Goodlife Consulting Partners
           </h2>
-          <p className="text-lg text-gray-700 leading-relaxed">
+          <p className="text-lg leading-relaxed">
             Welcome to Goodlife Consulting Partners. At Goodlife Consulting
             Partners, we are dedicated to fostering professional growth and
             development through our comprehensive training programs. Our mission
@@ -39,7 +46,7 @@ export default function AboutSection() {
           {/* Our Vision & Approach */}
           <div className="space-y-6">
             <Card className="border-l-4 border-l-terracotta-500 shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <CardContent className="p-6">
+              <CardContent className="bg-white bg-opacity-90 rounded-lg p-6">
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   Our Vision
                 </h3>
@@ -52,7 +59,7 @@ export default function AboutSection() {
             </Card>
 
             <Card className="border-l-4 border-l-forest-500 shadow-lg hover:shadow-xl transition-shadow duration-300">
-              <CardContent className="p-6">
+              <CardContent className="bg-white bg-opacity-90 rounded-lg p-6">
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   Our Approach
                 </h3>
@@ -76,19 +83,15 @@ export default function AboutSection() {
                   <MapPin className="h-5 w-5 text-terracotta-600 mt-1 flex-shrink-0" />
                   <div>
                     <p className="font-medium text-gray-900">Address</p>
-                    <p className="text-gray-600">
-                      PO Box 6061, Kicukiro Kagarama
-                    </p>
+                    <p className="text-gray-600">PO Box 8061, Kigali-Kacyiru</p>
                   </div>
                 </div>
 
                 <div className="flex items-start space-x-3">
                   <FileText className="h-5 w-5 text-forest-600 mt-1 flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-gray-900">
-                      RDB Registration
-                    </p>
-                    <p className="text-gray-600">141434783</p>
+                    <p className="font-medium text-gray-900">REG Registration</p>
+                    <p className="text-gray-600">148285</p>
                   </div>
                 </div>
 
@@ -96,8 +99,8 @@ export default function AboutSection() {
                   <Phone className="h-5 w-5 text-terracotta-600 mt-1 flex-shrink-0" />
                   <div>
                     <p className="font-medium text-gray-900">Phone</p>
-                    <p className="text-gray-600">+250 787 402 302</p>
-                    <p className="text-gray-600">+250 781 670 648</p>
+                    <p className="text-gray-600">+250 788 427 202</p>
+                    <p className="text-gray-600">+250 788 427 203</p>
                   </div>
                 </div>
 
@@ -106,7 +109,7 @@ export default function AboutSection() {
                   <div>
                     <p className="font-medium text-gray-900">Email</p>
                     <p className="text-gray-600">
-                      mugishajuniorfred@gmail.com
+                      info@goodlifeconsulting.rw
                     </p>
                   </div>
                 </div>
