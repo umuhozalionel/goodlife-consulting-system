@@ -52,10 +52,9 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const textColor = isScrolled ? "text-gray-900" : "text-white";
-  const hoverColor = isScrolled
-    ? "hover:text-terracotta-600"
-    : "hover:text-terracotta-400";
+  // static dark text + brand-accent hover on white bg
+  const textColor = "text-gray-900";
+  const hoverColor = "hover:text-terracotta-600";
 
   const dropdownBg = "bg-white";
   const dropdownBorder = "border-gray-200";
@@ -78,27 +77,22 @@ export default function Header() {
   }, [authModalOpen]);
 
   return (
-    <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white/80 backdrop-blur-sm shadow-lg" : "bg-black/50"
-      }`}
-    >
+    <header className="fixed top-0 w-full z-50 bg-white transition-all duration-300 shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Logo */}
           <Link href="/" className="flex items-center space-x-4">
-            <div className="w-10 h-10 bg-gradient-to-br from-terracotta-500 to-forest-500 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-lg drop-shadow-sm">
-                G
-              </span>
-            </div>
-            <div className="hidden sm:block">
-              <h1 className={`${textColor} font-bold text-lg drop-shadow-sm`}>
-                Goodlife Consulting
-              </h1>
-              <p className={`${textColor} text-xs drop-shadow-sm`}>Partners</p>
-            </div>
-          </Link>
+  <div className="w-10 h-10 rounded-xl overflow-hidden">
+    <img
+      src="/images/logo.png"
+      alt="Goodlife Logo"
+      className="object-contain w-full h-full"
+    />
+  </div>
+  <div className="hidden sm:block">
+    <h1 className={`${textColor} font-bold text-lg`}>Goodlife Consulting</h1>
+    <p className={`${textColor} text-xs`}>Partners</p>
+  </div>
+</Link>
 
           {/* Desktop Navigation */}
           <NavigationMenu className="hidden lg:flex">
@@ -157,7 +151,7 @@ export default function Header() {
                 size="icon"
                 className={`${textColor} ${hoverColor}`}
               >
-                <Search className="w-5 h-5 drop-shadow-sm" />
+                <Search className="w-5 h-5" />
               </Button>
               <div className="absolute right-0 top-12 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-all duration-300 z-50">
                 <Input
@@ -177,9 +171,9 @@ export default function Header() {
                 className={`flex items-center gap-1 ${textColor} ${hoverColor}`}
                 onClick={() => setIsLangOpen(!isLangOpen)}
               >
-                <Globe className="w-4 h-4 drop-shadow-sm" />
+                <Globe className="w-4 h-4" />
                 {language}
-                <ChevronDown className="w-4 h-4 drop-shadow-sm" />
+                <ChevronDown className="w-4 h-4" />
               </Button>
               {isLangOpen && (
                 <div className="absolute top-10 right-0 bg-white border shadow-md rounded-md z-50 w-32">
@@ -226,9 +220,9 @@ export default function Header() {
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? (
-              <X className="h-6 w-6 drop-shadow-sm" />
+              <X className="h-6 w-6" />
             ) : (
-              <Menu className="h-6 w-6 drop-shadow-sm" />
+              <Menu className="h-6 w-6" />
             )}
           </Button>
         </div>
@@ -269,7 +263,7 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden bg-black/50 border-t border-gray-700 py-4">
+          <div className="lg:hidden bg-white border-t border-gray-200 py-4 shadow-lg">
             <nav className="space-y-2">
               {[
                 "home",
