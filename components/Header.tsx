@@ -33,16 +33,18 @@ export default function Header() {
   const [language, setLanguage] = useState("EN");
   const [query, setQuery] = useState("");
 
+  // toggle scrolled state
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Dynamic container classes
+  // before scroll: dark-blue bg inside layout
+  // after scroll: fixed white bg + shadow
   const containerClasses = isScrolled
     ? "fixed top-0 left-1/2 transform -translate-x-1/2 w-full max-w-screen-xl bg-white shadow-sm"
-    : "relative w-full max-w-screen-xl bg-[#0a1932]";
+    : "relative mx-auto w-full max-w-screen-xl bg-[#0a1932]";
 
   const textColor = isScrolled ? "text-gray-900" : "text-white";
   const hoverColor = isScrolled ? "hover:text-terracotta-600" : "hover:text-gray-200";
@@ -59,18 +61,13 @@ export default function Header() {
       <div className="flex items-center justify-between h-16">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-3">
-          <img
-            src="/images/logo.png"
-            alt="Goodlife Logo"
-            className="w-10 h-10 object-contain"
-          />
+          <img src="/images/logo.png" alt="Goodlife Logo" className="w-10 h-10 object-contain" />
           <span className={`${textColor} font-bold text-lg`}>Goodlife</span>
         </Link>
 
         {/* Desktop Navigation */}
         <NavigationMenu className="hidden lg:flex">
           <NavigationMenuList className="flex items-center space-x-6">
-            {/* Training Programs Dropdown */}
             <NavigationMenuItem>
               <NavigationMenuTrigger
                 className={`
@@ -97,7 +94,6 @@ export default function Header() {
               </NavigationMenuContent>
             </NavigationMenuItem>
 
-            {/* Insights */}
             <NavigationMenuItem>
               <NavigationMenuLink
                 href="/#testimonials"
@@ -107,7 +103,6 @@ export default function Header() {
               </NavigationMenuLink>
             </NavigationMenuItem>
 
-            {/* Our Story */}
             <NavigationMenuItem>
               <NavigationMenuLink
                 href="/#about"
@@ -117,7 +112,6 @@ export default function Header() {
               </NavigationMenuLink>
             </NavigationMenuItem>
 
-            {/* Contact */}
             <NavigationMenuItem>
               <NavigationMenuLink
                 href="/#contact"
@@ -146,7 +140,7 @@ export default function Header() {
             </div>
           </div>
 
-          {/* Language */}
+          {/* Language Selector */}
           <div className="relative">
             <Button
               variant="ghost"
@@ -165,15 +159,10 @@ export default function Header() {
                     onClick={() => {
                       setLanguage(code);
                       setLangOpen(false);
-                      toast({
-                        title: "Language Selected",
-                        description: `Switched to ${label}`,
-                      });
+                      toast({ title: "Language Selected", description: `Switched to ${label}` });
                     }}
                     className={`w-full px-4 py-2 text-sm text-left hover:bg-emerald-50 ${
-                      language === code
-                        ? "text-emerald-700 font-semibold"
-                        : "text-gray-700"
+                      language === code ? "text-emerald-700 font-semibold" : "text-gray-700"
                     }`}
                   >
                     {label}
@@ -205,42 +194,37 @@ export default function Header() {
         </Button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu (dropdown removed) */}
       {mobileOpen && (
         <div className="lg:hidden bg-white border-t border-gray-200 shadow-lg">
           <nav className="p-4 space-y-2">
-            <NavigationMenuItem>
-              <NavigationMenuTrigger className="text-gray-900 hover:text-terracotta-600 text-sm font-medium transition">
-                Training Programs
-              </NavigationMenuTrigger>
-              <NavigationMenuContent>
-                <div className="w-64 p-4 bg-white border border-gray-200 rounded-md space-y-2">
-                  {trainingItems.map((item) => (
-                    <NavigationMenuLink
-                      key={item.href}
-                      href={item.href}
-                      className="block px-3 py-2 text-sm text-gray-900 hover:text-terracotta-600 hover:bg-gray-100 rounded-md transition"
-                    >
-                      {item.name}
-                    </NavigationMenuLink>
-                  ))}
-                </div>
-              </NavigationMenuContent>
-            </NavigationMenuItem>
+            <Link
+              href="/training"
+              className="block px-4 py-2 text-gray-900 hover:text-terracotta-600 transition"
+            >
+              Training Programs
+            </Link>
 
-            {[
-              { name: "Insights", href: "/#testimonials" },
-              { name: "Our Story", href: "/#about" },
-              { name: "Contact", href: "/#contact" },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="block px-4 py-2 text-gray-900 hover:text-terracotta-600 transition"
-              >
-                {item.name}
-              </Link>
-            ))}
+            <Link
+              href="/#testimonials"
+              className="block px-4 py-2 text-gray-900 hover:text-terracotta-600 transition"
+            >
+              Insights
+            </Link>
+
+            <Link
+              href="/#about"
+              className="block px-4 py-2 text-gray-900 hover:text-terracotta-600 transition"
+            >
+              Our Story
+            </Link>
+
+            <Link
+              href="/#contact"
+              className="block px-4 py-2 text-gray-900 hover:text-terracotta-600 transition"
+            >
+              Contact
+            </Link>
 
             <Link href="/#book-call">
               <Button className="w-full bg-white text-black hover:bg-gray-100 border border-gray-300 px-4 py-2 font-medium">
