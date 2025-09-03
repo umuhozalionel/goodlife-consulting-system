@@ -77,7 +77,7 @@ export default function Header() {
                 `}
               >
                 Training Programs
-                <ChevronDown className="w-4 h-4" />
+                
               </NavigationMenuTrigger>
               <NavigationMenuContent>
                 <div className="w-64 p-4 bg-white border border-gray-200 rounded-md space-y-2">
