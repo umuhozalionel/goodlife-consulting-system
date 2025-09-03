@@ -49,19 +49,36 @@ export default function HeroSection() {
 
         {/* Two CTAs side by side */}
         <div className="flex space-x-4">
+          {/* Learn More: was white→black, now black→white */}
           <Link href="/learn-more" className="inline-block">
             <Button
               size="lg"
-              className="bg-white text-black rounded-none hover:bg-black hover:text-white focus-visible:ring-black text-sm sm:text-base"
+              className="
+                bg-black text-white
+                rounded-none
+                hover:bg-white hover:text-black
+                focus-visible:ring-black
+                transition-colors duration-200 ease-in-out
+                text-sm sm:text-base
+              "
             >
               Learn More
             </Button>
           </Link>
 
+          {/* Apply Now: was yellow→green, now green→yellow */}
           <Link href="/signup/trainee" className="inline-block">
             <Button
               size="lg"
-              className="bg-[#FFFBEB] text-black hover:bg-[#317039] hover:text-white text-sm sm:text-base focus-visible:ring-[#317039]"
+              className="
+                bg-[#317039] text-white
+                rounded-none
+                hover:bg-[#FFFBEB] hover:text-black
+                focus-visible:ring-[#317039]
+                transition-colors duration-200 ease-in-out
+                flex items-center justify-center
+                text-sm sm:text-base
+              "
             >
               Apply Now
               <ArrowRight className="ml-2 h-5 w-5" />
