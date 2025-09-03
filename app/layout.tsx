@@ -20,7 +20,7 @@ export default function RootLayout({
       <body
         className="
           min-h-screen
-          bg-[url('/images/vectors.svg')]
+          bg-[url('/images/layout.jpg')]
           bg-cover
           bg-center
           bg-background
