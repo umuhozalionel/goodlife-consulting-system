@@ -44,7 +44,7 @@ export default function Header() {
   // after scroll: fixed white bg + shadow
   const containerClasses = isScrolled
     ? "fixed top-0 left-1/2 transform -translate-x-1/2 w-full max-w-screen-xl bg-white shadow-sm"
-    : "relative mx-auto w-full max-w-screen-xl bg-[#0a1932]";
+    : "relative mx-auto w-full max-w-screen-xl bg-[#317039]";
 
   const textColor = isScrolled ? "text-gray-900" : "text-white";
   const hoverColor = isScrolled ? "hover:text-terracotta-600" : "hover:text-gray-200";
@@ -62,7 +62,7 @@ export default function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-3">
           <img src="/images/logo.png" alt="Goodlife Logo" className="w-10 h-10 object-contain" />
-          <span className={`${textColor} font-bold text-lg`}>Goodlife</span>
+          <span className={`${textColor} font-bold text-lg`}></span>
         </Link>
 
         {/* Desktop Navigation */}
