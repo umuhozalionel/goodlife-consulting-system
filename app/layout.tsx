@@ -17,7 +17,19 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head />
-      <body className="min-h-screen bg-background text-foreground antialiased">
+      <body
+        className="
+          min-h-screen
+          bg-[url('/images/vectors.svg')]
+          bg-cover
+          bg-center
+          bg-background
+          text-foreground
+          antialiased
+          flex
+          justify-center
+        "
+      >
         {/* Skip link for keyboard users */}
         <a
           href="#home"
@@ -27,7 +39,12 @@ export default function RootLayout({
         </a>
 
         {/* <DebugCSSVariables /> */}
-        {children}
+
+        {/* Centered “card” container for your entire site */}
+        <div className="w-full max-w-7xl bg-[#0a1932] shadow-xl overflow-hidden">
+          {children}
+        </div>
+
         <Toaster />
       </body>
     </html>

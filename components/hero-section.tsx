@@ -4,8 +4,15 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Inter } from 'next/font/google';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
+
+// Load Inter font weights
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+});
 
 export default function HeroSection() {
   return (
@@ -13,40 +20,48 @@ export default function HeroSection() {
       id="home"
       className="relative flex items-center justify-center min-h-screen overflow-hidden"
     >
-      {/* Background Image */}
+      {/* Background */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/life-11.jpg"
+          src="/images/group-three-female-friends-having-fun-together-outdoors.jpg"
           alt="Training session outdoors"
           fill
           priority
           className="object-cover object-center"
         />
-        <div className="absolute inset-0 bg-black/60" />
       </div>
 
-      {/* Content Wrapper */}
-      <div className="relative z-10 w-full px-6 sm:px-12 max-w-screen-xl mx-auto flex flex-col justify-between h-full py-24 space-y-12">
-        {/* Welcome Text (left-aligned) */}
-        <div className="text-white text-left">
-          <p className="text-3xl sm:text-5xl font-medium text-emerald-300 tracking-wide mb-1">
-            Welcome to
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 z-10 pointer-events-none">
+        <div className="absolute inset-y-0 left-0 w-full sm:w-1/2 bg-gradient-to-r from-black/70 to-transparent" />
+      </div>
+
+      {/* Content */}
+      <div className="relative z-20 w-full px-6 sm:px-12 max-w-screen-xl mx-auto flex flex-col justify-center h-full py-24">
+        <div className={inter.className}>
+          <h1 className="filter brightness-110 text-4xl sm:text-6xl md:text-7xl font-bold text-[#CC4B24] drop-shadow-md mb-4 leading-tight">
+            Welcome to Goodlife Consulting Partners
+          </h1>
+          <p className="text-base sm:text-lg italic text-[#FFF1D4] leading-snug mb-8">
+            Empowering young Rwanda’s future leaders to become tomorrow’s change-makers.
           </p>
-          <h2 className="text-5xl sm:text-7xl font-bold text-white drop-shadow-md">
-            Goodlife Consulting partners.
-          </h2>
         </div>
 
-        {/* Headline + CTA (right-aligned) */}
-        <div className="text-white text-right">
-          <h1 className="text-base sm:text-xl font-light italic text-white/90 leading-snug mb-4">
-            Empowering young Rwanda’s Future Leaders
-Building Tomorrow’s Change-makers
-          </h1>
-          <Link href="/signup/trainee">
+        {/* Two CTAs side by side */}
+        <div className="flex space-x-4">
+          <Link href="/learn-more" className="inline-block">
             <Button
               size="lg"
-              className="bg-black hover:bg-neutral-900 text-white text-sm sm:text-base focus-visible:ring-white"
+              className="bg-white text-black rounded-none hover:bg-black hover:text-white focus-visible:ring-black text-sm sm:text-base"
+            >
+              Learn More
+            </Button>
+          </Link>
+
+          <Link href="/signup/trainee" className="inline-block">
+            <Button
+              size="lg"
+              className="bg-[#FFFBEB] text-black hover:bg-[#317039] hover:text-white text-sm sm:text-base focus-visible:ring-[#317039]"
             >
               Apply Now
               <ArrowRight className="ml-2 h-5 w-5" />
@@ -54,11 +69,22 @@ Building Tomorrow’s Change-makers
           </Link>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="flex justify-center mt-12 sm:mt-0">
-          <div className="w-6 h-10 border-2 border-white rounded-full flex items-start p-1 animate-bounce">
-            <span className="block w-1 h-3 bg-white rounded-full animate-pulse" />
-          </div>
+        {/* Animated scroll arrow */}
+        <div className="flex justify-center mt-16">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6 animate-bounce text-white"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
         </div>
       </div>
     </section>
