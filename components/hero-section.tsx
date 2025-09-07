@@ -18,7 +18,11 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative flex items-center justify-center min-h-screen overflow-hidden"
+      className="
+        relative flex items-center justify-center
+        h-[70vh] sm:h-[80vh]
+        overflow-hidden
+      "
     >
       {/* Background */}
       <div className="absolute inset-0 z-0">
@@ -37,7 +41,12 @@ export default function HeroSection() {
       </div>
 
       {/* Content */}
-      <div className="relative z-20 w-full px-6 sm:px-12 max-w-screen-xl mx-auto flex flex-col justify-center h-full py-24">
+      <div
+        className={`
+          relative z-20 w-full px-6 sm:px-12 max-w-screen-xl mx-auto
+          flex flex-col justify-center h-full
+        `}
+      >
         <div className={inter.className}>
           <h1 className="filter brightness-110 text-4xl sm:text-6xl md:text-7xl font-bold text-[#E9F5FF] drop-shadow-md mb-4 leading-tight">
             Welcome to Goodlife Consulting Partners
@@ -49,7 +58,7 @@ export default function HeroSection() {
 
         {/* Two CTAs side by side */}
         <div className="flex space-x-4">
-          {/* Learn More: was white→black, now black→white */}
+          {/* Learn More */}
           <Link href="/about-section" className="inline-block">
             <Button
               size="lg"
@@ -66,7 +75,7 @@ export default function HeroSection() {
             </Button>
           </Link>
 
-          {/* Apply Now: was yellow→green, now green→yellow */}
+          {/* Apply Now */}
           <Link href="/signup/trainee" className="inline-block">
             <Button
               size="lg"
