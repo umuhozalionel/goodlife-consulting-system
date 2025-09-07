@@ -1,13 +1,12 @@
 // components/AboutSection.tsx
-
 import { Card, CardContent } from "@/components/ui/card";
 import { MapPin, FileText, Phone, Mail } from "lucide-react";
 
 export default function AboutSection() {
   return (
     <section id="about" className="relative overflow-hidden py-20 bg-gray-50">
-      {/* Video background inset with ash border */}
-      <div className="absolute inset-0 m-6 rounded-2xl overflow-hidden">
+      {/* Fullscreen video background behind content */}
+      <div className="absolute inset-0">
         <video
           autoPlay
           muted
@@ -26,7 +25,7 @@ export default function AboutSection() {
       </div>
 
       {/* Main content above video */}
-      <div className="relative z-10 container mx-auto px-4">
+      <div className="relative z-10 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Intro text */}
         <div className="max-w-3xl mx-auto text-center mb-16 text-white">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
@@ -73,7 +72,7 @@ export default function AboutSection() {
           </div>
 
           {/* Company Details */}
-          <Card className="bg-white shadow-xl rounded-2xl overflow-hidden">
+          <Card className="bg-white bg-opacity-90 shadow-xl rounded-lg overflow-hidden">
             <CardContent className="p-8">
               <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">
                 Company Details

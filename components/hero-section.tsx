@@ -39,7 +39,7 @@ export default function HeroSection() {
       {/* Content */}
       <div className="relative z-20 w-full px-6 sm:px-12 max-w-screen-xl mx-auto flex flex-col justify-center h-full py-24">
         <div className={inter.className}>
-          <h1 className="filter brightness-110 text-4xl sm:text-6xl md:text-7xl font-bold text-[#CC4B24] drop-shadow-md mb-4 leading-tight">
+          <h1 className="filter brightness-110 text-4xl sm:text-6xl md:text-7xl font-bold text-[#E9F5FF] drop-shadow-md mb-4 leading-tight">
             Welcome to Goodlife Consulting Partners
           </h1>
           <p className="text-base sm:text-lg italic text-[#FFF1D4] leading-snug mb-8">
@@ -50,7 +50,7 @@ export default function HeroSection() {
         {/* Two CTAs side by side */}
         <div className="flex space-x-4">
           {/* Learn More: was white→black, now black→white */}
-          <Link href="/learn-more" className="inline-block">
+          <Link href="/about-section" className="inline-block">
             <Button
               size="lg"
               className="
@@ -71,10 +71,10 @@ export default function HeroSection() {
             <Button
               size="lg"
               className="
-                bg-[#317039] text-white
+                bg-[#FFFBEB] text-black
                 rounded-none
-                hover:bg-[#FFFBEB] hover:text-black
-                focus-visible:ring-[#317039]
+                hover:bg-[#0a1932] hover:text-white
+                focus-visible:ring-[#0a1932]
                 transition-colors duration-200 ease-in-out
                 flex items-center justify-center
                 text-sm sm:text-base

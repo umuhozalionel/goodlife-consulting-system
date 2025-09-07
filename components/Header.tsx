@@ -44,7 +44,7 @@ export default function Header() {
   // after scroll: fixed white bg + shadow
   const containerClasses = isScrolled
     ? "fixed top-0 left-1/2 transform -translate-x-1/2 w-full max-w-screen-xl bg-white shadow-sm"
-    : "relative mx-auto w-full max-w-screen-xl bg-[#317039]";
+    : "relative mx-auto w-full max-w-screen-xl bg-[#0a1932]";
 
   const textColor = isScrolled ? "text-gray-900" : "text-white";
   const hoverColor = isScrolled ? "hover:text-terracotta-600" : "hover:text-gray-200";
@@ -173,7 +173,7 @@ export default function Header() {
           </div>
 
           {/* Book a Call */}
-          <Link href="/#book-call">
+          <Link href="/#contact">
             <Button
               size="sm"
               className="bg-white text-black hover:bg-gray-100 border border-gray-300 text-sm font-medium"

@@ -18,7 +18,7 @@ export default function PartnersSection() {
   return (
     <section id="partners" className="py-4 overflow-hidden bg-[#0a1932]">
       <div className="max-w-screen-xl mx-auto">
-        <div className="relative w-full h-20 overflow-hidden">
+        <div className="relative w-full h-16 overflow-hidden">
           <div className="absolute flex animate-marquee whitespace-nowrap space-x-8">
             {loop.map((src, i) => (
               <img
