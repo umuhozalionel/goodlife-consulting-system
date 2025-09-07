@@ -126,6 +126,11 @@
   .animate-heroZoom {
     animation: heroZoom 12s ease-in-out infinite;
   }
+
+  /* Partners marquee animation */
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
+  }
 }
 
 /* ─────────────────────────────────────────────── */
@@ -162,5 +167,15 @@
   }
   100% {
     transform: scale(1.05);
+  }
+}
+
+/* Partners marquee keyframes */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
   }
 }
