@@ -9,61 +9,79 @@ import { ArrowRight } from "lucide-react";
 
 const programs = [
   {
+    slug: "leadership",
     category: "Leadership & Management",
-    link: "/training/leadership",
+    image: "/images/cheerful-mood-group-people-business-conference-modern-classroom-daytime.jpg",
     description: "Master leadership strategies and effective team management.",
   },
   {
+    slug: "corporate",
     category: "Corporate Trainings",
-    link: "/training/corporate",
+    image: "/images/entrepreneur-videocall-with-clients.jpg",
     description: "Tailored corporate skill-building for organizational growth.",
   },
   {
+    slug: "digital",
     category: "Digital & Innovation",
-    link: "/training/digital",
+    image: "/images/team-businessmen-listening-business-lecture-briefing.jpg",
     description: "Harness the latest digital tools and innovation practices.",
   },
   {
+    slug: "communication",
     category: "Communication & Personal Growth",
-    link: "/training/communication",
+    image:
+      "/images/corporate-business-people-meeting-boardroom-african-manager-brainstorming-with-colleagues-discussing-strategy-sharing-problem-solving-ideas-collaborating-conference-room-company.jpg",
     description: "Enhance communication skills and personal development.",
   },
   {
+    slug: "languages",
     category: "Languages & Social Impact",
-    link: "/training/languages",
+    image: "/images/full-shot-woman-working-out-with-trainer.jpg",
     description: "Learn new languages and drive social impact initiatives.",
   },
   {
+    slug: "team-building",
     category: "Team Building",
-    link: "/training/team-building",
+    image:
+      "/images/man-participation-training-after-being-hired-his-new-office-job.jpg",
     description: "Engage in dynamic exercises to strengthen team cohesion.",
   },
   {
+    slug: "industrial-attachment",
     category: "Industrial Attachment",
-    link: "/training/industrial-attachment",
-    description: "Hands-on industry exposure with mentorship & career planning.",
+    image:
+      "/images/african-american-businessman-giving-presentation-explaining-new-marketing-plan-meeting.jpg",
+    description:
+      "Hands-on industry exposure with mentorship & career planning.",
   },
   {
+    slug: "counselling",
     category: "Counselling",
-    link: "/training/counselling",
-    description: "Professional support for trauma, mental health & GBV recovery.",
+    image: "/images/beginner-average-skilled-expert-productivity.jpg",
+    description:
+      "Professional support for trauma, mental health & GBV recovery.",
   },
   {
+    slug: "career-guidance",
     category: "Career Guidance",
-    link: "/training/career-guidance",
-    description: "Navigate career paths, employability gaps & work-life balance.",
+    image:
+      "/images/male-employee-participating-training-session-his-new-office-job.jpg",
+    description:
+      "Navigate career paths, employability gaps & work-life balance.",
   },
   {
+    slug: "field-trips",
     category: "Field Trips & Site Visits",
-    link: "/training/field-trips",
-    description: "Explore real-world industries and innovation hubs on site visits.",
+    image:
+      "/images/confident-african-speaker-business-coach-giving-presentation-team.jpg",
+    description:
+      "Explore real-world industries and innovation hubs on site visits.",
   },
 ];
 
 export default function TrainingProgram() {
   // spotlight only the first 3
   const spotlight = programs.slice(0, 3);
-  const imageSrc = "/images/her.jpg";
   const duration = "3 months";
 
   return (
@@ -82,51 +100,42 @@ export default function TrainingProgram() {
 
         {/* Spotlight cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {spotlight.map((prog, idx) => {
-            const slug = prog.category
-              .toLowerCase()
-              .replace(/&/g, "and")
-              .replace(/\s+/g, "-");
-
-            return (
-              <Card
-                key={idx}
-                className="shadow-lg hover:shadow-xl transition-shadow duration-300"
-              >
-                <CardHeader className="p-0">
-                  <div className="relative w-full h-40">
-                    <Image
-                      src={imageSrc}
-                      alt={prog.category}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <CardTitle className="text-lg font-semibold text-gray-900">
-                    {prog.category}
-                  </CardTitle>
-                  <p className="text-sm text-gray-600 mt-2">
-                    {prog.description}
-                  </p>
-                  <p className="text-sm text-gray-600 mt-1 font-medium">
-                    Duration: {duration}
-                  </p>
-                  <div className="flex space-x-3 mt-4">
-                    <Link href={prog.link}>
-                      <Button variant="outline" className="rounded-full">
-                        View Details
-                      </Button>
-                    </Link>
-                    <Link href={`/signup/trainee?program=${slug}`}>
-                      <Button className="rounded-full">Enroll Now</Button>
-                    </Link>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+          {spotlight.map((prog) => (
+            <Card
+              key={prog.slug}
+              className="shadow-lg hover:shadow-xl transition-shadow duration-300"
+            >
+              <CardHeader className="p-0">
+                <div className="relative w-full h-40">
+                  <Image
+                    src={prog.image}
+                    alt={prog.category}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </CardHeader>
+              <CardContent>
+                <CardTitle className="text-lg font-semibold text-gray-900">
+                  {prog.category}
+                </CardTitle>
+                <p className="text-sm text-gray-600 mt-2">{prog.description}</p>
+                <p className="text-sm text-gray-600 mt-1 font-medium">
+                  Duration: {duration}
+                </p>
+                <div className="flex space-x-3 mt-4">
+                  <Link href={`/programs/${prog.slug}`}>
+                    <Button variant="outline" className="rounded-full">
+                      View Details
+                    </Button>
+                  </Link>
+                  <Link href={`/signup/trainee?program=${prog.slug}`}>
+                    <Button className="rounded-full">Enroll Now</Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
         {/* View More Programs button */}

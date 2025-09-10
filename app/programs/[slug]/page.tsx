@@ -1,10 +1,11 @@
-// app/programs/page.tsx
+// app/programs/[slug]/page.tsx
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
+import React, { useState, useRef, useEffect } from "react";
+import { use } from "react";
+import { notFound } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Bell,
   MoreHorizontal,
@@ -17,19 +18,25 @@ import {
   Facebook,
   Instagram,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { programs } from "@/data/programs";
 
-export default function ProgramsPage() {
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default function ProgramDetail({ params }: PageProps) {
+  const { slug } = React.use(params);
+  const program = programs.find((p) => p.slug === slug);
+  if (!program) return notFound();
+
   const [notifOpen, setNotifOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const router = useRouter();
 
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
+    function handleOutside(e: MouseEvent) {
       if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
         setNotifOpen(false);
       }
@@ -37,14 +44,12 @@ export default function ProgramsPage() {
         setMenuOpen(false);
       }
     }
-    window.addEventListener("click", handleClickOutside);
-    return () => window.removeEventListener("click", handleClickOutside);
+    window.addEventListener("click", handleOutside);
+    return () => window.removeEventListener("click", handleOutside);
   }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
-      <h1 className="sr-only">Current Programs</h1>
-
       {/* HEADER */}
       <header className="w-full bg-white flex items-center justify-between px-6 py-3 shadow">
         <Link href="/">
@@ -60,7 +65,7 @@ export default function ProgramsPage() {
         <div className="flex items-center space-x-4">
           <div className="relative" ref={notifRef}>
             <button
-              onClick={() => setNotifOpen(o => !o)}
+              onClick={() => setNotifOpen((o) => !o)}
               className="p-2 rounded-full hover:bg-gray-100 transition"
             >
               <Bell className="w-6 h-6 text-gray-900" />
@@ -81,7 +86,7 @@ export default function ProgramsPage() {
 
           <div className="relative" ref={menuRef}>
             <button
-              onClick={() => setMenuOpen(o => !o)}
+              onClick={() => setMenuOpen((o) => !o)}
               className="p-2 rounded-full hover:bg-gray-100 transition"
             >
               <MoreHorizontal className="w-6 h-6 text-gray-900" />
@@ -132,12 +137,13 @@ export default function ProgramsPage() {
         <div className="relative flex items-center container mx-auto px-6 max-w-6xl">
           <div className="w-full md:w-1/2 text-left text-white">
             <h2
-              className="text-4xl font-bold text-terracotta-500 inline-block
-                         border-b-2 border-terracotta-500 pb-2"
+              className="text-4xl font-bold text-terracotta-500 inline-block border-b-2 border-terracotta-500 pb-2"
             >
               Current Programs
             </h2>
-            <p className="mt-4 text-3xl font-semibold">Unlock Unlimited Learning</p>
+            <p className="mt-4 text-3xl font-semibold">
+              Unlock Unlimited Learning
+            </p>
             <p className="mt-2 text-lg">
               Find detailed information about your enrolled program here.
             </p>
@@ -145,52 +151,71 @@ export default function ProgramsPage() {
         </div>
       </section>
 
-      {/* PROGRAM CARDS */}
-      <main className="flex-1 container mx-auto px-6 py-12">
-        <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {programs.map((prog) => (
-            <div
-              key={prog.slug}
-              role="link"
-              tabIndex={0}
-              onClick={() => router.push(`/programs/${prog.slug}`)}
-              onKeyDown={(e) =>
-                e.key === "Enter" && router.push(`/programs/${prog.slug}`)
-              }
-              className="group cursor-pointer transform transition hover:scale-105 hover:shadow-xl"
-            >
-              <Card className="overflow-hidden rounded-lg bg-white shadow">
-                <div className="relative w-full h-48">
-                  <Image
-                    src={prog.image}
-                    alt={prog.category}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <CardContent className="p-5">
-                  <h3 className="text-xl font-semibold text-gray-900">
-                    {prog.category}
-                  </h3>
-                  <p className="mt-2 text-base leading-relaxed text-gray-600">
-                    {prog.description}
-                  </p>
-                  <div className="mt-4 flex space-x-3">
-                    <Link href={`/programs/${prog.slug}`}>
-                      <Button variant="outline" size="sm">
-                        View Details
-                      </Button>
-                    </Link>
-                    <Link href={`/signup/trainee?program=${prog.slug}`}>
-                      <Button size="sm">Enroll Now</Button>
-                    </Link>
-                  </div>
-                  <p className="mt-2 text-xs text-gray-400">Image by Freepik</p>
-                </CardContent>
-              </Card>
-            </div>
-          ))}
-        </div>
+      {/* BACK LINK */}
+      <div className="container mx-auto px-6 mt-6">
+        <Link
+          href="/programs"
+          className="text-sm text-forest-500 hover:underline"
+        >
+          ← Back to Programs
+        </Link>
+      </div>
+
+      {/* TWO-COLUMN DETAIL */}
+      <main className="flex-1 container mx-auto px-6 py-12 space-y-12">
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div className="space-y-4">
+            <h1 className="text-3xl font-bold text-gray-900">
+              {program.category}
+            </h1>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              {program.longDescription}
+            </p>
+          </div>
+          <div className="relative w-full h-64 lg:h-80 rounded-lg overflow-hidden">
+            <Image
+              src={program.image}
+              alt={program.category}
+              fill
+              className="object-cover"
+            />
+          </div>
+        </section>
+
+        <section className="space-y-6">
+          <h2 className="text-2xl font-semibold">Program structure</h2>
+          <div className="space-y-4">
+            {program.modules.map((mod) => (
+              <div key={mod.title}>
+                <h3 className="text-xl font-medium">{mod.title}</h3>
+                <ul className="list-disc list-inside text-gray-700">
+                  {mod.lessons.map((lesson) => (
+                    <li key={lesson}>{lesson}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {program.includes.length > 0 && (
+          <section className="space-y-4">
+            <h2 className="text-2xl font-semibold">
+              This program includes:
+            </h2>
+            <ul className="list-disc list-inside space-y-2 text-gray-700">
+              {program.includes.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        <section className="text-center">
+          <Link href={`/signup/trainee?program=${slug}`}>
+            <Button size="lg">Enroll Now</Button>
+          </Link>
+        </section>
       </main>
 
       {/* FOOTER */}
@@ -204,7 +229,7 @@ export default function ProgramsPage() {
                 "Community",
                 "Rewards",
                 "Support",
-                "Privacy Policy",  
+                "Privacy Policy",
                 "Terms & Conditions",
               ].map((link) => (
                 <Link
@@ -217,11 +242,10 @@ export default function ProgramsPage() {
               ))}
             </nav>
             <p className="text-sm">
-              © 2025 Goodlife Consultants. All rights reserved. Powered by  
+              © 2025 Goodlife Consultants. All rights reserved. Powered by
               Bravonet Technologies.
             </p>
           </div>
-
           <div className="flex flex-col items-center md:items-end space-y-6 mt-6 md:mt-0">
             <div className="flex space-x-4">
               <Link href="#">
@@ -233,25 +257,6 @@ export default function ProgramsPage() {
               <Link href="#">
                 <Instagram className="w-5 h-5 text-white hover:text-amber-300" />
               </Link>
-            </div>
-
-            <div className="w-full max-w-sm bg-white rounded-lg p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Send Us Your Suggestions
-              </h3>
-              <form className="flex flex-col sm:flex-row items-center sm:space-x-2">
-                <input
-                  type="email"
-                  placeholder="Your email"
-                  className="w-full sm:flex-1 p-2 rounded-md border border-gray-300 focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  className="mt-3 sm:mt-0 bg-forest-500 text-white font-semibold px-4 py-2 rounded-md hover:bg-forest-600 transition"
-                >
-                  Send
-                </button>
-              </form>
             </div>
           </div>
         </div>

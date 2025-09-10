@@ -16,7 +16,7 @@ export default function PartnersSection() {
   const loop = [...partners, ...partners]; // seamless scroll
 
   return (
-    <section id="partners" className="py-4 overflow-hidden bg-[#0a1932]">
+    <section id="partners" className="py-15 overflow-hidden bg-[#0a1932]">
       <div className="max-w-screen-xl mx-auto">
         <div className="relative w-full h-16 overflow-hidden">
           <div className="absolute flex animate-marquee whitespace-nowrap space-x-8">

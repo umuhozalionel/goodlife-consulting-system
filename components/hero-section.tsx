@@ -27,7 +27,7 @@ export default function HeroSection() {
       {/* Background */}
       <div className="absolute inset-0 z-0">
         <Image
-          src="/images/group-three-female-friends-having-fun-together-outdoors.jpg"
+          src="/images/life-7.jpg"
           alt="Training session outdoors"
           fill
           priority
