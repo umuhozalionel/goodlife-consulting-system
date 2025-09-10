@@ -33,7 +33,6 @@ const programs = [
       "/images/corporate-business-people-meeting-boardroom-african-manager-brainstorming-with-colleagues-discussing-strategy-sharing-problem-solving-ideas-collaborating-conference-room-company.jpg",
     description: "Enhance communication skills and personal development.",
   },
-  {
     slug: "languages",
     category: "Languages & Social Impact",
     image: "/images/full-shot-woman-working-out-with-trainer.jpg",

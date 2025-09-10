@@ -4,30 +4,10 @@ import { MapPin, FileText, Phone, Mail } from "lucide-react";
 
 export default function AboutSection() {
   return (
-    <section id="about" className="relative overflow-hidden py-20 bg-gray-50">
-      {/* Fullscreen video background behind content */}
-      <div className="absolute inset-0">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster="/images/about-hero.jpg"
-          className="w-full h-full object-cover"
-        >
-          <source
-            src="/videos/36c6-5860-4eab-9378-01f509998ae2.mp4"
-            type="video/mp4"
-          />
-          Your browser does not support the video tag.
-        </video>
-        <div className="absolute inset-0 bg-black/50" />
-      </div>
-
-      {/* Main content above video */}
+    <section id="about" className="relative overflow-hidden py-20 bg-gray-50 bg-white">
       <div className="relative z-10 max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Intro text */}
-        <div className="max-w-3xl mx-auto text-center mb-16 text-white">
+        <div className="max-w-3xl mx-auto text-center mb-16 text-gray-900">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             About Goodlife Consulting Partners
           </h2>

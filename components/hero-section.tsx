@@ -59,7 +59,7 @@ export default function HeroSection() {
         {/* Two CTAs side by side */}
         <div className="flex space-x-4">
           {/* Learn More */}
-          <Link href="/about-section" className="inline-block">
+          <Link href="/programs" className="inline-block">
             <Button
               size="lg"
               className="
