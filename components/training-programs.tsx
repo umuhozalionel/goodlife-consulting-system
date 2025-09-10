@@ -29,10 +29,10 @@ const programs = [
   {
     slug: "communication",
     category: "Communication & Personal Growth",
-    image:
-      "/images/corporate-business-people-meeting-boardroom-african-manager-brainstorming-with-colleagues-discussing-strategy-sharing-problem-solving-ideas-collaborating-conference-room-company.jpg",
+    image: "/images/corporate-business-people-meeting-boardroom-african-manager-brainstorming-with-colleagues-discussing-strategy-sharing-problem-solving-ideas-collaborating-conference-room-company.jpg",
     description: "Enhance communication skills and personal development.",
   },
+  {
     slug: "languages",
     category: "Languages & Social Impact",
     image: "/images/full-shot-woman-working-out-with-trainer.jpg",
@@ -41,45 +41,36 @@ const programs = [
   {
     slug: "team-building",
     category: "Team Building",
-    image:
-      "/images/man-participation-training-after-being-hired-his-new-office-job.jpg",
+    image: "/images/man-participation-training-after-being-hired-his-new-office-job.jpg",
     description: "Engage in dynamic exercises to strengthen team cohesion.",
   },
   {
     slug: "industrial-attachment",
     category: "Industrial Attachment",
-    image:
-      "/images/african-american-businessman-giving-presentation-explaining-new-marketing-plan-meeting.jpg",
-    description:
-      "Hands-on industry exposure with mentorship & career planning.",
+    image: "/images/african-american-businessman-giving-presentation-explaining-new-marketing-plan-meeting.jpg",
+    description: "Hands-on industry exposure with mentorship & career planning.",
   },
   {
     slug: "counselling",
     category: "Counselling",
     image: "/images/beginner-average-skilled-expert-productivity.jpg",
-    description:
-      "Professional support for trauma, mental health & GBV recovery.",
+    description: "Professional support for trauma, mental health & GBV recovery.",
   },
   {
     slug: "career-guidance",
     category: "Career Guidance",
-    image:
-      "/images/male-employee-participating-training-session-his-new-office-job.jpg",
-    description:
-      "Navigate career paths, employability gaps & work-life balance.",
+    image: "/images/male-employee-participating-training-session-his-new-office-job.jpg",
+    description: "Navigate career paths, employability gaps & work-life balance.",
   },
   {
     slug: "field-trips",
     category: "Field Trips & Site Visits",
-    image:
-      "/images/confident-african-speaker-business-coach-giving-presentation-team.jpg",
-    description:
-      "Explore real-world industries and innovation hubs on site visits.",
+    image: "/images/confident-african-speaker-business-coach-giving-presentation-team.jpg",
+    description: "Explore real-world industries and innovation hubs on site visits.",
   },
 ];
 
 export default function TrainingProgram() {
-  // spotlight only the first 3
   const spotlight = programs.slice(0, 3);
   const duration = "3 months";
 
