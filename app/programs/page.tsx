@@ -185,7 +185,7 @@ export default function ProgramsPage() {
                       <Button size="sm">Enroll Now</Button>
                     </Link>
                   </div>
-                  <p className="mt-2 text-xs text-gray-400">Image by Freepik</p>
+                  <p className="mt-2 text-xs text-gray-400">Open to Enroll</p>
                 </CardContent>
               </Card>
             </div>
