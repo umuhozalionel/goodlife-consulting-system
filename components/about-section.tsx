@@ -26,7 +26,7 @@ export default function AboutSection() {
             </div>
             <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-md">
               <Image
-                src="/images/life-7.jpg"
+                src="/community/community-11.jpg"
                 alt="Goodlife consulting team"
                 fill
                 className="object-cover"
