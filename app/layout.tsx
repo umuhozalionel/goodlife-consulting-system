@@ -41,7 +41,7 @@ export default function RootLayout({
         {/* <DebugCSSVariables /> */}
 
         {/* Centered “card” container for your entire site */}
-        <div className="w-full max-w-7xl bg-[#ffffff] shadow-xl overflow-hidden">
+        <div className="w-full max-w-7xl bg-gradient-to-br from-terracotta-50 to-forest-50 shadow-xl overflow-hidden">
           {children}
         </div>
 
