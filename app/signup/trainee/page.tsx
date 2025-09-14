@@ -177,7 +177,7 @@ export default function TraineeAuthPage() {
       {/* Left Illustration */}
       <aside className="relative hidden w-full md:flex md:w-1/2 wave-mask md:border-r md:border-gray-200">
         <Image
-          src="/images/life-10.jpg"
+          src="/community/community-10.jpg"
           alt="Team collaborating on training"
           fill
           className="object-cover"
