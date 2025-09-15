@@ -31,3 +31,5 @@ next-env.d.ts
 /serviceAccountKey.json
 .env.production
 .env.local
+.env.local
+.env.production
