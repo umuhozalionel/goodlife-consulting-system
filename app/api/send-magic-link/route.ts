@@ -3,35 +3,48 @@
 import { NextResponse } from 'next/server';
 import { initializeApp, cert, getApps } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
-import fetch from 'node-fetch';  // or omit if using Node 18+ with global fetch
 
+// Initialize Firebase Admin only once
 if (!getApps().length) {
   initializeApp({
     credential: cert({
       projectId: process.env.FIREBASE_PROJECT_ID!,
       clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY!
-        .replace(/\\n/g, '\n'),
+      privateKey: process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
     }),
   });
 }
 
 export async function POST(request: Request) {
   try {
+    // 1) Parse and validate email
     const { email } = (await request.json()) as { email?: string };
     if (!email || typeof email !== 'string') {
       return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
     }
 
-    // Generate and send magic link
+    // 2) Determine origin for magic link
+    const origin =
+      process.env.VERCEL_ENV === 'production'
+        ? 'https://goodlife-consulting-system.vercel.app'
+        : 'http://localhost:3000';
+
+    // 3) Generate the Firebase magic link
     const link = await getAuth().generateSignInWithEmailLink(email, {
-      url: 'http://localhost:3000/signup/trainee',
+      url: `${origin}/signup/trainee`,
       handleCodeInApp: true,
     });
 
-    const sandbox = process.env.MAILERSEND_SANDBOX_DOMAIN!;
-    console.log('Using sandbox domain:', sandbox);
+    // 4) Pick MailerSend domain
+    const isProd = process.env.VERCEL_ENV === 'production';
+    const mailDomain = isProd
+      ? process.env.MAILERSEND_DOMAIN!
+      : process.env.MAILERSEND_SANDBOX_DOMAIN!;
+    console.log(
+      `🟢 [send-magic-link] VERCEL_ENV=${process.env.VERCEL_ENV}, sending via domain=${mailDomain}`
+    );
 
+    // 5) Dispatch the email
     const apiRes = await fetch('https://api.mailersend.com/v1/email', {
       method: 'POST',
       headers: {
@@ -39,7 +52,7 @@ export async function POST(request: Request) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: { email: `test@${sandbox}`, name: 'Goodlife Dev' },
+        from: { email: `test@${mailDomain}`, name: 'Goodlife Dev' },
         to: [{ email }],
         subject: 'Your Goodlife Sign-In Link',
         html: `
@@ -64,17 +77,20 @@ export async function POST(request: Request) {
     });
 
     if (!apiRes.ok) {
-      const err = await apiRes.text();
-      console.error('MailerSend Error:', apiRes.status, err);
+      const errText = await apiRes.text();
+      console.error(
+        `🔴 [send-magic-link] MailerSend failed (${apiRes.status}): ${errText}`
+      );
       return NextResponse.json(
-        { error: `MailerSend failed (${apiRes.status}): ${err}` },
+        { error: `MailerSend failed (${apiRes.status}): ${errText}` },
         { status: 502 }
       );
     }
 
+    // 6) Success
     return NextResponse.json({ success: true });
   } catch (err: any) {
-    console.error('send-magic-link ERROR →', err);
+    console.error('🔴 [send-magic-link] ERROR →', err);
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
