@@ -3,11 +3,16 @@
 import { NextResponse } from 'next/server';
 import { initializeApp, cert, getApps } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
-import serviceAccount from '../../../serviceaccountkey.json';
 import fetch from 'node-fetch';
 
 if (!getApps().length) {
-  initializeApp({ credential: cert(serviceAccount) });
+  initializeApp({
+    credential: cert({
+      projectId: process.env.FIREBASE_PROJECT_ID,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
+    }),
+  });
 }
 
 export async function POST(request: Request) {
@@ -17,27 +22,22 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
     }
 
-    // 1) Generate Firebase magic link
     const link = await getAuth().generateSignInWithEmailLink(email, {
       url: 'http://localhost:3000/signup/trainee',
       handleCodeInApp: true,
     });
 
-    // 2) Send via MailerSend sandbox
-    const sandboxDomain = process.env.MAILERSEND_SANDBOX_DOMAIN;
-    console.log('Using sandbox domain:', sandboxDomain);
+    const sandbox = process.env.MAILERSEND_SANDBOX_DOMAIN!;
+    console.log('Using sandbox domain:', sandbox);
 
-    const msRes = await fetch('https://api.mailersend.com/v1/email', {
+    const res = await fetch('https://api.mailersend.com/v1/email', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${process.env.MAILERSEND_API_KEY}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: {
-          email: `test@${sandboxDomain}`,
-          name: 'Goodlife Dev',
-        },
+        from: { email: `test@${sandbox}`, name: 'Goodlife Dev' },
         to: [{ email }],
         subject: 'Your Goodlife Sign-In Link',
         html: `
@@ -57,18 +57,18 @@ export async function POST(request: Request) {
       }),
     });
 
-    if (!msRes.ok) {
-      const errText = await msRes.text();
-      console.error('MailerSend Error:', msRes.status, errText);
+    if (!res.ok) {
+      const err = await res.text();
+      console.error('MailerSend Error:', res.status, err);
       return NextResponse.json(
-        { error: `MailerSend failed (${msRes.status}): ${errText}` },
+        { error: `MailerSend failed (${res.status}): ${err}` },
         { status: 502 }
       );
     }
 
     return NextResponse.json({ success: true });
-  } catch (err: any) {
-    console.error('send-magic-link ERROR →', err);
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (e: any) {
+    console.error('send-magic-link ERROR →', e);
+    return NextResponse.json({ error: e.message }, { status: 500 });
   }
 }

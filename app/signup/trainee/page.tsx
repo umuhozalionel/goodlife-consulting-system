@@ -47,7 +47,11 @@ export default function TraineeAuthPage() {
           router.push('/signup/trainee/dashboard');
         })
         .catch((err: any) => {
-          console.error('🔴 signInWithEmailLink error →', err.code, err.message);
+          console.error(
+            '🔴 signInWithEmailLink error →',
+            err.code,
+            err.message
+          );
           if (err.code === 'auth/invalid-action-code') {
             toast({
               title: 'Invalid or expired link',
