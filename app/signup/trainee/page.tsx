@@ -155,7 +155,7 @@ export default function TraineeAuthPage() {
       {/* Left promo panel */}
       <aside
         className="hidden md:flex md:w-1/2 bg-cover bg-center"
-        style={{ backgroundImage: 'url("/community/community-1.jpg")' }}
+        style={{ backgroundImage: 'url("/community/community-5.jpg")' }}
       >
         <div className="flex flex-col justify-between bg-gray-900/70 p-12 text-white w-full">
           <div>
