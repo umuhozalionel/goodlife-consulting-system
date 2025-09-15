@@ -1,4 +1,3 @@
-// app/signup/trainee/page.tsx
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -6,7 +5,6 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import {
-  sendSignInLinkToEmail,
   isSignInWithEmailLink,
   signInWithEmailLink,
   GoogleAuthProvider,
@@ -27,28 +25,42 @@ export default function TraineeAuthPage() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // handle incoming magic link
+  // Handle incoming magic link
   useEffect(() => {
-    if (isSignInWithEmailLink(auth, window.location.href)) {
+    const href = window.location.href;
+    if (isSignInWithEmailLink(auth, href)) {
       setLoading(true);
       let storedEmail = localStorage.getItem('emailForSignIn') || '';
       if (!storedEmail) {
-        storedEmail = window.prompt('Please confirm your email for sign-in') || '';
+        storedEmail =
+          window.prompt('Please confirm your email for sign-in')?.trim() || '';
       }
-      signInWithEmailLink(auth, storedEmail, window.location.href)
-        .then(({ user }) =>
-          setDoc(
+
+      signInWithEmailLink(auth, storedEmail, href)
+        .then(async ({ user }) => {
+          await setDoc(
             doc(db, 'users', user.uid),
             { email: user.email, role: 'trainee', createdAt: new Date() },
             { merge: true }
-          ).then(() => {
-            toast({ title: 'Signed in', description: `Welcome ${user.email}` });
-            router.push('/signup/trainee/dashboard');
-          })
-        )
+          );
+          toast({ title: 'Signed in', description: `Welcome ${user.email}` });
+          router.push('/signup/trainee/dashboard');
+        })
         .catch((err: any) => {
-          console.error('🔴 signInWithEmailLink error →', err);
-          toast({ title: 'Error', description: err.message, variant: 'destructive' });
+          console.error('🔴 signInWithEmailLink error →', err.code, err.message);
+          if (err.code === 'auth/invalid-action-code') {
+            toast({
+              title: 'Invalid or expired link',
+              description: 'Request a new magic link.',
+              variant: 'destructive',
+            });
+          } else {
+            toast({
+              title: 'Error',
+              description: err.message,
+              variant: 'destructive',
+            });
+          }
         })
         .finally(() => {
           setLoading(false);
@@ -57,26 +69,43 @@ export default function TraineeAuthPage() {
     }
   }, [router, toast]);
 
-  // send magic link
+  // Send magic link via custom API
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       localStorage.setItem('emailForSignIn', email);
-      await sendSignInLinkToEmail(auth, email, {
-        url: window.location.origin + '/signup/trainee',
-        handleCodeInApp: true,
+
+      const res = await fetch('/api/send-magic-link', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        cache: 'no-store',
+        body: JSON.stringify({ email }),
       });
-      toast({ title: 'Magic link sent', description: 'Check your email.' });
+
+      const text = await res.text();
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        throw new Error(`Invalid response: ${text}`);
+      }
+
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to send link');
+      }
+
+      toast({ title: 'Magic link sent', description: 'Check your inbox.' });
     } catch (err: any) {
-      console.error('🔴 sendSignInLinkToEmail error →', err);
+      console.error('🔴 send-magic-link front error →', err);
       toast({ title: 'Error', description: err.message, variant: 'destructive' });
     } finally {
       setLoading(false);
     }
   };
 
-  // Google sign-in
+  // Google OAuth
   const onGoogle = async () => {
     setLoading(true);
     try {
@@ -96,7 +125,7 @@ export default function TraineeAuthPage() {
     }
   };
 
-  // Apple sign-in
+  // Apple OAuth
   const onApple = async () => {
     setLoading(true);
     try {
@@ -119,7 +148,7 @@ export default function TraineeAuthPage() {
 
   return (
     <main className="flex min-h-screen">
-      {/* Left promo panel with community images */}
+      {/* Left promo panel */}
       <aside
         className="hidden md:flex md:w-1/2 bg-cover bg-center"
         style={{ backgroundImage: 'url("/community/community-1.jpg")' }}
@@ -156,7 +185,16 @@ export default function TraineeAuthPage() {
       </aside>
 
       {/* Right form panel */}
-      <section className="flex w-full flex-col justify-center p-8 md:w-1/2">
+      <section className="relative flex w-full flex-col justify-center p-8 md:w-1/2">
+        <div className="absolute top-4 right-4">
+          <Link
+            href="/"
+            className="text-sm text-gray-500 hover:text-orange-600 underline"
+          >
+            ← Back Home
+          </Link>
+        </div>
+
         <div className="mx-auto w-full max-w-sm">
           <h1 className="text-2xl font-semibold">Sign in</h1>
           <p className="mt-2 text-sm text-gray-600">
@@ -168,7 +206,10 @@ export default function TraineeAuthPage() {
 
           <form onSubmit={onSubmit} className="mt-6 space-y-5">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700"
+              >
                 Email
               </label>
               <Input
@@ -181,7 +222,6 @@ export default function TraineeAuthPage() {
                 disabled={loading}
               />
             </div>
-
             <Button
               type="submit"
               className="w-full flex items-center justify-center"
@@ -199,7 +239,6 @@ export default function TraineeAuthPage() {
               <div className="flex-grow border-t border-gray-200" />
             </div>
 
-            {/* Another community snapshot */}
             <div className="mt-6 flex justify-center">
               <Image
                 src="/community/community-13.jpg"
