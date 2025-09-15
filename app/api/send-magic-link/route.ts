@@ -3,14 +3,15 @@
 import { NextResponse } from 'next/server';
 import { initializeApp, cert, getApps } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
-import fetch from 'node-fetch';
+import fetch from 'node-fetch';  // or omit if using Node 18+ with global fetch
 
 if (!getApps().length) {
   initializeApp({
     credential: cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
+      projectId: process.env.FIREBASE_PROJECT_ID!,
+      clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
+      privateKey: process.env.FIREBASE_PRIVATE_KEY!
+        .replace(/\\n/g, '\n'),
     }),
   });
 }
@@ -22,6 +23,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid email' }, { status: 400 });
     }
 
+    // Generate and send magic link
     const link = await getAuth().generateSignInWithEmailLink(email, {
       url: 'http://localhost:3000/signup/trainee',
       handleCodeInApp: true,
@@ -30,7 +32,7 @@ export async function POST(request: Request) {
     const sandbox = process.env.MAILERSEND_SANDBOX_DOMAIN!;
     console.log('Using sandbox domain:', sandbox);
 
-    const res = await fetch('https://api.mailersend.com/v1/email', {
+    const apiRes = await fetch('https://api.mailersend.com/v1/email', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${process.env.MAILERSEND_API_KEY}`,
@@ -43,9 +45,13 @@ export async function POST(request: Request) {
         html: `
           <div style="font-family:sans-serif;padding:20px;">
             <h2>Welcome to Goodlife Consulting</h2>
-            <a href="${link}" style="display:inline-block;
-               padding:10px 20px;background:#f97316;color:#fff;
-               text-decoration:none;border-radius:4px;">
+            <a href="${link}"
+               style="display:inline-block;
+                      padding:10px 20px;
+                      background:#f97316;
+                      color:#fff;
+                      text-decoration:none;
+                      border-radius:4px;">
               Sign In
             </a>
             <p style="margin-top:12px;font-size:12px;color:#555;">
@@ -57,18 +63,18 @@ export async function POST(request: Request) {
       }),
     });
 
-    if (!res.ok) {
-      const err = await res.text();
-      console.error('MailerSend Error:', res.status, err);
+    if (!apiRes.ok) {
+      const err = await apiRes.text();
+      console.error('MailerSend Error:', apiRes.status, err);
       return NextResponse.json(
-        { error: `MailerSend failed (${res.status}): ${err}` },
+        { error: `MailerSend failed (${apiRes.status}): ${err}` },
         { status: 502 }
       );
     }
 
     return NextResponse.json({ success: true });
-  } catch (e: any) {
-    console.error('send-magic-link ERROR →', e);
-    return NextResponse.json({ error: e.message }, { status: 500 });
+  } catch (err: any) {
+    console.error('send-magic-link ERROR →', err);
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
