@@ -1,22 +1,22 @@
+// app/api/send-magic-link/route.ts
+
+import fs   from 'fs'
+import path from 'path'
 import { NextRequest, NextResponse } from 'next/server'
 import { initializeApp, cert, getApps } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
 
 export async function POST(req: NextRequest) {
   try {
-    // 1) Lazy-init Admin SDK
+    // 1) Lazy-init using exactly “serviceaccountkey.json”
     if (!getApps().length) {
-      const b64 = process.env.FIREBASE_PRIVATE_KEY_B64
-      if (!b64) throw new Error('Missing FIREBASE_PRIVATE_KEY_B64')
-      const privateKey = Buffer.from(b64, 'base64').toString('utf8')
-
-      initializeApp({
-        credential: cert({
-          projectId:   process.env.FIREBASE_PROJECT_ID!,
-          clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
-          privateKey,
-        }),
-      })
+      const keyFile = path.resolve(process.cwd(), 'serviceaccountkey.json')
+      if (!fs.existsSync(keyFile)) {
+        throw new Error('serviceaccountkey.json not found in project root')
+      }
+      const serviceAccount = JSON.parse(fs.readFileSync(keyFile, 'utf8'))
+      initializeApp({ credential: cert(serviceAccount) })
+      console.log('[send-magic-link] Firebase Admin initialized')
     }
 
     // 2) Validate payload
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
       handleCodeInApp: true,
     })
 
-    // 4) Send email via MailerSend
+    // 4) Send via MailerSend
     const mailRes = await fetch('https://api.mailersend.com/v1/email', {
       method: 'POST',
       headers: {
@@ -46,36 +46,18 @@ export async function POST(req: NextRequest) {
         from:    { email: process.env.MAILERSEND_FROM!, name: 'Goodlife Dev' },
         to:      [{ email }],
         subject: 'Your Goodlife Sign-In Link',
-        html: `
-          <div style="font-family:sans-serif;padding:20px;">
-            <h2>Welcome to Goodlife Consulting</h2>
-            <a href="${link}"
-               style="display:inline-block;
-                      padding:10px 20px;
-                      background:#f97316;
-                      color:#fff;
-                      text-decoration:none;
-                      border-radius:4px;">
-              Sign In
-            </a>
-            <p style="margin-top:12px;font-size:12px;color:#555;">
-              Or copy & paste:<br/>
-              <code style="word-break:break-all;">${link}</code>
-            </p>
-          </div>
-        `,
+        html:    `<p>Click <a href="${link}">here</a> to sign in.</p>`,
       }),
     })
-
     if (!mailRes.ok) {
-      const text = await mailRes.text()
-      console.error('MailerSend error →', mailRes.status, text)
+      const errText = await mailRes.text()
+      console.error('[send-magic-link] MailerSend failed →', mailRes.status, errText)
       return NextResponse.json({ error: 'MailerSend failure' }, { status: 502 })
     }
 
     return NextResponse.json({ success: true })
   } catch (err: any) {
-    console.error('send-magic-link ERROR →', err)
+    console.error('[send-magic-link] ERROR →', err)
     return NextResponse.json(
       { error: err.message || 'Internal error' },
       { status: 500 }
