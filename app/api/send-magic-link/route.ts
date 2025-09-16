@@ -1,62 +1,50 @@
-// app/api/send-magic-link/route.ts
-
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { initializeApp, cert, getApps } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
 
-// Don’t run initializeApp at module‐load time; do it inside your handler
-export async function POST(request: Request) {
+export async function POST(req: NextRequest) {
   try {
-    // 1) Lazy‐init Firebase Admin
+    // 1) Lazy-init Admin SDK
     if (!getApps().length) {
-      const rawKey = process.env.FIREBASE_PRIVATE_KEY!
+      const b64 = process.env.FIREBASE_PRIVATE_KEY_B64
+      if (!b64) throw new Error('Missing FIREBASE_PRIVATE_KEY_B64')
+      const privateKey = Buffer.from(b64, 'base64').toString('utf8')
+
       initializeApp({
         credential: cert({
-          projectId: process.env.FIREBASE_PROJECT_ID!,
+          projectId:   process.env.FIREBASE_PROJECT_ID!,
           clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
-          privateKey: rawKey.replace(/\\n/g, '\n'),
+          privateKey,
         }),
       })
     }
 
     // 2) Validate payload
-    const { email } = (await request.json()) as { email?: string }
+    const { email } = await req.json()
     if (!email || typeof email !== 'string') {
       return NextResponse.json({ error: 'Invalid email' }, { status: 400 })
     }
 
-    // 3) Pick the correct origin
+    // 3) Generate magic link
     const origin =
-      process.env.VERCEL_ENV === 'production'
+      process.env.NODE_ENV === 'production'
         ? 'https://goodlife-consulting-system.vercel.app'
-        : 'http://localhost:3000'
-
-    // 4) Generate the magic link
+        : process.env.NEXT_PUBLIC_APP_URL!
     const link = await getAuth().generateSignInWithEmailLink(email, {
       url: `${origin}/signup/trainee`,
       handleCodeInApp: true,
     })
 
-    // 5) Choose MailerSend domain
-    const isProd = process.env.VERCEL_ENV === 'production'
-    const mailDomain = isProd
-      ? process.env.MAILERSEND_DOMAIN!
-      : process.env.MAILERSEND_SANDBOX_DOMAIN!
-
-    console.log(
-      `[send-magic-link] VERCEL_ENV=${process.env.VERCEL_ENV} origin=${origin} mailDomain=${mailDomain}`
-    )
-
-    // 6) Send via MailerSend
+    // 4) Send email via MailerSend
     const mailRes = await fetch('https://api.mailersend.com/v1/email', {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${process.env.MAILERSEND_API_KEY}`,
+        Authorization: `Bearer ${process.env.MAILERSEND_API_KEY!}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: { email: `test@${mailDomain}`, name: 'Goodlife Dev' },
-        to: [{ email }],
+        from:    { email: process.env.MAILERSEND_FROM!, name: 'Goodlife Dev' },
+        to:      [{ email }],
         subject: 'Your Goodlife Sign-In Link',
         html: `
           <div style="font-family:sans-serif;padding:20px;">
@@ -80,22 +68,16 @@ export async function POST(request: Request) {
     })
 
     if (!mailRes.ok) {
-      const errText = await mailRes.text()
-      console.error(
-        `[send-magic-link] MailerSend failed (${mailRes.status}): ${errText}`
-      )
-      return NextResponse.json(
-        { error: `MailerSend error (${mailRes.status})` },
-        { status: 502 }
-      )
+      const text = await mailRes.text()
+      console.error('MailerSend error →', mailRes.status, text)
+      return NextResponse.json({ error: 'MailerSend failure' }, { status: 502 })
     }
 
-    // 7) All good
     return NextResponse.json({ success: true })
   } catch (err: any) {
-    console.error('[send-magic-link] ERROR →', err)
+    console.error('send-magic-link ERROR →', err)
     return NextResponse.json(
-      { error: err instanceof Error ? err.message : String(err) },
+      { error: err.message || 'Internal error' },
       { status: 500 }
     )
   }
