@@ -1,39 +1,44 @@
-'use client';
+// app/signup/trainee/page.tsx
+'use client'
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 import {
   isSignInWithEmailLink,
   signInWithEmailLink,
   GoogleAuthProvider,
   OAuthProvider,
   signInWithPopup,
-} from 'firebase/auth';
-import { auth, db } from '@/lib/firebase';
-import { doc, setDoc } from 'firebase/firestore';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Loader2 } from 'lucide-react';
-import { FaGoogle, FaApple } from 'react-icons/fa';
-import { useToast } from '@/components/ui/use-toast';
+} from 'firebase/auth'
+import { auth, db } from '@/lib/firebase'
+import { doc, setDoc } from 'firebase/firestore'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Loader2 } from 'lucide-react'
+import { FaGoogle, FaApple } from 'react-icons/fa'
+import { useToast } from '@/components/ui/use-toast'
 
 export default function TraineeAuthPage() {
-  const router = useRouter();
-  const { toast } = useToast();
-  const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
+  const router = useRouter()
+  const { toast } = useToast()
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  // Handle incoming magic link
+  // handle incoming magic-link
   useEffect(() => {
-    const href = window.location.href;
+    const href = window.location.href
     if (isSignInWithEmailLink(auth, href)) {
-      setLoading(true);
-      let storedEmail = localStorage.getItem('emailForSignIn') || '';
+      setLoading(true)
+      let storedEmail = localStorage.getItem('emailForSignIn') || ''
       if (!storedEmail) {
-        storedEmail =
-          window.prompt('Please confirm your email for sign-in')?.trim() || '';
+        const promptEmail = window.prompt('Please confirm your email for sign-in')?.trim()
+        if (!promptEmail) {
+          setLoading(false)
+          return
+        }
+        storedEmail = promptEmail
       }
 
       signInWithEmailLink(auth, storedEmail, href)
@@ -42,113 +47,105 @@ export default function TraineeAuthPage() {
             doc(db, 'users', user.uid),
             { email: user.email, role: 'trainee', createdAt: new Date() },
             { merge: true }
-          );
-          toast({ title: 'Signed in', description: `Welcome ${user.email}` });
-          router.push('/signup/trainee/dashboard');
+          )
+          localStorage.removeItem('emailForSignIn')
+          toast({ title: 'Signed in', description: `Welcome ${user.email}` })
+          router.push('/signup/trainee/dashboard')
         })
-        .catch((err: any) => {
-          console.error(
-            '🔴 signInWithEmailLink error →',
-            err.code,
-            err.message
-          );
+        .catch(err => {
+          console.error('🔴 signInWithEmailLink ▶', err.code, err.message)
           if (err.code === 'auth/invalid-action-code') {
             toast({
               title: 'Invalid or expired link',
               description: 'Request a new magic link.',
               variant: 'destructive',
-            });
+            })
           } else {
-            toast({
-              title: 'Error',
-              description: err.message,
-              variant: 'destructive',
-            });
+            toast({ title: 'Error', description: err.message, variant: 'destructive' })
           }
         })
         .finally(() => {
-          setLoading(false);
-          localStorage.removeItem('emailForSignIn');
-        });
+          setLoading(false)
+        })
     }
-  }, [router, toast]);
+  }, [router, toast])
 
-  // Send magic link via custom API
+  // send magic-link
   const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+    e.preventDefault()
+    setLoading(true)
 
     try {
-      localStorage.setItem('emailForSignIn', email);
+      localStorage.setItem('emailForSignIn', email)
 
       const res = await fetch('/api/send-magic-link', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         cache: 'no-store',
         body: JSON.stringify({ email }),
-      });
+      })
 
-      const text = await res.text();
-      let data;
+      const text = await res.text()
+      let data: any
       try {
-        data = JSON.parse(text);
+        data = JSON.parse(text)
       } catch {
-        throw new Error(`Invalid response: ${text}`);
+        throw new Error(`Server error: ${text}`)
       }
 
       if (!res.ok) {
-        throw new Error(data.error || 'Failed to send link');
+        throw new Error(data.error || 'Failed to send link')
       }
 
-      toast({ title: 'Magic link sent', description: 'Check your inbox.' });
+      toast({ title: 'Magic link sent', description: 'Check your inbox.' })
     } catch (err: any) {
-      console.error('🔴 send-magic-link front error →', err);
-      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      console.error('🔴 send-magic-link front ▶', err)
+      toast({ title: 'Error', description: err.message, variant: 'destructive' })
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   // Google OAuth
   const onGoogle = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const { user } = await signInWithPopup(auth, new GoogleAuthProvider());
+      const { user } = await signInWithPopup(auth, new GoogleAuthProvider())
       await setDoc(
         doc(db, 'users', user.uid),
         { email: user.email, role: 'trainee', createdAt: new Date() },
         { merge: true }
-      );
-      toast({ title: 'Google Sign In', description: 'Success' });
-      router.push('/signup/trainee/dashboard');
+      )
+      toast({ title: 'Google Sign In', description: 'Success' })
+      router.push('/signup/trainee/dashboard')
     } catch (err: any) {
-      console.error('🔴 Google signInWithPopup error →', err);
-      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      console.error('🔴 Google signIn ▶', err)
+      toast({ title: 'Error', description: err.message, variant: 'destructive' })
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   // Apple OAuth
   const onApple = async () => {
-    setLoading(true);
+    setLoading(true)
     try {
-      const provider = new OAuthProvider('apple.com');
-      const { user } = await signInWithPopup(auth, provider);
+      const provider = new OAuthProvider('apple.com')
+      const { user } = await signInWithPopup(auth, provider)
       await setDoc(
         doc(db, 'users', user.uid),
         { email: user.email, role: 'trainee', createdAt: new Date() },
         { merge: true }
-      );
-      toast({ title: 'Apple Sign In', description: 'Success' });
-      router.push('/signup/trainee/dashboard');
+      )
+      toast({ title: 'Apple Sign In', description: 'Success' })
+      router.push('/signup/trainee/dashboard')
     } catch (err: any) {
-      console.error('🔴 Apple signInWithPopup error →', err);
-      toast({ title: 'Error', description: err.message, variant: 'destructive' });
+      console.error('🔴 Apple signIn ▶', err)
+      toast({ title: 'Error', description: err.message, variant: 'destructive' })
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <main className="flex min-h-screen">
@@ -222,7 +219,7 @@ export default function TraineeAuthPage() {
                 required
                 placeholder="you@example.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 disabled={loading}
               />
             </div>
@@ -236,46 +233,44 @@ export default function TraineeAuthPage() {
             </Button>
           </form>
 
-          <div className="mt-6">
-            <div className="relative flex items-center">
-              <div className="flex-grow border-t border-gray-200" />
-              <span className="mx-4 text-sm text-gray-400">OR</span>
-              <div className="flex-grow border-t border-gray-200" />
-            </div>
+          <div className="mt-6 flex items-center">
+            <div className="flex-grow border-t border-gray-200" />
+            <span className="mx-4 text-sm text-gray-400">OR</span>
+            <div className="flex-grow border-t border-gray-200" />
+          </div>
 
-            <div className="mt-6 flex justify-center">
-              <Image
-                src="/community/community-13.jpg"
-                alt="Interactive workshop"
-                width={240}
-                height={140}
-                className="rounded-lg shadow-md"
-              />
-            </div>
+          <div className="mt-6 flex justify-center">
+            <Image
+              src="/community/community-13.jpg"
+              alt="Interactive workshop"
+              width={240}
+              height={140}
+              className="rounded-lg shadow-md"
+            />
+          </div>
 
-            <div className="mt-6 space-y-3">
-              <Button
-                variant="outline"
-                className="w-full flex items-center justify-center space-x-2"
-                onClick={onGoogle}
-                disabled={loading}
-              >
-                <FaGoogle className="h-5 w-5 text-red-500" />
-                <span>Continue with Google</span>
-              </Button>
-              <Button
-                variant="outline"
-                className="w-full flex items-center justify-center space-x-2"
-                onClick={onApple}
-                disabled={loading}
-              >
-                <FaApple className="h-5 w-5 text-black" />
-                <span>Continue with Apple</span>
-              </Button>
-            </div>
+          <div className="mt-6 space-y-3">
+            <Button
+              variant="outline"
+              className="w-full flex items-center justify-center space-x-2"
+              onClick={onGoogle}
+              disabled={loading}
+            >
+              <FaGoogle className="h-5 w-5 text-red-500" />
+              <span>Continue with Google</span>
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full flex items-center justify-center space-x-2"
+              onClick={onApple}
+              disabled={loading}
+            >
+              <FaApple className="h-5 w-5 text-black" />
+              <span>Continue with Apple</span>
+            </Button>
           </div>
         </div>
       </section>
     </main>
-  );
+  )
 }
