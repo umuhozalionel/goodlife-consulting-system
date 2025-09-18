@@ -1,18 +1,18 @@
 // components/HeroSection.tsx
-'use client';
+'use client'
 
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { Inter } from 'next/font/google';
-import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import React from 'react'
+import Link from 'next/link'
+import Image from 'next/image'
+import { Inter } from 'next/font/google'
+import { Button } from '@/components/ui/button'
+import { ArrowRight } from 'lucide-react'
 
 // Load Inter font weights
 const inter = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '700'],
-});
+})
 
 export default function HeroSection() {
   return (
@@ -20,73 +20,70 @@ export default function HeroSection() {
       id="home"
       className="
         relative flex items-center justify-center
-        h-[70vh] sm:h-[80vh]
+        h-[75vh] sm:h-[85vh]
         overflow-hidden
       "
     >
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
+      {/* Background image + dark overlay */}
+      <div className="absolute inset-0 -z-10">
         <Image
-          src="/community/community-13.jpg"
-          alt="Training session outdoors"
+          src="/images/hero-background.jpg"
+          alt="Hero background"
           fill
           priority
           className="object-cover object-center"
         />
+        <div className="absolute inset-0 bg-black/60" />
       </div>
 
-      {/* Gradient overlay */}
-      <div className="absolute inset-0 z-10 pointer-events-none">
-        <div className="absolute inset-y-0 left-0 w-full sm:w-1/2 bg-gradient-to-r from-black/70 to-transparent" />
-      </div>
-
-      {/* Content */}
+      {/* Main content */}
       <div
         className={`
-          relative z-20 w-full px-6 sm:px-12 max-w-screen-xl mx-auto
-          flex flex-col justify-center h-full
+          relative z-10 mx-auto max-w-3xl px-6 text-center
+          flex flex-col items-center
+          ${inter.className}
         `}
       >
-        <div className={inter.className}>
-          <h1 className="filter brightness-110 text-4xl sm:text-6xl md:text-7xl font-bold text-[#E9F5FF] drop-shadow-md mb-4 leading-tight">
-            Welcome to Goodlife Consulting Partners
-          </h1>
-          <p className="text-base sm:text-lg italic text-[#FFF1D4] leading-snug mb-8">
-            Empowering young Rwanda’s future leaders to become tomorrow’s change-makers.
-          </p>
-        </div>
+        <h1
+          className="
+            text-4xl sm:text-6xl md:text-7xl
+            font-bold text-white drop-shadow-lg
+            leading-tight mb-4
+          "
+        >
+          Welcome to Goodlife Consulting Partners
+        </h1>
+        <p className="text-lg sm:text-xl text-gray-200 italic mb-8 max-w-xl">
+          Empowering Rwanda’s future leaders to become tomorrow’s change-makers.
+        </p>
 
-        {/* Two CTAs side by side */}
-        <div className="flex space-x-4">
-          {/* Learn More */}
-          <Link href="/programs" className="inline-block">
+        {/* Call-to-action buttons */}
+        <div className="flex flex-col sm:flex-row gap-4">
+          <Link href="/programs" className="group">
             <Button
               size="lg"
               className="
-                bg-black text-white
-                rounded-none
+                border-2 border-white text-white
+                rounded-none px-8 py-3
                 hover:bg-white hover:text-black
-                focus-visible:ring-black
-                transition-colors duration-200 ease-in-out
-                text-sm sm:text-base
+                hover:shadow-lg hover:-translate-y-1
+                transition ease-out duration-200
               "
             >
               Learn More
             </Button>
           </Link>
 
-          {/* Apply Now */}
-          <Link href="/signup/trainee" className="inline-block">
+          <Link href="/signup/trainee" className="group">
             <Button
               size="lg"
               className="
-                bg-[#FFFBEB] text-black
-                rounded-none
-                hover:bg-[#0a1932] hover:text-white
-                focus-visible:ring-[#0a1932]
-                transition-colors duration-200 ease-in-out
+                bg-orange-500 text-white
+                rounded-none px-8 py-3
+                hover:bg-orange-600
+                hover:shadow-lg hover:-translate-y-1
+                transition ease-out duration-200
                 flex items-center justify-center
-                text-sm sm:text-base
               "
             >
               Apply Now
@@ -94,25 +91,7 @@ export default function HeroSection() {
             </Button>
           </Link>
         </div>
-
-        {/* Animated scroll arrow */}
-        <div className="flex justify-center mt-16">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6 animate-bounce text-white"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </div>
       </div>
     </section>
-  );
+  )
 }

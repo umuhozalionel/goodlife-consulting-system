@@ -1,18 +1,18 @@
 // app/layout.tsx
-import "./globals.css";
-import type { Metadata } from "next";
-import { Toaster } from "@/components/ui/toaster";
-// import DebugCSSVariables from "@/components/DebugCSSVariables";
+import "./globals.css"
+import type { Metadata } from "next"
+import { Toaster } from "@/components/ui/toaster"
+import Header from "@/components/Header"
 
 export const metadata: Metadata = {
   title: "Goodlife Consulting Platform",
   description: "Empowering trainers and trainees to thrive",
-};
+}
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -38,15 +38,20 @@ export default function RootLayout({
           Skip to main content
         </a>
 
-        {/* <DebugCSSVariables /> */}
-
-        {/* Centered “card” container for your entire site */}
+        {/* site “card” container */}
         <div className="w-full max-w-7xl bg-gradient-to-br from-terracotta-50 to-forest-50 shadow-xl overflow-hidden">
-          {children}
+
+          {/* fixed header */}
+          <Header />
+
+          {/* content with top padding to avoid overlap */}
+          <main className="pt-16">
+            {children}
+          </main>
         </div>
 
         <Toaster />
       </body>
     </html>
-  );
+  )
 }

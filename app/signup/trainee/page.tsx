@@ -17,7 +17,8 @@ import { doc, setDoc } from 'firebase/firestore'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-react'
-import { FaGoogle, FaApple } from 'react-icons/fa'
+import { FaGoogle, FaLinkedin } from 'react-icons/fa'
+import { FiArrowLeft } from 'react-icons/fi'
 import { useToast } from '@/components/ui/use-toast'
 
 export default function TraineeAuthPage() {
@@ -26,7 +27,6 @@ export default function TraineeAuthPage() {
   const [email, setEmail] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // Handle magic-link sign-in
   useEffect(() => {
     const href = window.location.href
     if (isSignInWithEmailLink(auth, href)) {
@@ -68,7 +68,6 @@ export default function TraineeAuthPage() {
     }
   }, [router, toast])
 
-  // Send magic link to email
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
@@ -91,7 +90,6 @@ export default function TraineeAuthPage() {
     }
   }
 
-  // Google OAuth
   const onGoogle = async () => {
     setLoading(true)
     try {
@@ -110,18 +108,18 @@ export default function TraineeAuthPage() {
     }
   }
 
-  // Apple OAuth
-  const onApple = async () => {
+  const onLinkedIn = async () => {
     setLoading(true)
     try {
-      const provider = new OAuthProvider('apple.com')
+      const provider = new OAuthProvider('oidc.linkedin')
+      provider.addScope('r_liteprofile email')
       const { user } = await signInWithPopup(auth, provider)
       await setDoc(
         doc(db, 'users', user.uid),
         { email: user.email, role: 'trainee', createdAt: new Date() },
         { merge: true }
       )
-      toast({ title: 'Apple Sign In', description: 'Success' })
+      toast({ title: 'LinkedIn Sign In', description: 'Success' })
       router.push('/signup/trainee/dashboard')
     } catch (err: any) {
       toast({ title: 'Error', description: err.message, variant: 'destructive' })
@@ -136,9 +134,9 @@ export default function TraineeAuthPage() {
       style={{ backgroundImage: 'url("/community/community-5.jpg")' }}
     >
       <section className="flex items-center justify-center px-4 py-12">
-        <div className="bg-white rounded-xl shadow-xl w-full max-w-[68%] md:grid md:grid-cols-2 overflow-hidden">
+        <div className="rounded-xl shadow-xl w-full max-w-[68%] md:grid md:grid-cols-2 overflow-hidden">
           {/* Left info + QR panel */}
-          <div className="bg-primary-dark text-white p-8 flex flex-col justify-between">
+          <div className="bg-primary-dark/70 text-white p-8 flex flex-col justify-between">
             <div>
               <h2 className="text-2xl font-bold mb-4">Professional Training</h2>
               <ul className="space-y-2 text-sm mb-6">
@@ -171,16 +169,7 @@ export default function TraineeAuthPage() {
           </div>
 
           {/* Right form panel */}
-          <div className="p-8 flex flex-col justify-center">
-            <div className="text-right mb-4">
-              <Link
-                href="/"
-                className="text-sm text-gray-500 hover:text-accent underline"
-              >
-                ← Back Home
-              </Link>
-            </div>
-
+          <div className="bg-white p-8 flex flex-col justify-center relative">
             <h1 className="text-2xl font-semibold text-primary">Sign in</h1>
             <p className="mt-2 text-sm text-gray-600">
               Use the email you submitted via the QR form
@@ -209,9 +198,7 @@ export default function TraineeAuthPage() {
                 className="w-full flex items-center justify-center"
                 disabled={loading}
               >
-                {loading && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
+                {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Send Signup Link
               </Button>
             </form>
@@ -235,12 +222,23 @@ export default function TraineeAuthPage() {
               <Button
                 variant="outline"
                 className="w-full flex items-center justify-center space-x-2"
-                onClick={onApple}
+                onClick={onLinkedIn}
                 disabled={loading}
               >
-                <FaApple className="h-5 w-5 text-black" />
-                <span>Continue with Apple</span>
+                <FaLinkedin className="h-5 w-5 text-blue-700" />
+                <span>Continue with LinkedIn</span>
               </Button>
+            </div>
+
+            {/* Styled Back Home at bottom right */}
+            <div className="absolute bottom-4 right-8">
+              <Link
+                href="/"
+                className="inline-flex items-center px-3 py-1 text-sm font-medium text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                <FiArrowLeft className="mr-1 h-4 w-4" />
+                Back Home
+              </Link>
             </div>
           </div>
         </div>
