@@ -157,7 +157,7 @@ export default function TraineeAuthPage() {
         <div className="flex flex-col justify-between bg-gray-900/70 p-12 text-white w-full">
           <div>
             <Image
-              src="/community/community-2.jpg"
+              src="/community/community-12.jpg"
               alt="Group training"
               width={160}
               height={160}
