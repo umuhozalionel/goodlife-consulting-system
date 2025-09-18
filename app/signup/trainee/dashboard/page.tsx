@@ -2,227 +2,360 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import Calendar from 'react-calendar'
+import 'react-calendar/dist/Calendar.css'
 import { Html5Qrcode } from 'html5-qrcode'
-import { Bars3Icon, UserCircleIcon } from '@heroicons/react/24/outline'
-import { auth } from '@/lib/firebase'
-import { signOut, User } from 'firebase/auth'
-import { doc, setDoc } from 'firebase/firestore'
-import { db } from '@/lib/firebase'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import {
+  Bars3Icon,
+  HomeIcon,
+  CalendarDaysIcon as CalIcon,
+  ClipboardDocumentCheckIcon as QuizIcon,
+  BookOpenIcon,
+  UserCircleIcon,
+  ChevronRightIcon,
+  BellIcon,
+  EyeIcon,
+  Cog6ToothIcon,
+  LifebuoyIcon,
+  ArrowLeftOnRectangleIcon,
+} from '@heroicons/react/24/outline'
 import { Loader2 } from 'lucide-react'
+import { auth, db } from '@/lib/firebase'
+import { signOut, onAuthStateChanged, User } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
+import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/ui/use-toast'
 
-const modules = [
-  { id: 1, title: 'Orientation & Safety', complete: 100 },
-  { id: 2, title: 'Equipment Handling', complete: 45 },
-  { id: 3, title: 'Logbook Reporting', complete: 20 },
-  { id: 4, title: 'Site Assessment', complete: 0 },
-]
-
-const recommendations = [
-  { id: 1, title: 'Advanced Tool Calibration', desc: 'Deepen your technical expertise' },
-  { id: 2, title: 'Team Leadership Basics', desc: 'Lead your peers with confidence' },
-]
+type View = 'home' | 'planning' | 'quizzes' | 'logbook'
 
 export default function TraineeDashboard() {
   const router = useRouter()
   const { toast } = useToast()
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [showProfile, setShowProfile] = useState(false)
-  const [scanMode, setScanMode] = useState(false)
-  const [date, setDate] = useState(new Date())
-  const qrRef = useRef<HTMLDivElement>(null)
 
+  const [user, setUser] = useState<User | null>(null)
+  const [displayName, setDisplayName] = useState('')
+  const [loading, setLoading] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [currentView, setCurrentView] = useState<View>('home')
+  const [scanMode, setScanMode] = useState(false)
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const qrRef = useRef<HTMLDivElement>(null)
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+
+  // Auth + load avatar
   useEffect(() => {
-    const unsub = auth.onAuthStateChanged(u => {
+    return onAuthStateChanged(auth, async u => {
       setUser(u)
+      setDisplayName(u?.displayName || '')
       setLoading(false)
+      if (u) {
+        const snap = await getDoc(doc(db, 'trainees', u.uid))
+        if (snap.exists()) setAvatarUrl(snap.data().avatarUrl || null)
+      }
     })
-    return unsub
   }, [])
 
+  // redirect non-users
   useEffect(() => {
     if (!loading && !user) router.replace('/signup/trainee')
   }, [loading, user, router])
 
+  // QR check-in
   useEffect(() => {
     if (!scanMode || !qrRef.current) return
-    const qrId = 'qr-reader'
-    qrRef.current.innerHTML = `<div id="${qrId}"></div>`
-    const html5Qrcode = new Html5Qrcode(qrId)
-    html5Qrcode
+    const id = 'qr-reader'
+    qrRef.current.innerHTML = `<div id="${id}"></div>`
+    const scanner = new Html5Qrcode(id)
+    scanner
       .start(
         { facingMode: 'environment' },
         { fps: 10, qrbox: 250 },
-        decodedText => {
-          toast({ title: 'Checked in', description: decodedText })
-          html5Qrcode.stop()
+        decoded => {
+          toast({ title: 'Checked in', description: decoded })
+          scanner.stop()
           setScanMode(false)
         }
       )
       .catch(console.error)
-    return () => { html5Qrcode.stop().catch(() => {}) }
+    return () => scanner.stop().catch(() => {})
   }, [scanMode, toast])
 
-  const handleSignOut = async () => {
+  const handleLogout = async () => {
     await signOut(auth)
     router.push('/signup/trainee')
   }
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-orange-600" />
+      <main className="flex min-h-screen items-center justify-center bg-neutral-50">
+        <Loader2 className="h-10 w-10 animate-spin text-accent" />
       </main>
     )
   }
   if (!user) return null
 
+  const navItems: { id: View; label: string; Icon: React.FC<any> }[] = [
+    { id: 'home',     label: 'Home',               Icon: HomeIcon },
+    { id: 'planning', label: 'My Planning',        Icon: CalIcon },
+    { id: 'quizzes',  label: 'Evaluation Quizzes', Icon: QuizIcon },
+    { id: 'logbook',  label: 'Logbook',            Icon: BookOpenIcon },
+  ]
+
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-neutral-50 overflow-hidden">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md">
-        <div className="p-6 flex items-center space-x-2">
-          <Bars3Icon className="h-6 w-6 text-orange-600" />
-          <span className="text-xl font-bold text-gray-800">Goodlife</span>
+      <aside
+        className={`
+          flex-shrink-0 transition-all duration-300
+          ${sidebarOpen ? 'w-64' : 'w-16'}
+          bg-primary-dark text-white border-r border-primary
+        `}
+      >
+        <div className="h-full flex flex-col">
+          <div className="flex items-center justify-between px-6 py-4">
+            {sidebarOpen && (
+              <span className="text-xl font-semibold">Goodlife</span>
+            )}
+            <button
+              onClick={() => setSidebarOpen(v => !v)}
+              aria-label="Toggle sidebar"
+              className="p-1 text-white hover:text-accent transition-colors"
+            >
+              <Bars3Icon className="h-6 w-6" />
+            </button>
+          </div>
+          <nav className="flex-1 px-2 space-y-1">
+            {navItems.map(({ id, label, Icon }) => {
+              const active = currentView === id
+              return (
+                <button
+                  key={id}
+                  onClick={() => setCurrentView(id)}
+                  className={`
+                    flex items-center w-full px-4 py-2 rounded-md
+                    transition-colors duration-200
+                    ${active
+                      ? 'bg-primary text-white border-l-4 border-accent'
+                      : 'text-white hover:bg-primary'}
+                  `}
+                >
+                  <Icon className="h-5 w-5 flex-shrink-0" />
+                  {sidebarOpen && (
+                    <span className="ml-3 text-sm font-medium">{label}</span>
+                  )}
+                </button>
+              )
+            })}
+          </nav>
+          <div className="px-4 py-6 border-t border-primary">
+            <button
+              onClick={() => setShowProfileMenu(v => !v)}
+              className="flex items-center space-x-2 w-full text-white hover:text-accent transition-colors"
+            >
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt="Avatar"
+                  className="h-6 w-6 rounded-full object-cover"
+                />
+              ) : (
+                <UserCircleIcon className="h-6 w-6" />
+              )}
+              {sidebarOpen && (
+                <span className="text-sm font-medium">Profile</span>
+              )}
+            </button>
+          </div>
         </div>
-        <nav className="mt-6">
-          <Link href="#" className="block px-6 py-2 text-gray-700 hover:bg-orange-50">Dashboard</Link>
-          <Link href="#" className="block px-6 py-2 text-gray-700 hover:bg-orange-50">Courses</Link>
-          <Link href="#" className="block px-6 py-2 text-gray-700 hover:bg-orange-50">Calendar</Link>
-          <button
-            onClick={() => setShowProfile(true)}
-            className="w-full text-left px-6 py-2 text-gray-700 hover:bg-orange-50 flex items-center"
-          >
-            <UserCircleIcon className="h-5 w-5 mr-2" /> Profile
-          </button>
-          <button
-            onClick={handleSignOut}
-            className="w-full text-left px-6 py-2 mt-4 text-gray-700 hover:bg-red-50"
-          >
-            Sign Out
-          </button>
-        </nav>
       </aside>
 
-      {/* Main */}
-      <main className="flex-1 overflow-y-auto p-8">
-        <header className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-semibold text-gray-800">Welcome, {user.email}</h1>
-          <button
-            onClick={() => setShowProfile(true)}
-            className="flex items-center space-x-2 text-gray-700 hover:text-orange-600"
-          >
-            <UserCircleIcon className="h-6 w-6" />
-            <span>Edit Profile</span>
-          </button>
-        </header>
-
-        {/* Upcoming Session & Calendar */}
-        <section className="grid md:grid-cols-2 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-medium mb-2">Next On-Site Session</h2>
-            <p className="text-gray-600">Thursday, Sep 18 · 2:00 PM</p>
-            <p className="text-gray-600 mt-1">Location: Main Training Hall</p>
-            <Button
-              onClick={() => setScanMode(true)}
-              className="mt-4 bg-orange-600 text-white"
-            >
-              Check-In via QR
-            </Button>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-medium mb-4">Your Calendar</h2>
-            <Calendar onChange={setDate} value={date} className="text-sm" />
-          </div>
-        </section>
-
-        {/* Progress & Recommendations */}
-        <section className="grid lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-medium mb-4">Module Progress</h2>
-            <ul className="space-y-4">
-              {modules.map(m => (
-                <li key={m.id}>
-                  <div className="flex justify-between mb-1">
-                    <span className="font-medium">{m.title}</span>
-                    <span className="text-sm text-gray-600">{m.complete}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-orange-600 h-2 rounded-full"
-                      style={{ width: `${m.complete}%` }}
-                    />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-medium mb-4">Recommended Next</h2>
-            <ul className="space-y-4">
-              {recommendations.map(r => (
-                <li key={r.id} className="p-4 border rounded hover:shadow">
-                  <h3 className="font-semibold">{r.title}</h3>
-                  <p className="text-gray-600 text-sm">{r.desc}</p>
-                  <Button variant="link" className="text-orange-600">
-                    Start Now
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      </main>
-
-      {/* Profile Modal */}
-      {showProfile && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-          <div
-            className="fixed inset-0 bg-black opacity-30"
-            onClick={() => setShowProfile(false)}
-          />
-          <div className="bg-white rounded-lg max-w-md w-full p-6 z-10">
-            <h2 className="text-xl font-semibold mb-4">Edit Profile</h2>
-            <form className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium">Full Name</label>
-                <Input type="text" defaultValue="Dr Joyce" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium">Email</label>
-                <Input type="email" defaultValue={user.email || ''} />
-              </div>
-              <div className="flex justify-end space-x-2">
-                <Button variant="outline" onClick={() => setShowProfile(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={() => setShowProfile(false)}>
-                  Save
-                </Button>
-              </div>
-            </form>
-          </div>
+      {/* Profile menu */}
+      {showProfileMenu && (
+        <div className="absolute top-16 right-4 z-50 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5">
+          <ul className="divide-y divide-neutral-200">
+            <li>
+              <button
+                onClick={() => {
+                  router.push('/signup/trainee/profile')
+                  setShowProfileMenu(false)
+                }}
+                className="flex items-center w-full px-4 py-2 hover:bg-neutral-100 transition-colors"
+              >
+                <EyeIcon className="h-5 w-5 text-primary" />
+                <span className="ml-3 text-gray-800 text-sm">View Profile</span>
+              </button>
+            </li>
+            <li>
+              <button className="flex items-center w-full px-4 py-2 hover:bg-neutral-100 transition-colors">
+                <Cog6ToothIcon className="h-5 w-5 text-primary" />
+                <span className="ml-3 text-gray-800 text-sm">Settings</span>
+              </button>
+            </li>
+            <li>
+              <button className="flex items-center w-full px-4 py-2 hover:bg-neutral-100 transition-colors">
+                <LifebuoyIcon className="h-5 w-5 text-primary" />
+                <span className="ml-3 text-gray-800 text-sm">Support</span>
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={handleLogout}
+                className="flex items-center w-full px-4 py-2 hover:bg-neutral-100 transition-colors"
+              >
+                <ArrowLeftOnRectangleIcon className="h-5 w-5 text-primary" />
+                <span className="ml-3 text-gray-800 text-sm">Logout</span>
+              </button>
+            </li>
+          </ul>
         </div>
       )}
 
-      {/* QR Scan Overlay */}
+      {/* Main */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header */}
+        <header className="flex items-center justify-between bg-primary px-6 py-4 shadow-sm">
+          <h1 className="text-2xl font-semibold text-white">
+            {displayName || user.email}
+          </h1>
+          <button
+            onClick={() => setShowProfileMenu(v => !v)}
+            aria-label="Toggle profile menu"
+            className="flex items-center space-x-2 text-white hover:text-accent transition-colors"
+          >
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt="Avatar"
+                className="h-8 w-8 rounded-full object-cover"
+              />
+            ) : (
+              <UserCircleIcon className="h-8 w-8" />
+            )}
+          </button>
+        </header>
+
+        {/* Content */}
+        <main className="flex-1 overflow-y-auto p-6 space-y-6">
+          {currentView === 'home' && (
+            <div className="grid gap-6">
+              {/* Top */}
+              <div className="grid lg:grid-cols-2 gap-6">
+                <div className="bg-white rounded-md shadow-md hover:shadow-lg transition-shadow p-6">
+                  <h2 className="text-xl font-semibold text-primary">
+                    Next On-Site Session
+                  </h2>
+                  <p className="mt-2 text-gray-600">
+                    Thursday, Sep 18 · 2:00 PM
+                  </p>
+                  <p className="text-gray-600 mt-1">Main Training Hall</p>
+                  <Button
+                    onClick={() => setScanMode(true)}
+                    className="mt-4 bg-accent hover:bg-orange-600 text-white px-5 py-2 rounded-md focus:ring-2 focus:ring-accent"
+                  >
+                    Check-In via QR
+                  </Button>
+                </div>
+                <div className="bg-white rounded-md shadow-md hover:shadow-lg transition-shadow p-6">
+                  <h2 className="text-xl font-semibold text-primary mb-4">
+                    Your Calendar
+                  </h2>
+                  <Calendar
+                    className="rounded-md border border-neutral-200"
+                    onChange={() => {}}
+                    value={new Date()}
+                  />
+                </div>
+              </div>
+
+              {/* Middle */}
+              <div className="grid sm:grid-cols-3 gap-6">
+                {[
+                  { title: 'Upcoming Events', desc: 'No upcoming events' },
+                  { title: 'Current Learning', desc: '—' },
+                  { title: 'Current Projects', desc: 'No current projects' },
+                ].map(item => (
+                  <div
+                    key={item.title}
+                    className="bg-white rounded-md shadow-md hover:shadow-lg transition-shadow p-4 flex flex-col justify-between"
+                  >
+                    <div>
+                      <h3 className="text-lg font-semibold text-primary">
+                        {item.title}
+                      </h3>
+                      <p className="mt-1 text-gray-500">{item.desc}</p>
+                    </div>
+                    <button className="self-end flex items-center text-sm text-accent hover:text-orange-600 transition-colors">
+                      View <ChevronRightIcon className="h-4 w-4 ml-1" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {/* Bottom */}
+              <div className="grid md:grid-cols-2 gap-6">
+                {[
+                  {
+                    title: 'Scores',
+                    value: '—',
+                    status: 'In Progress',
+                    icon: <BellIcon className="h-5 w-5" />,
+                  },
+                  {
+                    title: 'Reports',
+                    value: '—',
+                    status: '',
+                    icon: null,
+                  },
+                ].map(({ title, value, status, icon }) => (
+                  <div
+                    key={title}
+                    className="bg-white rounded-md shadow-md hover:shadow-lg transition-shadow p-6 flex flex-col justify-between"
+                  >
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="text-lg font-semibold text-primary">
+                          {title}
+                        </h3>
+                        <p className="text-3xl font-bold text-primary mt-1">
+                          {value}
+                        </p>
+                      </div>
+                      {status && (
+                        <div className="flex items-center space-x-1 text-sm text-gray-500">
+                          {icon}
+                          <span className="uppercase">{status}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="self-end text-sm text-gray-400">
+                      View Details
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {currentView !== 'home' && (
+            <div className="flex items-center justify-center h-64 text-gray-500">
+              {currentView === 'planning' && <p>My Planning coming soon…</p>}
+              {currentView === 'quizzes' && <p>Evaluation Quizzes coming soon…</p>}
+              {currentView === 'logbook' && <p>Logbook coming soon…</p>}
+            </div>
+          )}
+        </main>
+      </div>
+
+      {/* QR Overlay */}
       {scanMode && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6">
-            <h3 className="text-lg font-medium mb-4">Scan QR to Check-In</h3>
-            <div ref={qrRef} className="w-80 h-80" />
-            <Button
-              variant="outline"
-              className="mt-4"
-              onClick={() => setScanMode(false)}
-            >
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
+          <div className="bg-white rounded-md p-6 shadow-lg space-y-4">
+            <h3 className="text-lg font-semibold text-primary">
+              Scan QR to Check-In
+            </h3>
+            <div ref={qrRef} className="w-80 h-80 rounded-md border border-neutral-200" />
+            <Button variant="outline" className="mt-2">
               Cancel
             </Button>
           </div>
