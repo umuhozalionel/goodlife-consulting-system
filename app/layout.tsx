@@ -1,12 +1,11 @@
-// app/layout.tsx
-import "./globals.css"
-import type { Metadata } from "next"
-import { Toaster } from "@/components/ui/toaster"
-import Header from "@/components/Header"
+import './globals.css'
+import type { Metadata } from 'next'
+import Header from '@/components/Header'
+import ClientToaster from '@/components/client-toaster'
 
 export const metadata: Metadata = {
-  title: "Goodlife Consulting Platform",
-  description: "Empowering trainers and trainees to thrive",
+  title: 'Goodlife Consulting Platform',
+  description: 'Empowering trainers and trainees to thrive',
 }
 
 export default function RootLayout({
@@ -16,41 +15,25 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className="
-          min-h-screen
-          bg-[url('/images/layout.jpg')]
-          bg-cover
-          bg-center
-          bg-background
-          text-foreground
-          antialiased
-          flex
-          justify-center
-        "
-      >
-        {/* Skip link for keyboard users */}
-        <a
-          href="#home"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-green-700 text-white px-3 py-2 rounded-md"
-        >
-          Skip to main content
-        </a>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
+      <body className="min-h-screen flex flex-col bg-white text-foreground antialiased overflow-visible">
+        {/* Header always at the top */}
+        <Header />
 
-        {/* site “card” container */}
-        <div className="w-full max-w-7xl bg-gradient-to-br from-terracotta-50 to-forest-50 shadow-xl overflow-hidden">
-
-          {/* fixed header */}
-          <Header />
-
-          {/* content with top padding to avoid overlap */}
-          <main className="pt-16">
+        {/* 
+          flex-1 lets HeroSection fill remaining space 
+          removed pb-16 so no extra gap under the hero 
+        */}
+        <div className="flex-1 w-full bg-gradient-to-br from-terracotta-50 to-forest-50 shadow-xl relative z-0 overflow-visible">
+          <main className="flex-1 pt-16 relative z-10">
             {children}
           </main>
         </div>
 
-        <Toaster />
+        {/* Client-only Toaster */}
+        <ClientToaster />
       </body>
     </html>
   )

@@ -52,46 +52,45 @@ export default function Header() {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
-        <NavigationMenu className="hidden lg:flex">
-          <NavigationMenuList className="flex items-center space-x-6">
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                href="/programs"
-                className={`text-sm font-medium transition ${navText} ${navHover}`}
-              >
-                Our Programs
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                href="/#testimonials"
-                className={`text-sm font-medium transition ${navText} ${navHover}`}
-              >
-                Insights
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                href="/#about"
-                className={`text-sm font-medium transition ${navText} ${navHover}`}
-              >
-                Our Story
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-            <NavigationMenuItem>
-              <NavigationMenuLink
-                href="/#contact"
-                className={`text-sm font-medium transition ${navText} ${navHover}`}
-              >
-                Contact
-              </NavigationMenuLink>
-            </NavigationMenuItem>
-          </NavigationMenuList>
-        </NavigationMenu>
+        {/* Desktop Nav & Controls (≥768px) */}
+        <div className="hidden md:flex items-center space-x-6">
+          <NavigationMenu>
+            <NavigationMenuList className="flex items-center space-x-6">
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="/#about"
+                  className={`text-sm font-medium transition ${navText} ${navHover}`}
+                >
+                  Our Story
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="/programs"
+                  className={`text-sm font-medium transition ${navText} ${navHover}`}
+                >
+                  Our Programs
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="/#testimonials"
+                  className={`text-sm font-medium transition ${navText} ${navHover}`}
+                >
+                  Insights
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+              <NavigationMenuItem>
+                <NavigationMenuLink
+                  href="/#contact"
+                  className={`text-sm font-medium transition ${navText} ${navHover}`}
+                >
+                  Contact
+                </NavigationMenuLink>
+              </NavigationMenuItem>
+            </NavigationMenuList>
+          </NavigationMenu>
 
-        {/* Controls */}
-        <div className="hidden md:flex items-center space-x-4">
           {/* Search */}
           <div className="relative group">
             <Button variant="ghost" size="icon" className={`${navText} ${navHover}`}>
@@ -157,55 +156,95 @@ export default function Header() {
           </a>
         </div>
 
-        {/* Mobile Toggle */}
+        {/* Mobile Toggle (<768px) */}
         <Button
           variant="ghost"
           size="icon"
-          className={`lg:hidden transition ${navText} ${navHover}`}
+          className={`md:hidden transition ${navText} ${navHover}`}
           onClick={() => setMobileOpen(!mobileOpen)}
         >
           {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </Button>
       </div>
 
-      {/* Mobile Menu (fade in/out) */}
+      {/* Mobile Menu (<768px): slide down/up */}
       <div
         className={`
-          lg:hidden bg-white border-t border-gray-200 shadow-lg
-          transition-opacity duration-300
-          ${mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}
+          md:hidden
+          bg-white border-t border-gray-200 shadow-lg
+          overflow-hidden
+          transition-[max-height] duration-300 ease-in-out
+          ${mobileOpen ? 'max-h-[400px] py-4' : 'max-h-0'}
         `}
       >
-        <nav className="p-4 space-y-2">
+        <nav className="px-6 space-y-4">
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
+            <Input
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Search topics…"
+              className="pl-10 pr-4 py-2 w-full rounded-md border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Language Selector (mobile) */}
+          <div>
+            <select
+              aria-label="Select language"
+              className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={language}
+              onChange={e => {
+                setLanguage(e.target.value as 'EN' | 'FR' | 'RW')
+                toast({
+                  title: 'Language Selected',
+                  description: `Switched to ${languages[e.target.value]}`,
+                })
+              }}
+            >
+              <option value="EN">English</option>
+              <option value="FR">Français</option>
+              <option value="RW">Kinyarwanda</option>
+            </select>
+          </div>
+
+          {/* Links */}
           <Link
-            href="/training-program"
-            className="block px-4 py-2 text-gray-900 hover:text-blue-600 transition"
+            href="/#about"
+            onClick={() => setMobileOpen(false)}
+            className="block text-gray-900 hover:text-blue-600 transition"
+          >
+            Our Story
+          </Link>
+          <Link
+            href="/programs"
+            onClick={() => setMobileOpen(false)}
+            className="block text-gray-900 hover:text-blue-600 transition"
           >
             Our Programs
           </Link>
           <Link
             href="/#testimonials"
-            className="block px-4 py-2 text-gray-900 hover:text-blue-600 transition"
+            onClick={() => setMobileOpen(false)}
+            className="block text-gray-900 hover:text-blue-600 transition"
           >
             Insights
           </Link>
           <Link
-            href="/#about"
-            className="block px-4 py-2 text-gray-900 hover:text-blue-600 transition"
-          >
-            Our Story
-          </Link>
-          <Link
             href="/#contact"
-            className="block px-4 py-2 text-gray-900 hover:text-blue-600 transition"
+            onClick={() => setMobileOpen(false)}
+            className="block text-gray-900 hover:text-blue-600 transition"
           >
             Contact
           </Link>
+
+          {/* Book a Call */}
           <a
             href="https://wa.me/250788845062"
             target="_blank"
             rel="noopener noreferrer"
-            className="block"
+            onClick={() => setMobileOpen(false)}
           >
             <Button className="w-full bg-blue-600 text-white border border-blue-600 hover:bg-white hover:text-blue-600 px-4 py-2 font-medium">
               Book a Call
