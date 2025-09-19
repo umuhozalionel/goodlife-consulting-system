@@ -12,53 +12,44 @@ export default function HeroSection() {
   return (
     <section
       id="home"
-      className="relative flex items-center justify-center h-screen overflow-hidden"
+      className="relative flex items-start justify-center h-[85vh] pt-24 overflow-hidden"
     >
-      {/* Background image with responsive sizes, blur placeholder */}
-      <div className="absolute inset-0 -z-10">
+      {/* full-bleed background + dark overlay */}
+      <div className="absolute inset-0 z-0">
         <Image
-          src="/images/hero-background.jpg"
-          alt="Hero background"
+          src="/community/community-15.jpg"
+          alt="Training session background"
           fill
           priority
           className="object-cover object-center"
-          sizes="(max-width: 768px) 800px,
-                 (max-width: 1200px) 1280px,
+          sizes="(max-width: 640px) 640px,
+                 (max-width: 1024px) 1024px,
                  1920px"
           quality={70}
           placeholder="blur"
-          blurDataURL="/images/hero-background-blur.jpg"
+          blurDataURL="/community/community-15-blur.jpg"
         />
         <div className="absolute inset-0 bg-black/60" />
       </div>
 
-      {/* Floating gradient blobs */}
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0.6 }}
-        animate={{ scale: [0.8, 1.2, 0.8] }}
-        transition={{ duration: 8, repeat: Infinity }}
-        className="absolute top-10 left-10 w-56 h-56 bg-gradient-to-tr from-purple-500 to-pink-400 rounded-full mix-blend-screen filter blur-md"
-      />
-      <motion.div
-        initial={{ scale: 1, opacity: 0.5 }}
-        animate={{ x: [-50, 50, -50], y: [20, -20, 20] }}
-        transition={{ duration: 10, repeat: Infinity }}
-        className="absolute bottom-16 right-20 w-64 h-64 bg-gradient-to-bl from-blue-400 to-green-300 rounded-full mix-blend-screen filter blur-md"
-      />
-
-      {/* Main content */}
+      {/* hero text + CTAs */}
       <div className="relative z-10 max-w-3xl px-6 text-center">
         <motion.h1
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="
-            text-4xl sm:text-6xl md:text-7xl 
-            font-extrabold 
-            bg-clip-text text-transparent
-            bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500
-            leading-snug
-          "
+          initial={{ y: 50 }}
+          animate={{
+            y: 0,
+            color: ['#ffffff', '#fbbf24', '#ffffff'],
+          }}
+          transition={{
+            y: { duration: 1 },
+            color: {
+              duration: 3,
+              repeat: Infinity,
+              repeatType: 'loop',
+              ease: 'easeInOut',
+            },
+          }}
+          className="text-4xl sm:text-6xl md:text-7xl font-extrabold leading-normal mb-8"
         >
           Welcome to Goodlife Consulting Partners
         </motion.h1>
@@ -66,18 +57,17 @@ export default function HeroSection() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.5, duration: 1 }}
-          className="mt-4 text-lg sm:text-xl text-gray-200 italic max-w-xl mx-auto"
+          transition={{ delay: 0.6, duration: 1 }}
+          className="text-lg sm:text-xl text-gray-200 italic max-w-lg mx-auto mb-12"
         >
           Empowering Rwanda’s future leaders to become tomorrow’s change-makers.
         </motion.p>
 
-        {/* CTA buttons */}
-        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
+            transition={{ delay: 0.9, duration: 0.6 }}
           >
             <Link href="/programs" className="group">
               <Button
@@ -98,7 +88,7 @@ export default function HeroSection() {
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 1, duration: 0.6 }}
+            transition={{ delay: 1.1, duration: 0.6 }}
           >
             <Link href="/signup/trainee" className="group">
               <Button
@@ -120,18 +110,18 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* SVG wave at bottom */}
+      {/* full-width flipped wave separator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.4, duration: 1 }}
-        className="absolute bottom-0 w-full overflow-hidden leading-none"
-        style={{ lineHeight: 0 }}
+        className="absolute bottom-0 left-0 w-full overflow-hidden leading-none pointer-events-none"
+        style={{ height: '80px' }}
       >
         <svg
           viewBox="0 0 1200 120"
           preserveAspectRatio="none"
-          className="w-full h-24 fill-white"
+          className="w-full h-full fill-terracotta-50 transform rotate-180"
         >
           <path d="M0,0L1200,0L1200,120L0,16Z" opacity=".25" />
           <path d="M0,0L1200,0L1200,80L0,32Z" opacity=".5" />
