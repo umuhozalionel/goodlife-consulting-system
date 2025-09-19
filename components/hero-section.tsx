@@ -69,7 +69,7 @@ export default function HeroSection() {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.9, duration: 0.6 }}
           >
-            <Link href="/programs" className="group">
+            <Link href="#about" className="group">
               <Button
                 size="lg"
                 className="
