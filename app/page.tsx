@@ -1,6 +1,4 @@
-// app/page.tsx
-
-import Header from "@/components/Header"
+import Header from "@/components/header"
 import HeroSection from "@/components/hero-section"
 // import PartnersSection from "@/components/partners-section"  // removed per request
 import AboutSection from "@/components/about-section"
@@ -16,7 +14,7 @@ import ChatWidget from "@/components/chat-widget"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen">
       <Header />
       <HeroSection />
       <AboutSection />

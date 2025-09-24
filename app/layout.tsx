@@ -1,3 +1,4 @@
+// app/layout.tsx
 import './globals.css'
 import type { Metadata } from 'next'
 import Header from '@/components/Header'
@@ -18,21 +19,16 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className="min-h-screen flex flex-col bg-white text-foreground antialiased overflow-visible">
-        {/* Header always at the top */}
+      <body className="min-h-screen flex flex-col bg-[#ffffff] text-foreground antialiased overflow-visible">
+        {/* Header */}
         <Header />
 
-        {/* 
-          flex-1 lets HeroSection fill remaining space 
-          removed pb-16 so no extra gap under the hero 
-        */}
-        <div className="flex-1 w-full bg-gradient-to-br from-terracotta-50 to-forest-50 shadow-xl relative z-0 overflow-visible">
-          <main className="flex-1 pt-16 relative z-10">
-            {children}
-          </main>
-        </div>
+        {/* Your page content */}
+        <main className="flex-1 relative z-0 overflow-visible">
+          {children}
+        </main>
 
-        {/* Client-only Toaster */}
+        {/* Toasts */}
         <ClientToaster />
       </body>
     </html>
