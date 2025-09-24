@@ -1,4 +1,4 @@
-import Header from "@/components/header"
+import Header from "@/components/Header"
 import HeroSection from "@/components/hero-section"
 // import PartnersSection from "@/components/partners-section"  // removed per request
 import AboutSection from "@/components/about-section"
