@@ -164,7 +164,11 @@ export default function HeroSection() {
                     />
                   </div>
                   <span className="ml-3 text-sm text-[#1E3A8A] font-medium">
-                    We’re trusted by thousands
+                    50+ trusted Partners
+                  </span>
+                  --
+                  <span className="ml-3 text-sm text-[#1E3A8A] font-medium">
+                    100+ Successful Trainees
                   </span>
                 </div>
 
