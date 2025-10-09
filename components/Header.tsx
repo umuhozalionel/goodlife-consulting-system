@@ -33,7 +33,6 @@ export default function Header() {
     'fixed top-0 left-0 w-full z-50 bg-white transition-colors duration-300',
     isScrolled ? 'bg-opacity-80 backdrop-blur-sm shadow-sm' : '',
   ].join(' ')
-
   const navText = 'text-gray-900'
   const navHover = 'hover:text-blue-600'
 
@@ -98,9 +97,11 @@ export default function Header() {
             </Button>
             <div className="absolute right-0 top-12 w-64 rounded border bg-white p-2 opacity-0 invisible group-hover:visible group-hover:opacity-100 transition-opacity duration-300 z-50">
               <Input
+                type="search"
                 value={query}
-                onChange={e => setQuery(e.target.value)}
+                onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search topics…"
+                aria-label="Search topics"
                 className="w-full"
               />
             </div>
@@ -182,9 +183,11 @@ export default function Header() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
             <Input
+              type="search"
               value={query}
-              onChange={e => setQuery(e.target.value)}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search topics…"
+              aria-label="Search topics"
               className="pl-10 pr-4 py-2 w-full rounded-md border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -195,7 +198,7 @@ export default function Header() {
               aria-label="Select language"
               className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               value={language}
-              onChange={e => {
+              onChange={(e) => {
                 setLanguage(e.target.value as 'EN' | 'FR' | 'RW')
                 toast({
                   title: 'Language Selected',

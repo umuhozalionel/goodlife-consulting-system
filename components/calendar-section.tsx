@@ -1,185 +1,206 @@
-// components/calendar-section.tsx
-"use client";
+'use client'
 
-import { useState } from "react";
-import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Calendar, MapPin, Monitor, Filter } from "lucide-react";
+import { useState } from 'react'
+import Link from 'next/link'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Filter, MapPin, Monitor, Clock, Users } from 'lucide-react'
+import ThemeToggle from '@/components/theme-toggle'
 
 const upcomingTrainings = [
-  { id: 1, title: "Leadership Excellence Workshop", date: "2025-01-15", time: "09:00 - 17:00", location: "Goodlife Training Center", mode: "Physical", category: "Leadership", spots: 12 },
-  { id: 2, title: "Digital Marketing Fundamentals", date: "2025-01-20", time: "14:00 - 16:00", location: "Goodlife Training Center", mode: "Physical", category: "Digital", spots: 25 },
-  { id: 3, title: "Public Speaking Mastery", date: "2025-01-25", time: "10:00 - 15:00", location: "Goodlife Training Center", mode: "Physical", category: "Communication", spots: 8 },
-  { id: 4, title: "Financial Literacy for Professionals", date: "2025-02-01", time: "09:00 - 12:00", location: "Goodlife Training Center", mode: "Physical", category: "Finance", spots: 30 },
-  { id: 5, title: "Project Management Certification Prep", date: "2025-02-05", time: "08:00 - 18:00", location: "Goodlife Training Center", mode: "Physical", category: "Leadership", spots: 15 },
-  { id: 6, title: "AI Tools for Report Writing", date: "2025-02-10", time: "15:00 - 17:00", location: "Goodlife Training Center", mode: "Physical", category: "Digital", spots: 40 },
-];
+  { id: 1, title: 'Leadership Excellence Workshop',     date: '2025-01-15', time: '09:00 - 17:00', location: 'Goodlife Training Center', mode: 'Physical',  category: 'Leadership', spots: 12 },
+  { id: 2, title: 'Digital Marketing Fundamentals',      date: '2025-01-20', time: '14:00 - 16:00', location: 'Goodlife Training Center', mode: 'Physical',  category: 'Digital',    spots: 25 },
+  { id: 3, title: 'Public Speaking Mastery',             date: '2025-01-25', time: '10:00 - 15:00', location: 'Goodlife Training Center', mode: 'Physical',  category: 'Communication', spots: 8 },
+  { id: 4, title: 'Financial Literacy for Professionals',date: '2025-02-01', time: '09:00 - 12:00', location: 'Goodlife Training Center', mode: 'Physical',  category: 'Finance',     spots: 30 },
+  { id: 5, title: 'Project Management Certification Prep',date: '2025-02-05', time: '08:00 - 18:00', location: 'Goodlife Training Center', mode: 'Physical',  category: 'Leadership', spots: 15 },
+  { id: 6, title: 'AI Tools for Report Writing',         date: '2025-02-10', time: '15:00 - 17:00', location: 'Goodlife Training Center', mode: 'Physical',  category: 'Digital',    spots: 40 },
+]
 
-const categories = ["All", "Leadership", "Digital", "Communication", "Finance"];
-
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleDateString("en-US", {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-}
+const categories = ['All', 'Leadership', 'Digital', 'Communication', 'Finance'] as const
+type Category = typeof categories[number]
 
 export default function CalendarSection() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
-  const [showAll, setShowAll] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<Category>('All')
+  const [showAll, setShowAll] = useState(false)
 
   const filtered =
-    selectedCategory === "All"
+    selectedCategory === 'All'
       ? upcomingTrainings
-      : upcomingTrainings.filter((t) => t.category === selectedCategory);
+      : upcomingTrainings.filter((t) => t.category === selectedCategory)
 
-  const visible = showAll ? filtered : filtered.slice(0, 3);
+  const visible = showAll ? filtered : filtered.slice(0, 3)
 
   return (
     <section
       id="calendar"
-      className="py-20 bg-gradient-to-br from-terracotta-50 to-forest-50"
+      className="py-20 bg-background dark:bg-background"
     >
+      <div className="container mx-auto px-4 flex justify-end mb-6">
+        <ThemeToggle />
+      </div>
       <div className="container mx-auto px-4">
-        {/* Heading & Filter */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-            Upcoming Training Calendar
-          </h2>
-          <div className="flex flex-wrap justify-center gap-2 mt-4">
-            <Filter className="h-5 w-5 text-gray-500 mt-1" />
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-4">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground dark:text-foreground mb-2">
+              Upcoming Training Calendar
+            </h2>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <Filter className="h-5 w-5 text-primary dark:text-primary" />
             {categories.map((cat) => (
-              <Button
+              <button
                 key={cat}
-                variant={selectedCategory === cat ? "default" : "outline"}
                 onClick={() => {
-                  setSelectedCategory(cat);
-                  setShowAll(false);
+                  setSelectedCategory(cat)
+                  setShowAll(false)
                 }}
-                className={`rounded-full px-3 ${
+                aria-pressed={selectedCategory === cat}
+                className={`rounded-full px-4 py-2 text-sm transition duration-200 focus:outline-none focus:ring-2 focus:ring-primary ${
                   selectedCategory === cat
-                    ? "bg-black text-white"
-                    : "border-amber-200 text-black hover:bg-amber-50"
+                    ? 'bg-primary text-primary-foreground border-primary shadow'
+                    : 'border-border text-foreground hover:bg-muted hover:text-foreground'
                 }`}
               >
                 {cat}
-              </Button>
+              </button>
             ))}
           </div>
         </div>
 
-        {/* Training Cards */}
-        <div className="space-y-12">
-          {visible.map((tr) => (
-            <Card
-              key={tr.id}
-              className="shadow-lg border border-gray-200 hover:shadow-xl transition-shadow duration-300"
-            >
-              <CardContent className="p-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Overview */}
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <Badge className="bg-terracotta-100 text-terracotta-800">
-                        {tr.mode === "Online" ? (
-                          <Monitor className="h-4 w-4 mr-1 inline" />
-                        ) : (
-                          <MapPin className="h-4 w-4 mr-1 inline" />
-                        )}
-                        {tr.mode}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs">
-                        {tr.spots} spots left
-                      </Badge>
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-900">
-                      {tr.title}
-                    </h3>
-                    <p className="flex items-center text-gray-600">
-                      <Calendar className="h-5 w-5 mr-2 text-terracotta-600" />
-                      {formatDate(tr.date)}
-                    </p>
-                    <p className="flex items-center text-gray-600">
-                      <span className="inline-block h-4 w-4 mr-2">
-                        <span className="block h-2 w-2 bg-forest-500 rounded-full" />
-                      </span>
-                      {tr.time}
-                    </p>
-                    <p className="flex items-center text-gray-600">
-                      <MapPin className="h-5 w-5 mr-2 text-terracotta-600" />
-                      {tr.location}
-                    </p>
-                  </div>
+        <div className="space-y-6">
+          <AnimatePresence>
+            {visible.map((tr, idx) => (
+              <motion.div
+                key={tr.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.4, delay: idx * 0.1 }}
+              >
+                <Card className="border border-border bg-card dark:bg-card shadow transition hover:shadow-md overflow-hidden">
+                  <CardContent className="p-0">
+                    <div className="grid grid-cols-1 md:grid-cols-5">
+                      <div className="md:col-span-1 bg-primary text-primary-foreground p-6 flex flex-col items-center justify-center min-w-[3.5rem]">
+                        <div className="text-2xl font-bold">
+                          {new Date(tr.date).getDate()}
+                        </div>
+                        <div className="text-sm opacity-90 mt-1">
+                          {new Date(tr.date).toLocaleDateString('en-US', {
+                            month: 'short',
+                          })}
+                        </div>
+                        <div className="text-xs opacity-75 mt-1">
+                          {new Date(tr.date).toLocaleDateString('en-US', {
+                            year: 'numeric',
+                          })}
+                        </div>
+                      </div>
 
-                  {/* Session Details with BG */}
-                  <div className="relative rounded-lg overflow-hidden">
-                    <div className="absolute inset-0 bg-[url('/images/home-desk-design.jpg')] bg-cover bg-center" />
-                    <div className="relative bg-white bg-opacity-90 p-6 space-y-3 h-full">
-                      <h4 className="text-lg font-semibold text-gray-800">
-                        Session Details
-                      </h4>
-                      <ul className="list-disc list-inside text-gray-700 space-y-1">
-                        <li>
-                          <strong>Category:</strong> {tr.category}
-                        </li>
-                        <li>
-                          <strong>Date &amp; Time:</strong> {formatDate(tr.date)},{" "}
-                          {tr.time}
-                        </li>
-                        <li>
-                          <strong>Location:</strong> {tr.location}
-                        </li>
-                        <li>
-                          <strong>Mode:</strong> {tr.mode}
-                        </li>
-                        <li>
-                          <strong>Spots left:</strong> {tr.spots}
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
+                      <div className="md:col-span-4 p-6 bg-card dark:bg-card flex flex-col">
+                        <div className="flex flex-col lg:flex-row gap-4 mb-4">
+                          <div className="flex-1 space-y-4">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <Badge className="bg-blue-50 text-blue-600 border-blue-200">
+                                {tr.mode === 'Online' ? (
+                                  <Monitor className="h-3 w-3 mr-1 inline align-middle" />
+                                ) : (
+                                  <MapPin className="h-3 w-3 mr-1 inline align-middle" />
+                                )}
+                                <span className="text-foreground">
+                                  {tr.mode}
+                                </span>
+                              </Badge>
+                              <Badge variant="outline" className="text-muted-foreground border-muted">
+                                {tr.category}
+                              </Badge>
+                            </div>
 
-                {/* Register Now */}
-                <div className="mt-6 text-right">
-                  <Link href="/signup/trainee">
-                    <Button className="bg-black text-white px-4 py-2 text-sm rounded-full hover:bg-amber-800">
-                      Register Now
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                            <h3 className="text-xl font-semibold text-foreground leading-tight">
+                              {tr.title}
+                            </h3>
+
+                            <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                              <div className="flex items-center gap-1">
+                                <Clock className="h-4 w-4 text-primary inline align-middle" />
+                                {tr.time}
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <MapPin className="h-4 w-4 text-primary inline align-middle" />
+                                {tr.location}
+                              </div>
+                              <div className="flex items-center gap-1">
+                                <Users className="h-4 w-4 text-primary inline align-middle" />
+                                {tr.spots} spots
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex-shrink-0 flex lg:self-end">
+                            <Link href={`/signup/trainee?program=${tr.id}`}>
+                              <Button className="bg-primary text-primary-foreground px-6 py-2 rounded font-medium transition hover:bg-primary-dark focus:ring-2 focus:ring-primary">
+                                Register Now
+                              </Button>
+                            </Link>
+                          </div>
+                        </div>
+
+                        <div className="border-t border-border pt-4 grid grid-cols-2 md:grid-cols-4 gap-4 mt-auto text-sm text-foreground">
+                          <div>
+                            <span className="font-medium">Duration:</span>{' '}
+                            <span className="ml-1">
+                              {tr.time.includes('08:00 - 18:00')
+                                ? 'Full Day Intensive'
+                                : tr.time.includes('09:00 - 17:00')
+                                ? 'Full Day'
+                                : 'Half Day'}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="font-medium">Format:</span>{' '}
+                            <span className="ml-1">{tr.mode}</span>
+                          </div>
+                          <div>
+                            <span className="font-medium">Level:</span>{' '}
+                            <span className="ml-1">All Levels</span>
+                          </div>
+                          <div>
+                            <span className="font-medium">Language:</span>{' '}
+                            <span className="ml-1">English</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
 
-        {/* View More / Show Less */}
         {filtered.length > 3 && (
-          <div className="mt-8 text-center">
+          <div className="mt-12 text-center">
             <Button
               onClick={() => setShowAll(!showAll)}
-              className="bg-black text-white px-6 py-2 rounded-full hover:bg-amber-800 inline-flex items-center gap-2"
+              variant="outline"
+              className="inline-flex items-center px-8 py-3 border-primary text-primary rounded hover:bg-muted focus:ring-2 focus:ring-primary"
             >
-              <span className="inline-block h-3 w-3 rounded-full bg-white animate-pulse" />
-              {showAll ? "Show Less" : "View More"}
+              {showAll ? 'Show Less' : `View All ${filtered.length} Trainings`}
             </Button>
           </div>
         )}
 
-        {/* Learn More Programs */}
         <div className="mt-12 text-center">
           <Link
             href="/programs"
-            className="text-black font-medium hover:underline"
+            className="inline-flex items-center text-primary font-medium hover:text-primary-dark focus:ring-2 focus:ring-primary transition"
           >
-            Learn more programs →
+            Explore all training programs
+            <span className="ml-2">→</span>
           </Link>
         </div>
       </div>
     </section>
-  );
+  )
 }
