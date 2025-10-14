@@ -760,7 +760,7 @@ export default function TraineeDashboard() {
                 <div className="grid gap-6 grid-cols-1 lg:grid-cols-3">
                   <div className="card-surface rounded-md p-4">
                     <h2 className="text-lg font-semibold text-[var(--color-text)]">Next On-Site Session</h2>
-                    <p className="mt-2 text-[var(--color-text-muted)]">Thursday, Sep 18 · 2:00 PM</p>
+                    <p className="mt-2 text-[var(--color-text-muted)]">Thursday, Nov 18 · 2:00 PM</p>
                     <p className="text-[var(--color-text-muted)] mt-1">Main Training Hall</p>
                     <Button onClick={() => setScanMode(true)} className="mt-4 btn-accent px-4 py-2 rounded-md">
                       Check-In via QR
