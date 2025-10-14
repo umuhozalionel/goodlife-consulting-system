@@ -24,14 +24,24 @@ const config: Config = {
         emerald: tailwindColors.emerald,
         amber: tailwindColors.amber,
         ...customColors,
+
+        // 🎨 New dashboard palette
         primary: {
-          DEFAULT: customColors.primary,
+          DEFAULT: '#0B5FFF',
+          dark: '#0738B7',
           foreground: '#ffffff',
         },
-        secondary: {
-          DEFAULT: tailwindColors.gray[700],
+        accent: {
+          DEFAULT: '#FF7A18',
           foreground: '#ffffff',
         },
+        surface: '#FFFFFF',
+        muted: '#F3F6F9',
+        'text-primary': '#0F1724',
+        'text-muted': '#6B7280',
+        'border-soft': '#E6EEF8',
+
+        // Legacy HSL tokens (preserved for compatibility)
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
@@ -45,7 +55,7 @@ const config: Config = {
           DEFAULT: 'hsl(var(--muted))',
           foreground: 'hsl(var(--muted-foreground))',
         },
-        accent: {
+        accentLegacy: {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
         },
@@ -57,6 +67,9 @@ const config: Config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+      },
+      boxShadow: {
+        'md-custom': '0 6px 18px rgba(7,56,183,0.08)',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -74,26 +87,26 @@ const config: Config = {
         },
         gradientShift: {
           '0%, 100%': { 'background-position': '0% 50%' },
-          '50%':     { 'background-position': '100% 50%' },
+          '50%': { 'background-position': '100% 50%' },
         },
         particleAnimation: {
           from: { 'background-position': '0 0' },
-          to:   { 'background-position': '400px 0' },
+          to: { 'background-position': '400px 0' },
         },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
-        'accordion-up':   'accordion-up 0.2s ease-out',
-        gradientShift:    'gradientShift 18s ease infinite',
-        particleAnimation:'particleAnimation 20s linear infinite',
+        'accordion-up': 'accordion-up 0.2s ease-out',
+        gradientShift: 'gradientShift 18s ease infinite',
+        particleAnimation: 'particleAnimation 20s linear infinite',
       },
     },
   },
   variants: {
     extend: {
       backgroundColor: ['dark'],
-      textColor:       ['dark'],
-      borderColor:     ['dark'],
+      textColor: ['dark'],
+      borderColor: ['dark'],
     },
   },
   plugins: [require('tailwindcss-animate')],

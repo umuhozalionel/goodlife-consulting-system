@@ -2,7 +2,6 @@
 import './globals.css'
 import type { Metadata } from 'next'
 import Script from 'next/script'
-import Header from '@/components/Header'
 import ClientToaster from '@/components/client-toaster'
 
 export const metadata: Metadata = {
@@ -65,7 +64,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="min-h-screen flex flex-col bg-background text-foreground antialiased overflow-visible">
-        <Header />
         <main id="main" aria-label="Page content" className="flex-1 relative z-0 overflow-visible">
           {children}
         </main>
