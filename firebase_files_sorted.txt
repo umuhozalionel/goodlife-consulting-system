@@ -24,10 +24,10 @@ app/search/i18n/fr.json
 app/search/page.tsx
 app/signup/api/route.ts
 app/signup/page.tsx
-app/signup/trainee/TrainingForm.tsx
-app/signup/trainee/dashboard/page.tsx
-app/signup/trainee/page.tsx
-app/signup/trainee/profile/page.tsx
+apphttps://goodlifeconsulting.pro/auth/TrainingForm.tsx
+apphttps://goodlifeconsulting.pro/auth/dashboard/page.tsx
+apphttps://goodlifeconsulting.pro/auth/page.tsx
+apphttps://goodlifeconsulting.pro/auth/profile/page.tsx
 app/signup/trainer/page.tsx
 app/trainer/dashboard/page.tsx
 app/trainer/preview/page.tsx

@@ -238,7 +238,7 @@ export default function TrainingProgram() {
                           </Button>
                         </motion.div>
                       </Link>
-                      <Link href={`/signup/trainee?program=${prog.slug}`} prefetch={false}>
+                      <Link href={`https://goodlifeconsulting.pro/auth?program=${prog.slug}`} prefetch={false}>
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                           <Button className="bg-[#d25c27] text-white hover:bg-[#bb3b32] transition-colors rounded-lg">
                             Enroll Now

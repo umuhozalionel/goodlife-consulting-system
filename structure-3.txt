@@ -133,12 +133,12 @@ trainer/
 ./app/signup/api:
 route.ts
 
-./app/signup/trainee:
+./apphttps://goodlifeconsulting.pro/auth:
 TrainingForm.tsx
 dashboard/
 page.tsx
 
-./app/signup/trainee/dashboard:
+./apphttps://goodlifeconsulting.pro/auth/dashboard:
 page.tsx
 
 ./app/signup/trainer:

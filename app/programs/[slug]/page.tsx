@@ -212,7 +212,7 @@ export default function ProgramDetail({ params }: PageProps) {
         )}
 
         <section className="text-center">
-          <Link href={`/signup/trainee?program=${slug}`}>
+          <Link href={`https://goodlifeconsulting.pro/auth?program=${slug}`}>
             <Button size="lg">Enroll Now</Button>
           </Link>
         </section>

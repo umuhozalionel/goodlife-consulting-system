@@ -337,7 +337,7 @@ export default function CalendarSection() {
 
                           {/* Action Section */}
                           <div className="md:col-span-2 bg-[#f8fafc] p-6 flex flex-col justify-center items-center border-l border-[#e2e8f0]">
-                            <Link href={`/signup/trainee?program=${training.id}`}>
+                            <Link href={`https://goodlifeconsulting.pro/auth?program=${training.id}`}>
                               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                                 <Button className="bg-[#d25c27] text-white w-full mb-3 hover:bg-[#bb3b32] transition-colors rounded-lg">
                                   Register
