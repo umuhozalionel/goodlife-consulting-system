@@ -32,12 +32,12 @@ export default function Header() {
   }, [])
 
   const headerClasses = [
-    'fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-sm transition-colors duration-300',
+    'fixed top-0 left-0 w-full z-50 bg-white/95 backdrop-blur-sm transition-colors duration-300 border-b border-gray-100',
     isScrolled ? 'shadow-sm' : '',
   ].join(' ')
   
-  const navText = 'text-[#0f172a]'
-  const navHover = 'hover:text-[#0c4a6e]'
+  const navText = 'text-[#383f41]'
+  const navHover = 'hover:text-[#1b6981]'
 
   return (
     <header className={headerClasses}>
@@ -114,7 +114,7 @@ export default function Header() {
                           })
                         }}
                         className={`block w-full px-4 py-2 text-left text-sm hover:bg-gray-50 ${
-                          language === code ? 'text-[#0c4a6e] font-semibold' : 'text-gray-700'
+                          language === code ? 'text-[#1b6981] font-semibold' : 'text-[#383f41]'
                         }`}
                       >
                         {label}
@@ -132,17 +132,17 @@ export default function Header() {
               rel="noopener noreferrer"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="flex items-center space-x-2 bg-[#0f172a] text-white px-4 py-2 hover:bg-[#0c4a6e] transition"
+              className={`flex items-center space-x-2 p-2 transition font-medium ${navText} ${navHover}`}
             >
-              <Phone className="w-4 h-4" />
-              <span className="font-medium">Book a Call</span>
+              <Phone className="w-5 h-5" />
+              <span>Book a Call</span>
             </motion.a>
           </div>
 
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden p-2 transition"
+            className="md:hidden p-2 transition text-[#383f41] hover:text-[#1b6981]"
             aria-label="Menu"
           >
             {mobileOpen ? (
@@ -173,7 +173,7 @@ export default function Header() {
                       description: `Switched to ${languages[e.target.value]}`,
                     })
                   }}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#0c4a6e]"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#1b6981] text-[#383f41]"
                 >
                   <option value="EN">English</option>
                   <option value="FR">Français</option>
@@ -184,28 +184,28 @@ export default function Header() {
                 <Link
                   href="/#about"
                   onClick={() => setMobileOpen(false)}
-                  className="block py-2 font-medium transition hover:text-[#0c4a6e]"
+                  className="block py-2 font-medium transition hover:text-[#1b6981] text-[#383f41]"
                 >
                   Our Story
                 </Link>
                 <Link
                   href="/programs"
                   onClick={() => setMobileOpen(false)}
-                  className="block py-2 font-medium transition hover:text-[#0c4a6e]"
+                  className="block py-2 font-medium transition hover:text-[#1b6981] text-[#383f41]"
                 >
                   Our Programs
                 </Link>
                 <Link
                   href="/#testimonials"
                   onClick={() => setMobileOpen(false)}
-                  className="block py-2 font-medium transition hover:text-[#0c4a6e]"
+                  className="block py-2 font-medium transition hover:text-[#1b6981] text-[#383f41]"
                 >
                   Insights
                 </Link>
                 <Link
                   href="/#contact"
                   onClick={() => setMobileOpen(false)}
-                  className="block py-2 font-medium transition hover:text-[#0c4a6e]"
+                  className="block py-2 font-medium transition hover:text-[#1b6981] text-[#383f41]"
                 >
                   Contact
                 </Link>
@@ -216,11 +216,11 @@ export default function Header() {
                   target="_blank"
                   rel="noopener noreferrer"
                   whileTap={{ scale: 0.95 }}
-                  className="w-full flex items-center justify-center space-x-2 bg-[#0f172a] text-white px-4 py-3 hover:bg-[#0c4a6e] transition"
+                  className="w-full flex items-center justify-center space-x-2 p-2 transition hover:text-[#1b6981] text-[#383f41] font-medium"
                   onClick={() => setMobileOpen(false)}
                 >
                   <Phone className="w-4 h-4" />
-                  <span className="font-medium">Book a Call</span>
+                  <span>Book a Call</span>
                 </motion.a>
               </div>
             </motion.div>

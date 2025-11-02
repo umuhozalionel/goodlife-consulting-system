@@ -21,7 +21,7 @@ import {
   Tooltip,
 } from 'recharts'
 import { Card, CardContent } from '@/components/ui/card'
-import { MapPin, Phone, Mail, Users, Target } from 'lucide-react'
+import { MapPin, Phone, Mail, Users, Target, ArrowRight, BookOpen, Globe, TrendingUp } from 'lucide-react'
 
 interface Section {
   id: string
@@ -108,7 +108,29 @@ const ictData = [
   { year: 2024, schools: 92, internet: 78, services: 100, startups: 400 },
 ]
 
-const COLORS = ['#0f172a', '#0c4a6e', '#1e40af', '#1d4ed8']
+const COLORS = ['#1b6981', '#769f3f', '#d25c27', '#dd8426']
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut"
+    }
+  }
+}
 
 export default function AboutSection(): JSX.Element {
   const [activeId, setActiveId] = useState<string>(sections[0].id)
@@ -136,15 +158,27 @@ export default function AboutSection(): JSX.Element {
         />
       </Head>
 
-      <section id="about" aria-labelledby="about-heading" className="relative bg-white py-12">
-        <div className="max-w-full mx-auto px-6 md:px-8 lg:px-12">
+      <section id="about" aria-labelledby="about-heading" className="relative bg-white w-full py-12 md:py-16 lg:py-20">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <motion.div 
+            className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+          >
             
             {/* Left Sidebar - Navigation */}
-            <aside className="lg:col-span-3">
+            <motion.aside 
+              className="lg:col-span-3"
+              variants={itemVariants}
+            >
               {/* Welcome Message */}
-              <div className="bg-[#0c4a6e] text-white p-6 rounded-lg mb-6">
+              <motion.div 
+                className="bg-[#1b6981] text-white p-6 rounded-xl mb-6 shadow-lg"
+                whileHover={{ y: -2, transition: { duration: 0.2 } }}
+              >
                 <div className="flex items-center space-x-3 mb-4">
                   <Target className="h-6 w-6" />
                   <h3 className="text-xl font-bold">Explore Our Story</h3>
@@ -152,47 +186,59 @@ export default function AboutSection(): JSX.Element {
                 <p className="text-sm leading-relaxed">
                   Discover how we're transforming professional development in Rwanda through innovative training and strategic partnerships.
                 </p>
-              </div>
+              </motion.div>
 
               {/* Navigation */}
-              <nav aria-label="About navigation" className="space-y-2 bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-                {sections.map((sec) => (
-                  <button
+              <nav aria-label="About navigation" className="space-y-2 bg-white border border-[#e2e8f0] rounded-xl p-4 sm:p-6 shadow-sm">
+                {sections.map((sec, index) => (
+                  <motion.button
                     key={sec.id}
                     onClick={() => setActiveId(sec.id)}
-                    className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#0c4a6e] focus:ring-offset-2 ${
+                    className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#1b6981] focus:ring-offset-2 ${
                       activeId === sec.id
-                        ? 'bg-[#0f172a] text-white font-semibold'
-                        : 'text-[#0f172a] hover:bg-[#0c4a6e] hover:text-white'
+                        ? 'bg-[#383f41] text-white font-semibold shadow-md'
+                        : 'text-[#383f41] hover:bg-[#1b6981] hover:text-white'
                     }`}
                     aria-current={activeId === sec.id ? 'page' : undefined}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
                   >
                     {sec.title}
-                  </button>
+                  </motion.button>
                 ))}
               </nav>
-            </aside>
+            </motion.aside>
 
             {/* Center Featured Content */}
-            <div className="lg:col-span-6">
-              <div className="mb-8">
-                <h2 id="about-heading" className="text-3xl font-bold text-[#0f172a]">About Us</h2>
-                <div className="w-20 h-1 bg-[#0c4a6e] mt-2"></div>
+            <motion.div 
+              className="lg:col-span-6"
+              variants={itemVariants}
+            >
+              <div className="mb-6 sm:mb-8">
+                <h2 id="about-heading" className="text-2xl sm:text-3xl font-bold text-[#383f41]">About Us</h2>
+                <div className="w-16 sm:w-20 h-1 bg-[#1b6981] mt-2 rounded-full"></div>
               </div>
 
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={active.id}
-                  className="bg-white border border-gray-200 p-8 rounded-lg shadow-sm"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.4 }}
+                  className="bg-white border border-[#e2e8f0] p-6 sm:p-8 rounded-xl shadow-sm"
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.4, type: "spring", stiffness: 100 }}
                 >
-                  <h3 className="text-2xl font-bold text-[#0f172a] mb-4">{active.title}</h3>
-                  <p className="mb-6 text-[#0f172a] text-lg leading-relaxed">{active.description}</p>
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#383f41] mb-4">{active.title}</h3>
+                  <p className="mb-6 text-[#383f41] text-base sm:text-lg leading-relaxed">{active.description}</p>
 
-                  <div className="relative w-full h-64 rounded-lg overflow-hidden mb-6">
+                  <motion.div 
+                    className="relative w-full h-48 sm:h-64 rounded-lg overflow-hidden mb-6"
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.3 }}
+                  >
                     <Image
                       src={active.image}
                       alt={active.title}
@@ -200,30 +246,39 @@ export default function AboutSection(): JSX.Element {
                       className="object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
-                  </div>
+                  </motion.div>
 
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: 0.1 }}
-                    className="bg-[#0f172a] p-6 rounded-lg"
+                    className="bg-[#383f41] p-4 sm:p-6 rounded-xl"
                   >
-                    <h4 className="text-lg font-semibold text-white mb-3">
-                      UN & WEF Alignment
-                    </h4>
-                    <p className="text-white">
+                    <div className="flex items-center gap-2 mb-3">
+                      <Globe className="h-5 w-5 text-[#769f3f]" />
+                      <h4 className="text-lg font-semibold text-white">
+                        UN & WEF Alignment
+                      </h4>
+                    </div>
+                    <p className="text-white text-sm sm:text-base">
                       Aligned with UN Sustainable Development Cooperation Framework
                       2025–2029 and the WEF Regional Competitiveness Report.
                     </p>
                   </motion.div>
                 </motion.div>
               </AnimatePresence>
-            </div>
+            </motion.div>
 
             {/* Right Sidebar - Contact & Newsletter */}
-            <aside className="lg:col-span-3 space-y-6">
+            <motion.aside 
+              className="lg:col-span-3 space-y-6"
+              variants={itemVariants}
+            >
               {/* Welcome Message */}
-              <div className="bg-[#0f172a] text-white p-6 rounded-lg">
+              <motion.div 
+                className="bg-[#383f41] text-white p-6 rounded-xl shadow-lg"
+                whileHover={{ y: -2, transition: { duration: 0.2 } }}
+              >
                 <div className="flex items-center space-x-3 mb-4">
                   <Users className="h-6 w-6" />
                   <h3 className="text-xl font-bold">Join Our Community</h3>
@@ -231,41 +286,43 @@ export default function AboutSection(): JSX.Element {
                 <p className="text-sm leading-relaxed">
                   Connect with industry leaders, access exclusive resources, and stay updated on our latest training programs and opportunities.
                 </p>
-              </div>
+              </motion.div>
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -2 }}
+                transition={{ duration: 0.3 }}
               >
                 <Card className="border-0 shadow-lg">
-                  <CardContent className="bg-white p-6 rounded-lg border border-gray-200">
-                    <h3 className="text-lg font-semibold text-[#0f172a] mb-4">Contact Information</h3>
+                  <CardContent className="bg-white p-4 sm:p-6 rounded-xl border border-[#e2e8f0]">
+                    <h3 className="text-lg font-semibold text-[#383f41] mb-4">Contact Information</h3>
                     <div className="flex items-start space-x-3 mb-4">
-                      <MapPin className="h-5 w-5 mt-1 flex-shrink-0 text-[#0c4a6e]" />
+                      <MapPin className="h-5 w-5 mt-1 flex-shrink-0 text-[#1b6981]" />
                       <div>
-                        <p className="font-semibold text-[#0f172a]">Address</p>
-                        <p className="text-sm text-[#0f172a] mt-1">
+                        <p className="font-semibold text-[#383f41]">Address</p>
+                        <p className="text-sm text-[#383f41] mt-1">
                           PO Box 6061, Kicukiro Kagarama<br />
                           Kigali, Rwanda
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3 mb-4">
-                      <Phone className="h-5 w-5 mt-1 flex-shrink-0 text-[#0c4a6e]" />
+                      <Phone className="h-5 w-5 mt-1 flex-shrink-0 text-[#1b6981]" />
                       <div>
-                        <p className="font-semibold text-[#0f172a]">Phone</p>
-                        <p className="text-sm text-[#0f172a] mt-1">
+                        <p className="font-semibold text-[#383f41]">Phone</p>
+                        <p className="text-sm text-[#383f41] mt-1">
                           +250 790 363 700<br />
                           Toll Free: 9001
                         </p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <Mail className="h-5 w-5 mt-1 flex-shrink-0 text-[#0c4a6e]" />
+                      <Mail className="h-5 w-5 mt-1 flex-shrink-0 text-[#1b6981]" />
                       <div>
-                        <p className="font-semibold text-[#0f172a]">Email</p>
-                        <p className="text-sm text-[#0f172a] mt-1">
+                        <p className="font-semibold text-[#383f41]">Email</p>
+                        <p className="text-sm text-[#383f41] mt-1">
                           info@goodlifeconsultingpartners.org
                         </p>
                       </div>
@@ -276,12 +333,17 @@ export default function AboutSection(): JSX.Element {
 
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -2 }}
+                transition={{ duration: 0.3, delay: 0.1 }}
               >
                 <Card className="border-0 shadow-lg">
-                  <CardContent className="p-6 bg-[#0c4a6e] text-white rounded-lg">
-                    <h3 className="text-lg font-semibold mb-4">Stay Connected</h3>
+                  <CardContent className="p-4 sm:p-6 bg-[#1b6981] text-white rounded-xl">
+                    <div className="flex items-center gap-2 mb-4">
+                      <BookOpen className="h-5 w-5" />
+                      <h3 className="text-lg font-semibold">Stay Connected</h3>
+                    </div>
                     <p className="mb-4 text-sm">
                       Get the latest insights, program updates & sector reports delivered to your inbox.
                     </p>
@@ -290,73 +352,99 @@ export default function AboutSection(): JSX.Element {
                         type="email"
                         placeholder="Your email address"
                         aria-label="Your email address"
-                        className="border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent text-[#0f172a]"
+                        className="border border-[#e2e8f0] rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white focus:border-transparent text-[#383f41] text-sm"
                       />
-                      <button
+                      <motion.button
                         type="submit"
-                        className="bg-[#0f172a] text-white rounded-lg px-4 py-3 font-semibold hover:bg-[#1e293b] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#0c4a6e]"
+                        className="bg-[#d25c27] text-white rounded-lg px-4 py-3 font-semibold hover:bg-[#bb3b32] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#1b6981] flex items-center justify-center gap-2"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                       >
                         Subscribe Now
-                      </button>
+                        <ArrowRight className="w-4 h-4" />
+                      </motion.button>
                     </form>
                   </CardContent>
                 </Card>
               </motion.div>
-            </aside>
-          </div>
+            </motion.aside>
+          </motion.div>
 
           {/* Charts Section */}
-          <div className="mt-16 p-8 bg-gray-50 rounded-lg">
-            <h3 className="text-2xl font-bold text-[#0f172a] mb-8 text-center">Our Impact & Metrics</h3>
+          <motion.div 
+            className="mt-12 sm:mt-16 p-6 sm:p-8 bg-[#f8fafc] rounded-xl border border-[#e2e8f0]"
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center justify-center gap-3 mb-6 sm:mb-8">
+              <TrendingUp className="h-6 w-6 text-[#1b6981]" />
+              <h3 className="text-xl sm:text-2xl font-bold text-[#383f41] text-center">Our Impact & Metrics</h3>
+            </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
               {/* Business Investment */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h4 className="text-lg font-semibold text-[#0f172a] mb-4">
+              <motion.div 
+                className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-[#e2e8f0]"
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              >
+                <h4 className="text-lg font-semibold text-[#383f41] mb-4">
                   Business Investment (2021–2024)
                 </h4>
                 <div role="img" aria-label="Bar chart of business investments from 2021 to 2024 in billions USD">
                   <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={bizData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="year" />
-                      <YAxis unit="B" />
-                      <Tooltip formatter={(val) => `${val}B USD`} />
-                      <Bar dataKey="investment" fill="#0f172a" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis dataKey="year" stroke="#64748b" />
+                      <YAxis unit="B" stroke="#64748b" />
+                      <Tooltip 
+                        formatter={(val) => [`${val}B USD`, 'Investment']}
+                        contentStyle={{ backgroundColor: '#1b6981', color: 'white', border: 'none', borderRadius: '8px' }}
+                      />
+                      <Bar dataKey="investment" fill="#1b6981" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
-                <p className="text-sm text-[#0f172a] mt-3">
+                <p className="text-sm text-[#383f41] mt-3">
                   USD 3.2B commitments in 2024, up 32% since 2023.
                 </p>
-              </div>
+              </motion.div>
 
               {/* Trainees & Partners Impact */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h4 className="text-lg font-semibold text-[#0f172a] mb-4">
+              <motion.div 
+                className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-[#e2e8f0]"
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              >
+                <h4 className="text-lg font-semibold text-[#383f41] mb-4">
                   Trainees & Partners Impact
                 </h4>
                 <div role="img" aria-label="Stacked bar chart of trainees, partners, and impacted counts by category">
                   <ResponsiveContainer width="100%" height={200}>
                     <BarChart data={traineesData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="category" />
-                      <YAxis />
-                      <Tooltip />
-                      <Bar dataKey="trainees" fill="#0f172a" />
-                      <Bar dataKey="partners" fill="#0c4a6e" />
-                      <Bar dataKey="impacted" fill="#1e40af" />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis dataKey="category" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: '#1b6981', color: 'white', border: 'none', borderRadius: '8px' }}
+                      />
+                      <Bar dataKey="trainees" fill="#1b6981" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="partners" fill="#769f3f" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="impacted" fill="#d25c27" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>
                 </div>
-                <p className="text-sm text-[#0f172a] mt-3">
+                <p className="text-sm text-[#383f41] mt-3">
                   Shows trainees trained, partner orgs, and total impacted per category.
                 </p>
-              </div>
+              </motion.div>
 
               {/* Tourism Revenue */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h4 className="text-lg font-semibold text-[#0f172a] mb-4">
+              <motion.div 
+                className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-[#e2e8f0]"
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              >
+                <h4 className="text-lg font-semibold text-[#383f41] mb-4">
                   Tourism Revenue (2024)
                 </h4>
                 <div role="img" aria-label="Pie chart showing 2024 tourism revenue breakdown">
@@ -375,49 +463,62 @@ export default function AboutSection(): JSX.Element {
                           <Cell key={idx} fill={COLORS[idx % COLORS.length]} />
                         ))}
                       </Pie>
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: '#1b6981', color: 'white', border: 'none', borderRadius: '8px' }}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
-                <p className="text-sm text-[#0f172a] mt-3">
+                <p className="text-sm text-[#383f41] mt-3">
                   USD 647M total, led by Gorilla Tours at USD 200M.
                 </p>
-              </div>
+              </motion.div>
 
               {/* ICT & Innovation */}
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h4 className="text-lg font-semibold text-[#0f172a] mb-4">
+              <motion.div 
+                className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-[#e2e8f0]"
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
+              >
+                <h4 className="text-lg font-semibold text-[#383f41] mb-4">
                   ICT & Innovation (2021–2024)
                 </h4>
                 <div role="img" aria-label="Line chart tracking ICT & innovation metrics from 2021 to 2024">
                   <ResponsiveContainer width="100%" height={200}>
                     <LineChart data={ictData}>
-                      <CartesianGrid strokeDasharray="3 3" />
-                      <XAxis dataKey="year" />
-                      <YAxis />
-                      <Tooltip />
-                      <Line type="monotone" dataKey="schools" stroke="#0f172a" strokeWidth={3} dot={{ fill: '#0f172a' }} />
-                      <Line type="monotone" dataKey="internet" stroke="#0c4a6e" strokeWidth={3} dot={{ fill: '#0c4a6e' }} />
-                      <Line type="monotone" dataKey="services" stroke="#1e40af" strokeWidth={3} dot={{ fill: '#1e40af' }} />
-                      <Line type="monotone" dataKey="startups" stroke="#1d4ed8" strokeWidth={3} dot={{ fill: '#1d4ed8' }} />
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+                      <XAxis dataKey="year" stroke="#64748b" />
+                      <YAxis stroke="#64748b" />
+                      <Tooltip 
+                        contentStyle={{ backgroundColor: '#1b6981', color: 'white', border: 'none', borderRadius: '8px' }}
+                      />
+                      <Line type="monotone" dataKey="schools" stroke="#1b6981" strokeWidth={3} dot={{ fill: '#1b6981', r: 4 }} />
+                      <Line type="monotone" dataKey="internet" stroke="#769f3f" strokeWidth={3} dot={{ fill: '#769f3f', r: 4 }} />
+                      <Line type="monotone" dataKey="services" stroke="#d25c27" strokeWidth={3} dot={{ fill: '#d25c27', r: 4 }} />
+                      <Line type="monotone" dataKey="startups" stroke="#dd8426" strokeWidth={3} dot={{ fill: '#dd8426', r: 4 }} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
-                <p className="text-sm text-[#0f172a] mt-3">
+                <p className="text-sm text-[#383f41] mt-3">
                   Tracks % schools connected, internet penetration, online services, & startups.
                 </p>
-              </div>
+              </motion.div>
             </div>
 
             {/* Read More */}
-            <div className="flex justify-center mt-8">
+            <motion.div 
+              className="flex justify-center mt-6 sm:mt-8"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
               <Link
                 href="/more"
-                className="bg-[#0f172a] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#0c4a6e] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#0c4a6e] focus:ring-offset-2"
+                className="bg-[#d25c27] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#bb3b32] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#1b6981] focus:ring-offset-2 flex items-center gap-2"
               >
                 Read More About Our Impact
+                <ArrowRight className="w-4 h-4" />
               </Link>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
     </>

@@ -63,7 +63,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body className="min-h-screen flex flex-col bg-background text-foreground antialiased overflow-visible">
+      <body className="min-h-screen flex flex-col bg-white text-foreground antialiased overflow-visible">
+        {/* Subtle global background pattern */}
+        <div className="fixed inset-0 -z-10 bg-[linear-gradient(45deg,transparent_25%,rgba(0,0,0,0.02)_25%,rgba(0,0,0,0.02)_50%,transparent_50%,transparent_75%,rgba(0,0,0,0.02)_75%)] bg-[length:40px_40px] opacity-[0.03]" />
+        
         <main id="main" aria-label="Page content" className="flex-1 relative z-0 overflow-visible">
           {children}
         </main>
