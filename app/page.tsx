@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Header />
-      <div className="pt-10"> {/* Added padding-top to prevent header overlap */}
+      <div className="pt-10">
         <HeroSection />
         <AboutSection />
         <TrainingPrograms />
