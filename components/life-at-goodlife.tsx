@@ -4,7 +4,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, X, ChevronDown, ChevronUp, Play, Pause } from "lucide-react";
+import { ChevronLeft, ChevronRight, X, ChevronDown, Play, Pause } from "lucide-react";
 
 type Slide = {
   src: string;
@@ -71,7 +71,7 @@ export default function LifeAtGoodlife() {
   };
 
   return (
-    <section id="life" className="relative py-20 bg-white overflow-hidden">
+    <section id="life" className="relative py-20 overflow-hidden w-full">
       {/* Video Background */}
       {videoOn && (
         <div className="absolute inset-0 z-0">
@@ -92,48 +92,48 @@ export default function LifeAtGoodlife() {
       )}
 
       {/* Main Content */}
-      <div className="relative z-10 max-w-full mx-auto px-6 md:px-8 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+      <div className="relative z-10 w-full mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start w-full">
           
           {/* Left Column - Testimonials & FAQ */}
-          <div className="space-y-8">
+          <div className="space-y-8 w-full">
             {/* Testimonial Section */}
-            <div className={`${videoOn ? 'bg-white/95 backdrop-blur-sm' : 'bg-white'} rounded-2xl p-8 shadow-lg border border-gray-100`}>
+            <div className={`${videoOn ? 'bg-white/95 backdrop-blur-sm' : 'bg-white'} rounded-xl p-6 lg:p-8 shadow-lg border border-[#e2e8f0] w-full`}>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-[#0c4a6e] rounded-full flex items-center justify-center">
+                <div className="w-12 h-12 bg-[#1b6981] rounded-lg flex items-center justify-center">
                   <span className="text-white font-bold text-lg">"</span>
                 </div>
-                <h3 className={`text-3xl font-bold ${videoOn ? 'text-white' : 'text-[#0f172a]'}`}>What Our Trainees Say</h3>
+                <h3 className={`text-2xl lg:text-3xl font-bold ${videoOn ? 'text-white' : 'text-[#383f41]'}`}>What Our Trainees Say</h3>
               </div>
               
-              <blockquote className={`text-lg leading-relaxed mb-6 ${videoOn ? 'text-white' : 'text-[#0f172a]'}`}>
+              <blockquote className={`text-lg leading-relaxed mb-6 ${videoOn ? 'text-white' : 'text-[#383f41]'}`}>
                 {slides[currentSlide].testimonial}
               </blockquote>
               
-              <div className="border-t border-gray-200 pt-6">
-                <p className={`font-semibold ${videoOn ? 'text-white' : 'text-[#0f172a]'}`}>{slides[currentSlide].author}</p>
-                <p className="text-[#0c4a6e] text-sm">{slides[currentSlide].role}</p>
+              <div className="border-t border-[#e2e8f0] pt-6">
+                <p className={`font-semibold ${videoOn ? 'text-white' : 'text-[#383f41]'}`}>{slides[currentSlide].author}</p>
+                <p className="text-[#1b6981] text-sm">{slides[currentSlide].role}</p>
               </div>
             </div>
 
             {/* FAQ Section */}
-            <div className={`${videoOn ? 'bg-white/95 backdrop-blur-sm' : 'bg-white'} rounded-2xl p-8 shadow-lg border border-gray-100`}>
-              <h4 className={`text-2xl font-bold mb-6 ${videoOn ? 'text-white' : 'text-[#0f172a]'}`}>Got questions? We've got answers!</h4>
+            <div className={`${videoOn ? 'bg-white/95 backdrop-blur-sm' : 'bg-white'} rounded-xl p-6 lg:p-8 shadow-lg border border-[#e2e8f0] w-full`}>
+              <h4 className={`text-xl lg:text-2xl font-bold mb-6 ${videoOn ? 'text-white' : 'text-[#383f41]'}`}>Got questions? We've got answers!</h4>
               
               <div className="space-y-4">
                 {faqs.map((faq, idx) => (
-                  <div key={idx} className={`border rounded-xl overflow-hidden transition-all hover:border-[#0c4a6e] ${videoOn ? 'border-gray-300' : 'border-gray-200'}`}>
+                  <div key={idx} className={`border rounded-lg overflow-hidden transition-all hover:border-[#1b6981] ${videoOn ? 'border-[#e2e8f0]' : 'border-[#e2e8f0]'} w-full`}>
                     <button
                       onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
-                      className={`w-full flex justify-between items-center p-6 transition-colors ${videoOn ? 'bg-black/30 hover:bg-black/40 text-white' : 'bg-gray-50 hover:bg-gray-100 text-[#0f172a]'}`}
+                      className={`w-full flex justify-between items-center p-4 lg:p-6 transition-colors ${videoOn ? 'bg-black/30 hover:bg-black/40 text-white' : 'bg-[#f8fafc] hover:bg-[#f1f5f9] text-[#383f41]'}`}
                     >
-                      <span className="font-semibold text-left">{faq.question}</span>
-                      <ChevronDown className={`h-5 w-5 text-[#0c4a6e] transition-transform ${openFaq === idx ? 'rotate-180' : ''}`} />
+                      <span className="font-semibold text-left text-sm lg:text-base">{faq.question}</span>
+                      <ChevronDown className={`h-5 w-5 text-[#1b6981] transition-transform ${openFaq === idx ? 'rotate-180' : ''}`} />
                     </button>
                     
                     {openFaq === idx && (
-                      <div className={`p-6 border-t ${videoOn ? 'bg-black/20 text-gray-200 border-gray-300' : 'bg-white text-[#0f172a] border-gray-200'}`}>
-                        <p className="leading-relaxed">{faq.answer}</p>
+                      <div className={`p-4 lg:p-6 border-t ${videoOn ? 'bg-black/20 text-white/90 border-[#e2e8f0]' : 'bg-white text-[#383f41] border-[#e2e8f0]'}`}>
+                        <p className="leading-relaxed text-sm lg:text-base">{faq.answer}</p>
                       </div>
                     )}
                   </div>
@@ -143,9 +143,9 @@ export default function LifeAtGoodlife() {
           </div>
 
           {/* Right Column - Image Slider */}
-          <div className="space-y-6">
-            <div className="relative overflow-hidden rounded-2xl shadow-2xl group">
-              <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
+          <div className="space-y-6 w-full">
+            <div className="relative overflow-hidden rounded-xl shadow-lg group w-full">
+              <div className="flex transition-transform duration-500 ease-out w-full" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
                 {slides.map((slide, idx) => (
                   <div key={idx} className="min-w-full aspect-[4/3] relative cursor-pointer" onClick={() => setLightboxSrc(slide.src)}>
                     <Image 
@@ -161,11 +161,11 @@ export default function LifeAtGoodlife() {
               </div>
 
               {/* Navigation Arrows */}
-              <button onClick={prevSlide} className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-all opacity-0 group-hover:opacity-100">
-                <ChevronLeft className="h-6 w-6 text-[#0f172a]" />
+              <button onClick={prevSlide} className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 p-3 rounded-lg shadow-lg hover:bg-white transition-all opacity-0 group-hover:opacity-100">
+                <ChevronLeft className="h-6 w-6 text-[#383f41]" />
               </button>
-              <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-all opacity-0 group-hover:opacity-100">
-                <ChevronRight className="h-6 w-6 text-[#0f172a]" />
+              <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 p-3 rounded-lg shadow-lg hover:bg-white transition-all opacity-0 group-hover:opacity-100">
+                <ChevronRight className="h-6 w-6 text-[#383f41]" />
               </button>
 
               {/* Slide Indicators */}
@@ -174,48 +174,48 @@ export default function LifeAtGoodlife() {
                   <button 
                     key={idx} 
                     onClick={() => setCurrentSlide(idx)} 
-                    className={`w-3 h-3 rounded-full transition-all ${idx === currentSlide ? 'bg-[#0c4a6e] w-8' : 'bg-white/80'}`} 
+                    className={`w-3 h-3 rounded-lg transition-all ${idx === currentSlide ? 'bg-[#1b6981] w-8' : 'bg-white/80'}`} 
                   />
                 ))}
               </div>
             </div>
 
             {/* Stats Bar */}
-            <div className="grid grid-cols-3 gap-4 text-center">
-              <div className="bg-[#0f172a] text-white p-4 rounded-xl">
+            <div className="grid grid-cols-3 gap-4 text-center w-full">
+              <div className="bg-[#383f41] text-white p-4 rounded-lg">
                 <div className="text-2xl font-bold">300+</div>
                 <div className="text-sm opacity-90">Trainees</div>
               </div>
-              <div className="bg-[#0c4a6e] text-white p-4 rounded-xl">
+              <div className="bg-[#1b6981] text-white p-4 rounded-lg">
                 <div className="text-2xl font-bold">95%</div>
                 <div className="text-sm opacity-90">Success Rate</div>
               </div>
-              <div className="bg-[#0f172a] text-white p-4 rounded-xl">
+              <div className="bg-[#769f3f] text-white p-4 rounded-lg">
                 <div className="text-2xl font-bold">50+</div>
                 <div className="text-sm opacity-90">Partners</div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Action Buttons */}
-      <div className="relative z-10 max-w-full mx-auto px-6 md:px-8 lg:px-12 mt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <Link 
-          href="/community" 
-          className="inline-flex items-center gap-2 bg-[#0c4a6e] text-white px-6 py-3 rounded-lg hover:bg-[#0a3d5c] transition-colors font-semibold w-full sm:w-auto justify-center"
-        >
-          Browse Community Environment
-          <ChevronRight className="h-4 w-4" />
-        </Link>
+        {/* Action Buttons */}
+        <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 w-full">
+          <Link 
+            href="/testimonials" 
+            className="inline-flex items-center gap-2 bg-[#1b6981] text-white px-6 py-3 rounded-lg hover:bg-[#155870] transition-colors font-semibold w-full sm:w-auto justify-center"
+          >
+            Browse Community Environment
+            <ChevronRight className="h-4 w-4" />
+          </Link>
 
-        <button 
-          onClick={toggleVideo}
-          className="inline-flex items-center gap-2 bg-[#0f172a] text-white px-6 py-3 rounded-lg hover:bg-[#1a2438] transition-colors font-semibold w-full sm:w-auto justify-center"
-        >
-          {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-          Thousand Hills Wonders
-        </button>
+          <button 
+            onClick={toggleVideo}
+            className="inline-flex items-center gap-2 bg-[#d25c27] text-white px-6 py-3 rounded-lg hover:bg-[#bb3b32] transition-colors font-semibold w-full sm:w-auto justify-center"
+          >
+            {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+            Thousand Hills Wonders
+          </button>
+        </div>
       </div>
 
       {/* Lightbox Modal */}
@@ -223,9 +223,9 @@ export default function LifeAtGoodlife() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" onClick={() => setLightboxSrc(null)}>
           <button 
             onClick={() => setLightboxSrc(null)} 
-            className="absolute top-6 right-6 p-3 rounded-full bg-white/90 hover:bg-white transition z-50"
+            className="absolute top-6 right-6 p-3 rounded-lg bg-white/90 hover:bg-white transition z-50"
           >
-            <X className="h-6 w-6 text-[#0f172a]" />
+            <X className="h-6 w-6 text-[#383f41]" />
           </button>
           <div className="max-w-[90vw] max-h-[90vh] p-4" onClick={(e) => e.stopPropagation()}>
             <Image 
@@ -233,7 +233,7 @@ export default function LifeAtGoodlife() {
               alt="Zoomed view" 
               width={1200} 
               height={800} 
-              className="rounded-2xl shadow-2xl object-contain" 
+              className="rounded-xl shadow-2xl object-contain" 
             />
           </div>
         </div>

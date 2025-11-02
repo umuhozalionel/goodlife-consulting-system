@@ -73,6 +73,28 @@ const programs = [
   },
 ]
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: "easeOut"
+    }
+  }
+}
+
 export default function TrainingProgram() {
   const spotlight = programs.slice(0, 3)
   const duration = '3 months'
@@ -104,10 +126,19 @@ export default function TrainingProgram() {
       >
         <div className="max-w-full mx-auto px-6 md:px-8 lg:px-12">
           {/* Header Section with Welcome Message */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
+          <motion.div 
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+          >
             {/* Left: Welcome Message */}
-            <div className="lg:col-span-4">
-              <div className="bg-[#0c4a6e] text-white p-8 rounded-lg">
+            <motion.div 
+              className="lg:col-span-4"
+              variants={itemVariants}
+            >
+              <div className="bg-[#1b6981] text-white p-8 rounded-lg shadow-lg">
                 <div className="flex items-center space-x-3 mb-4">
                   <Target className="h-6 w-6" />
                   <h3 className="text-xl font-bold">Transform Your Career</h3>
@@ -127,40 +158,47 @@ export default function TrainingProgram() {
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Right: Title and Description */}
-            <div className="lg:col-span-8">
-              <div className="bg-white border border-gray-200 p-8 rounded-lg shadow-sm">
+            <motion.div 
+              className="lg:col-span-8"
+              variants={itemVariants}
+            >
+              <div className="bg-white border border-[#e2e8f0] p-8 rounded-lg shadow-sm">
                 <h2
                   id="programs-heading"
-                  className="text-3xl md:text-4xl font-bold text-[#0f172a] mb-4"
+                  className="text-3xl md:text-4xl font-bold text-[#383f41] mb-4"
                 >
                   Our Training Programs
                 </h2>
-                <div className="w-24 h-1 bg-[#0c4a6e] rounded-full mb-6" />
-                <p className="text-lg text-[#0f172a] leading-relaxed max-w-2xl">
+                <div className="w-24 h-1 bg-[#1b6981] rounded-full mb-6" />
+                <p className="text-lg text-[#383f41] leading-relaxed max-w-2xl">
                   Comprehensive solutions to elevate your skills and unlock your potential through 
                   industry-relevant training and hands-on experience.
                 </p>
               </div>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
 
           {/* Spotlight Programs */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12"
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
             {spotlight.map((prog, index) => (
               <motion.article 
                 key={prog.slug} 
                 aria-labelledby={`${prog.slug}-title`}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
+                variants={itemVariants}
+                whileHover={{ y: -4, transition: { duration: 0.2 } }}
               >
-                <Card className="border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 hover:border-[#0c4a6e] group">
+                <Card className="border border-[#e2e8f0] shadow-sm hover:shadow-md transition-all duration-300 hover:border-[#1b6981] group rounded-lg">
                   <CardHeader className="p-0">
-                    <div className="relative w-full h-48 overflow-hidden">
+                    <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
                       <Image
                         src={prog.image}
                         alt={prog.category}
@@ -174,18 +212,18 @@ export default function TrainingProgram() {
                   <CardContent className="p-6">
                     <h3
                       id={`${prog.slug}-title`}
-                      className="text-xl font-semibold text-[#0f172a] mb-3"
+                      className="text-xl font-semibold text-[#383f41] mb-3"
                     >
                       {prog.category}
                     </h3>
-                    <p className="text-[#0f172a] mb-4 leading-relaxed">
+                    <p className="text-[#383f41] mb-4 leading-relaxed">
                       {prog.description}
                     </p>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-sm font-medium text-[#0c4a6e]">
+                      <span className="text-sm font-medium text-[#1b6981]">
                         Duration: {duration}
                       </span>
-                      <span className="text-sm text-[#0f172a] bg-gray-100 px-2 py-1 rounded">
+                      <span className="text-sm text-[#383f41] bg-[#f8fafc] px-2 py-1 rounded-md border border-[#e2e8f0]">
                         Featured
                       </span>
                     </div>
@@ -194,7 +232,7 @@ export default function TrainingProgram() {
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                           <Button 
                             variant="outline" 
-                            className="border-[#0f172a] text-[#0f172a] hover:bg-[#0f172a] hover:text-white transition-colors"
+                            className="border-[#383f41] text-[#383f41] hover:bg-[#383f41] hover:text-white transition-colors rounded-lg"
                           >
                             View Details
                           </Button>
@@ -202,7 +240,7 @@ export default function TrainingProgram() {
                       </Link>
                       <Link href={`/signup/trainee?program=${prog.slug}`} prefetch={false}>
                         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                          <Button className="bg-[#0f172a] text-white hover:bg-[#0c4a6e] transition-colors">
+                          <Button className="bg-[#d25c27] text-white hover:bg-[#bb3b32] transition-colors rounded-lg">
                             Enroll Now
                           </Button>
                         </motion.div>
@@ -212,65 +250,85 @@ export default function TrainingProgram() {
                 </Card>
               </motion.article>
             ))}
-          </div>
+          </motion.div>
 
-          {/* View More Programs */}
-          <div className="text-center">
-            <Link href="/programs" prefetch>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button className="bg-[#0f172a] text-white px-8 py-3 hover:bg-[#0c4a6e] transition-colors group">
-                  <span>View All Programs</span>
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </motion.div>
-            </Link>
-            
-            {/* Additional Info with QR Code */}
-            <div className="mt-8 grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-              <div className="text-center p-4">
-                <div className="bg-[#0c4a6e] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+          {/* Additional Info with QR Code */}
+          <motion.div 
+            className="mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto mb-8">
+              <motion.div 
+                className="text-center p-4 bg-white border border-[#e2e8f0] rounded-lg shadow-sm"
+                whileHover={{ y: -2, transition: { duration: 0.2 } }}
+              >
+                <div className="bg-[#1b6981] text-white w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
                   <Users className="h-6 w-6" />
                 </div>
-                <h4 className="font-semibold text-[#0f172a]">Expert Instructors</h4>
-                <p className="text-sm text-[#0f172a] mt-1">Industry professionals with real-world experience</p>
-              </div>
+                <h4 className="font-semibold text-[#383f41]">Expert Instructors</h4>
+                <p className="text-sm text-[#383f41] mt-1">Industry professionals with real-world experience</p>
+              </motion.div>
               
-              <div className="text-center p-4">
-                <div className="bg-[#0f172a] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+              <motion.div 
+                className="text-center p-4 bg-white border border-[#e2e8f0] rounded-lg shadow-sm"
+                whileHover={{ y: -2, transition: { duration: 0.2 } }}
+              >
+                <div className="bg-[#383f41] text-white w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
                   <Target className="h-6 w-6" />
                 </div>
-                <h4 className="font-semibold text-[#0f172a]">Practical Focus</h4>
-                <p className="text-sm text-[#0f172a] mt-1">Hands-on learning with immediate application</p>
-              </div>
+                <h4 className="font-semibold text-[#383f41]">Practical Focus</h4>
+                <p className="text-sm text-[#383f41] mt-1">Hands-on learning with immediate application</p>
+              </motion.div>
               
-              <div className="text-center p-4">
-                <div className="bg-[#0c4a6e] text-white w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+              <motion.div 
+                className="text-center p-4 bg-white border border-[#e2e8f0] rounded-lg shadow-sm"
+                whileHover={{ y: -2, transition: { duration: 0.2 } }}
+              >
+                <div className="bg-[#769f3f] text-white w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
                   <TrendingUp className="h-6 w-6" />
                 </div>
-                <h4 className="font-semibold text-[#0f172a]">Proven Results</h4>
-                <p className="text-sm text-[#0f172a] mt-1">95% of graduates report career advancement</p>
-              </div>
+                <h4 className="font-semibold text-[#383f41]">Proven Results</h4>
+                <p className="text-sm text-[#383f41] mt-1">95% of graduates report career advancement</p>
+              </motion.div>
 
               {/* QR Code Section */}
-              <div className="text-center p-4">
-                <div className="bg-white border border-gray-200 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
-                  <QrCode className="h-6 w-6 text-[#0f172a]" />
+              <motion.div 
+                className="text-center p-4 bg-white border border-[#e2e8f0] rounded-lg shadow-sm"
+                whileHover={{ y: -2, transition: { duration: 0.2 } }}
+              >
+                <div className="bg-white border border-[#e2e8f0] w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
+                  <QrCode className="h-6 w-6 text-[#383f41]" />
                 </div>
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-semibold text-[#0f172a]">Quick Register</h4>
+                <div className="flex flex-col items-center mb-3">
+                  <h4 className="font-semibold text-[#383f41] mb-2">Quick Register</h4>
                   <motion.button
                     onClick={() => setIsQrPopupOpen(true)}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="bg-[#0f172a] text-white px-3 py-1 rounded text-sm font-medium hover:bg-[#0c4a6e] transition-colors"
+                    className="bg-[#d25c27] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#bb3b32] transition-colors"
                   >
                     Show QR
                   </motion.button>
                 </div>
-                <p className="text-sm text-[#0f172a]">Click to scan and register instantly</p>
-              </div>
+                <p className="text-sm text-[#383f41]">Click to scan and register instantly</p>
+              </motion.div>
             </div>
-          </div>
+
+            {/* View All Programs Button - Now at the bottom */}
+            <div className="text-center">
+              <Link href="/programs" prefetch>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button className="bg-[#1b6981] text-white px-8 py-3 hover:bg-[#155870] transition-colors group rounded-lg">
+                    <span>View All Programs</span>
+                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </motion.div>
+              </Link>
+            </div>
+          </motion.div>
         </div>
 
         {/* QR Code Popup */}
@@ -287,33 +345,33 @@ export default function TrainingProgram() {
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.9, opacity: 0 }}
-                className="bg-white rounded-2xl p-8 max-w-sm w-full relative"
+                className="bg-white rounded-xl p-8 max-w-sm w-full relative border border-[#e2e8f0] shadow-lg"
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Close Button */}
                 <button
                   onClick={() => setIsQrPopupOpen(false)}
-                  className="absolute top-4 right-4 text-gray-500 hover:text-[#0f172a] transition-colors"
+                  className="absolute top-4 right-4 text-[#64748b] hover:text-[#383f41] transition-colors"
                 >
                   <X className="h-6 w-6" />
                 </button>
 
                 {/* QR Code Content */}
                 <div className="text-center">
-                  <div className="bg-[#0c4a6e] text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="bg-[#1b6981] text-white w-16 h-16 rounded-lg flex items-center justify-center mx-auto mb-4">
                     <QrCode className="h-8 w-8" />
                   </div>
                   
-                  <h3 className="text-2xl font-bold text-[#0f172a] mb-2">
+                  <h3 className="text-2xl font-bold text-[#383f41] mb-2">
                     Quick Registration
                   </h3>
                   
-                  <p className="text-[#0f172a] mb-6">
+                  <p className="text-[#383f41] mb-6">
                     Scan this QR code to register instantly
                   </p>
 
                   {/* QR Code Image */}
-                  <div className="bg-white p-4 rounded-xl border-2 border-[#0c4a6e] mb-4 mx-auto max-w-xs">
+                  <div className="bg-white p-4 rounded-lg border-2 border-[#1b6981] mb-4 mx-auto max-w-xs">
                     <Image 
                       src="/qr/trainee-registration.png" 
                       alt="Trainee Registration QR Code" 
@@ -323,11 +381,11 @@ export default function TrainingProgram() {
                     />
                   </div>
 
-                  <p className="text-sm text-[#0f172a] font-medium">
+                  <p className="text-sm text-[#383f41] font-medium">
                     Use your camera to scan this QR code
                   </p>
                   
-                  <p className="text-xs text-gray-600 mt-2">
+                  <p className="text-xs text-[#64748b] mt-2">
                     Point your phone's camera at the code to open registration
                   </p>
                 </div>

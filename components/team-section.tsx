@@ -268,15 +268,6 @@ const modalVariants: Variants = {
   }
 }
 
-/* ---------- Color Constants ---------- */
-const COLORS = {
-  primary: '#0f172a',
-  secondary: '#0c4a6e',
-  accent: '#dc2626',
-  background: '#ffffff',
-  lightBg: '#f8fafc'
-}
-
 /* ---------- Profile Card Component ---------- */
 const ProfileCard = ({ member, onViewProfile }: { member: TeamMember; onViewProfile: (member: TeamMember) => void }) => {
   const [isHovered, setIsHovered] = useState(false)
@@ -284,13 +275,13 @@ const ProfileCard = ({ member, onViewProfile }: { member: TeamMember; onViewProf
   return (
     <motion.div
       variants={cardVariants}
-      className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100"
+      className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-[#e2e8f0]"
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
       whileHover={{ y: -8 }}
     >
       {/* Background Gradient Effect */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#f8fafc] to-white opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       
       {/* Image Container */}
       <div className="relative h-64 overflow-hidden">
@@ -307,7 +298,7 @@ const ProfileCard = ({ member, onViewProfile }: { member: TeamMember; onViewProf
         
         {/* Experience Badge */}
         <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg">
-          <div className="flex items-center gap-1 text-xs font-semibold text-gray-700">
+          <div className="flex items-center gap-1 text-xs font-semibold text-[#383f41]">
             <Calendar className="h-3 w-3" />
             <span>{member.experience}</span>
           </div>
@@ -318,7 +309,7 @@ const ProfileCard = ({ member, onViewProfile }: { member: TeamMember; onViewProf
           {member.specialties?.slice(0, 2).map((specialty, index) => (
             <span
               key={index}
-              className="bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 text-xs font-medium text-gray-700 shadow-lg"
+              className="bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 text-xs font-medium text-[#383f41] shadow-lg"
             >
               {specialty}
             </span>
@@ -328,7 +319,7 @@ const ProfileCard = ({ member, onViewProfile }: { member: TeamMember; onViewProf
         {/* View Profile Button */}
         <motion.button
           onClick={() => onViewProfile(member)}
-          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-sm text-gray-800 px-6 py-2 rounded-full font-semibold shadow-lg hover:bg-white transition-all duration-300 opacity-0 group-hover:opacity-100"
+          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-sm text-[#383f41] px-6 py-2 rounded-full font-semibold shadow-lg hover:bg-white transition-all duration-300 opacity-0 group-hover:opacity-100"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -339,34 +330,34 @@ const ProfileCard = ({ member, onViewProfile }: { member: TeamMember; onViewProf
       {/* Content */}
       <div className="relative p-6">
         <div className="mb-3">
-          <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
-            {member.honorific && <span className="text-gray-600">{member.honorific} </span>}
+          <h3 className="text-xl font-bold text-[#383f41] group-hover:text-[#1b6981] transition-colors duration-300">
+            {member.honorific && <span className="text-[#383f41]">{member.honorific} </span>}
             {member.name}
-            {member.credentials && <span className="text-gray-600">, {member.credentials}</span>}
+            {member.credentials && <span className="text-[#383f41]">, {member.credentials}</span>}
           </h3>
-          <p className="text-gray-600 text-sm mt-1">{member.role}</p>
+          <p className="text-[#383f41] text-sm mt-1">{member.role}</p>
         </div>
 
-        <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">
+        <p className="text-[#383f41] text-sm leading-relaxed line-clamp-3">
           {member.bio.split('.').slice(0, 2).join('.')}.
         </p>
 
         {/* Location */}
         {member.location && (
-          <div className="flex items-center gap-2 mt-3 text-gray-600 text-sm">
+          <div className="flex items-center gap-2 mt-3 text-[#383f41] text-sm">
             <MapPin className="h-4 w-4" />
             <span>{member.location}</span>
           </div>
         )}
 
         {/* Social Links */}
-        <div className="flex gap-3 mt-4 pt-4 border-t border-gray-100">
+        <div className="flex gap-3 mt-4 pt-4 border-t border-[#e2e8f0]">
           {member.linkedin && (
             <motion.a
               href={member.linkedin}
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 bg-gray-100 rounded-lg hover:bg-blue-100 hover:text-blue-600 transition-colors duration-300"
+              className="p-2 bg-[#f8fafc] rounded-lg hover:bg-[#1b6981] hover:text-white transition-colors duration-300"
             >
               <Linkedin className="h-4 w-4" />
             </motion.a>
@@ -376,7 +367,7 @@ const ProfileCard = ({ member, onViewProfile }: { member: TeamMember; onViewProf
               href={member.twitter}
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 bg-gray-100 rounded-lg hover:bg-blue-100 hover:text-blue-600 transition-colors duration-300"
+              className="p-2 bg-[#f8fafc] rounded-lg hover:bg-[#1b6981] hover:text-white transition-colors duration-300"
             >
               <Twitter className="h-4 w-4" />
             </motion.a>
@@ -386,7 +377,7 @@ const ProfileCard = ({ member, onViewProfile }: { member: TeamMember; onViewProf
               href={member.github}
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-300"
+              className="p-2 bg-[#f8fafc] rounded-lg hover:bg-[#383f41] hover:text-white transition-colors duration-300"
             >
               <Github className="h-4 w-4" />
             </motion.a>
@@ -395,7 +386,7 @@ const ProfileCard = ({ member, onViewProfile }: { member: TeamMember; onViewProf
       </div>
 
       {/* Hover Border Effect */}
-      <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-blue-200 transition-all duration-500 pointer-events-none" />
+      <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-[#1b6981] transition-all duration-500 pointer-events-none" />
     </motion.div>
   )
 }
@@ -445,7 +436,7 @@ const ProfileModal = ({ member, isOpen, onClose }: { member: TeamMember; isOpen:
             onClick={onClose}
             className="absolute top-6 right-6 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-colors duration-300"
           >
-            <X className="h-6 w-6 text-gray-700" />
+            <X className="h-6 w-6 text-[#383f41]" />
           </button>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 h-full">
@@ -468,7 +459,7 @@ const ProfileModal = ({ member, isOpen, onClose }: { member: TeamMember; isOpen:
                     {member.name}
                     {member.credentials && <span>, {member.credentials}</span>}
                   </h2>
-                  <p className="text-blue-200 text-lg mb-4">{member.role}</p>
+                  <p className="text-[#769f3f] text-lg mb-4">{member.role}</p>
                   
                   <div className="flex items-center gap-4 text-sm">
                     {member.location && (
@@ -492,25 +483,25 @@ const ProfileModal = ({ member, isOpen, onClose }: { member: TeamMember; isOpen:
             <div className="lg:col-span-2 p-8 overflow-y-auto max-h-[80vh] lg:max-h-[90vh]">
               {/* Bio */}
               <div className="mb-8">
-                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <Users className="h-5 w-5 text-blue-600" />
+                <h3 className="text-xl font-bold text-[#383f41] mb-4 flex items-center gap-2">
+                  <Users className="h-5 w-5 text-[#1b6981]" />
                   Professional Bio
                 </h3>
-                <p className="text-gray-700 leading-relaxed">{member.bio}</p>
+                <p className="text-[#383f41] leading-relaxed">{member.bio}</p>
               </div>
 
               {/* Specialties */}
               {member.specialties && (
                 <div className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <Star className="h-5 w-5 text-blue-600" />
+                  <h3 className="text-xl font-bold text-[#383f41] mb-4 flex items-center gap-2">
+                    <Star className="h-5 w-5 text-[#1b6981]" />
                     Areas of Expertise
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {member.specialties.map((specialty, index) => (
                       <span
                         key={index}
-                        className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                        className="px-4 py-2 bg-[#1b6981] text-white rounded-full text-sm font-medium"
                       >
                         {specialty}
                       </span>
@@ -521,15 +512,15 @@ const ProfileModal = ({ member, isOpen, onClose }: { member: TeamMember; isOpen:
 
               {/* Portfolio */}
               <div className="mb-8">
-                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                  <BookOpen className="h-5 w-5 text-blue-600" />
+                <h3 className="text-xl font-bold text-[#383f41] mb-4 flex items-center gap-2">
+                  <BookOpen className="h-5 w-5 text-[#1b6981]" />
                   Key Achievements
                 </h3>
                 <div className="grid gap-4">
                   {member.portfolio.map((item, index) => (
-                    <div key={index} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
-                      <h4 className="font-semibold text-gray-900 mb-2">{item.title}</h4>
-                      <p className="text-gray-700 text-sm">{item.description}</p>
+                    <div key={index} className="p-4 bg-[#f8fafc] rounded-lg border border-[#e2e8f0]">
+                      <h4 className="font-semibold text-[#383f41] mb-2">{item.title}</h4>
+                      <p className="text-[#383f41] text-sm">{item.description}</p>
                     </div>
                   ))}
                 </div>
@@ -538,14 +529,14 @@ const ProfileModal = ({ member, isOpen, onClose }: { member: TeamMember; isOpen:
               {/* Honors & Awards */}
               {member.honors && member.honors.length > 0 && (
                 <div className="mb-8">
-                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-                    <Award className="h-5 w-5 text-blue-600" />
+                  <h3 className="text-xl font-bold text-[#383f41] mb-4 flex items-center gap-2">
+                    <Award className="h-5 w-5 text-[#1b6981]" />
                     Honors & Recognition
                   </h3>
                   <ul className="space-y-3">
                     {member.honors.map((honor, index) => (
-                      <li key={index} className="flex items-start gap-3 text-gray-700">
-                        <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
+                      <li key={index} className="flex items-start gap-3 text-[#383f41]">
+                        <div className="w-2 h-2 bg-[#1b6981] rounded-full mt-2 flex-shrink-0" />
                         <span>{honor}</span>
                       </li>
                     ))}
@@ -554,12 +545,12 @@ const ProfileModal = ({ member, isOpen, onClose }: { member: TeamMember; isOpen:
               )}
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4 pt-6 border-t border-gray-200">
+              <div className="flex flex-wrap gap-4 pt-6 border-t border-[#e2e8f0]">
                 <motion.a
                   href="/contact"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+                  className="inline-flex items-center gap-2 bg-[#d25c27] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#bb3b32] transition-colors duration-300"
                 >
                   <Mail className="h-4 w-4" />
                   Contact {member.name.split(' ')[0]}
@@ -571,7 +562,7 @@ const ProfileModal = ({ member, isOpen, onClose }: { member: TeamMember; isOpen:
                       href={member.linkedin}
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.9 }}
-                      className="p-3 bg-gray-100 rounded-lg hover:bg-blue-100 hover:text-blue-600 transition-colors duration-300"
+                      className="p-3 bg-[#f8fafc] rounded-lg hover:bg-[#1b6981] hover:text-white transition-colors duration-300"
                     >
                       <Linkedin className="h-5 w-5" />
                     </motion.a>
@@ -581,7 +572,7 @@ const ProfileModal = ({ member, isOpen, onClose }: { member: TeamMember; isOpen:
                       href={member.twitter}
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.9 }}
-                      className="p-3 bg-gray-100 rounded-lg hover:bg-blue-100 hover:text-blue-600 transition-colors duration-300"
+                      className="p-3 bg-[#f8fafc] rounded-lg hover:bg-[#1b6981] hover:text-white transition-colors duration-300"
                     >
                       <Twitter className="h-5 w-5" />
                     </motion.a>
@@ -591,7 +582,7 @@ const ProfileModal = ({ member, isOpen, onClose }: { member: TeamMember; isOpen:
                       href={member.github}
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.9 }}
-                      className="p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-300"
+                      className="p-3 bg-[#f8fafc] rounded-lg hover:bg-[#383f41] hover:text-white transition-colors duration-300"
                     >
                       <Github className="h-5 w-5" />
                     </motion.a>
@@ -626,26 +617,21 @@ export default function TeamSection(): JSX.Element {
   const closeProfile = () => setSelectedMember(null)
 
   return (
-    <section id="team" className="relative py-20 bg-gradient-to-br from-slate-50 via-white to-blue-50 overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
-      <div className="absolute top-0 left-0 w-72 h-72 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" />
-      <div className="absolute top-0 right-0 w-72 h-72 bg-slate-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000" />
-      
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="team" className="relative py-20 w-full bg-white">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-16 w-full"
         >
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#383f41] mb-6">
             Meet Our 
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-slate-800"> Team</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1b6981] to-[#769f3f]"> Team</span>
           </h2>
-          <div className="w-24 h-1.5 bg-gradient-to-r from-blue-600 to-slate-800 rounded-full mx-auto mb-6" />
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+          <div className="w-24 h-1.5 bg-gradient-to-r from-[#1b6981] to-[#769f3f] rounded-full mx-auto mb-6" />
+          <p className="text-xl text-[#383f41] max-w-3xl mx-auto leading-relaxed">
             Discover the passionate experts and industry leaders driving our mission forward. 
             Each team member brings unique expertise and dedication to empower Rwanda's future leaders.
           </p>
@@ -656,7 +642,7 @@ export default function TeamSection(): JSX.Element {
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-wrap justify-center gap-4 mb-12"
+          className="flex flex-wrap justify-center gap-4 mb-12 w-full"
         >
           {[
             { key: 'all', label: 'All Team Members', count: boardMembers.length + trainers.length },
@@ -670,15 +656,15 @@ export default function TeamSection(): JSX.Element {
               whileTap={{ scale: 0.95 }}
               className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 ${
                 activeFilter === filter.key
-                  ? 'bg-blue-600 text-white shadow-lg'
-                  : 'bg-white text-slate-700 shadow-md hover:shadow-lg border border-slate-200'
+                  ? 'bg-[#1b6981] text-white shadow-lg'
+                  : 'bg-white text-[#383f41] shadow-md hover:shadow-lg border border-[#e2e8f0]'
               }`}
             >
               <span>{filter.label}</span>
               <span className={`px-2 py-1 rounded-full text-sm ${
                 activeFilter === filter.key
                   ? 'bg-white/20 text-white'
-                  : 'bg-slate-100 text-slate-600'
+                  : 'bg-[#f8fafc] text-[#383f41]'
               }`}>
                 {filter.count}
               </span>
@@ -692,7 +678,7 @@ export default function TeamSection(): JSX.Element {
           variants={containerVariants}
           initial="hidden"
           animate="visible"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full"
         >
           {filteredMembers.map((member) => (
             <ProfileCard
@@ -708,15 +694,15 @@ export default function TeamSection(): JSX.Element {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mt-16"
+          className="text-center mt-16 w-full"
         >
-          <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 rounded-3xl p-12 text-center relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[#1b6981] via-[#769f3f] to-[#383f41] rounded-3xl p-12 text-center relative overflow-hidden w-full">
             <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
             <div className="relative z-10">
               <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
                 Ready to Work With Our Experts?
               </h3>
-              <p className="text-xl text-blue-100 max-w-2xl mx-auto mb-8 leading-relaxed">
+              <p className="text-xl text-white/90 max-w-2xl mx-auto mb-8 leading-relaxed">
                 Connect with our team of industry leaders and expert trainers to transform your career or organization.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -724,7 +710,7 @@ export default function TeamSection(): JSX.Element {
                   href="/contact"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center bg-white text-slate-900 px-8 py-4 rounded-xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 group"
+                  className="inline-flex items-center bg-white text-[#383f41] px-8 py-4 rounded-xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 group"
                 >
                   Get In Touch
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -733,7 +719,7 @@ export default function TeamSection(): JSX.Element {
                   href="/programs"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white hover:text-slate-900 transition-all duration-300 group backdrop-blur-sm"
+                  className="inline-flex items-center border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white hover:text-[#383f41] transition-all duration-300 group"
                 >
                   <BookOpen className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
                   Browse Programs
