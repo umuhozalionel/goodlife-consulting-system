@@ -26,8 +26,7 @@ import {
 
 const inter = Inter({ subsets: ['latin'], weight: ['400','700'] });
 const lora = Lora({ subsets: ['latin'], weight: ['400','700'] });
-const blurDataURL =
-  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==';
+const blurDataURL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==';
 
 const SliderContent = ({ slide, images, setSlide }) => {
   const prev = () => setSlide((s) => (s === 0 ? images.length - 1 : s - 1));
@@ -36,10 +35,7 @@ const SliderContent = ({ slide, images, setSlide }) => {
   return (
     <div className="relative mb-6">
       <div className="relative pt-8">
-        <div
-          className="relative w-full pb-[56.25%] overflow-hidden rounded-xl"
-          style={{ boxShadow: '0 0 12px rgba(0,0,0,0.2)' }}
-        >
+        <div className="relative w-full pb-[56.25%] overflow-hidden">
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={slide}
@@ -68,14 +64,14 @@ const SliderContent = ({ slide, images, setSlide }) => {
         <button
           onClick={prev}
           aria-label="Previous slide"
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full hover:bg-white transition"
+          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 p-2 rounded-full hover:bg-white transition border border-gray-200"
         >
           <ChevronLeft className="w-6 h-6 text-[#0f172a]" />
         </button>
         <button
           onClick={next}
           aria-label="Next slide"
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full hover:bg-white transition"
+          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 p-2 rounded-full hover:bg-white transition border border-gray-200"
         >
           <NextIcon className="w-6 h-6 text-[#0f172a]" />
         </button>
@@ -110,195 +106,163 @@ export default function HeroSection() {
 
   const images = [
     {
-      src: '/trainee-overview.jpg',
+      src: '/images/hero/business-focus.jpg',
       alt: 'Business Focus',
       caption: 'Set your skills on a new level with business industry experts',
-      description:
-        'We bridge theory and practice in business by empowering Rwanda’s future leaders with world-class internships guided by industry experts.',
+      description: 'We bridge theory and practice in business by empowering Rwanda\'s future leaders with world-class internships guided by industry experts.',
     },
     {
-      src: '/tourism-overview.jpg',
-      alt: 'Tourism Focus',
-      caption: 'Discover Rwanda’s hidden treasures with expert guidance',
-      description:
-        'We bridge theory and practice in tourism by empowering Rwanda’s future leaders through immersive internships discovering hidden treasures.',
+      src: '/images/hero/tourism-focus.jpg',
+      alt: 'Tourism Focus', 
+      caption: 'Discover Rwanda\'s hidden treasures with expert guidance',
+      description: 'We bridge theory and practice in tourism by empowering Rwanda\'s future leaders through immersive internships discovering hidden treasures.',
     },
     {
-      src: '/tech-overview.jpg',
+      src: '/images/hero/tech-focus.jpg',
       alt: 'ICT Focus',
       caption: 'Innovate the future with cutting-edge tech skills',
-      description:
-        'We bridge theory and practice in ICT by equipping Rwanda’s future leaders with cutting-edge internships and hands-on mentorship to drive digital innovation.',
+      description: 'We bridge theory and practice in ICT by equipping Rwanda\'s future leaders with cutting-edge internships and hands-on mentorship to drive digital innovation.',
     },
   ];
+
+  const handleStartJourney = () => {
+    // Try first link, if it fails try second link
+    const primaryLink = 'https://goodlifeconsulting.pro/auth';
+    const fallbackLink = 'https://goodlife-e-portal.vercel.app/auth';
+    
+    // Open primary link in new tab
+    const newWindow = window.open(primaryLink, '_blank');
+    
+    // If primary fails to open, try fallback after a short delay
+    setTimeout(() => {
+      if (!newWindow || newWindow.closed || typeof newWindow.closed === 'undefined') {
+        window.open(fallbackLink, '_blank');
+      }
+    }, 1000);
+  };
 
   return (
     <section
       id="home"
-      className={`${inter.className} relative overflow-hidden pt-20 pb-8`}
+      className={`${inter.className} relative overflow-hidden bg-white`}
       aria-label="Hero section"
     >
       <motion.div
-        className="absolute top-0 left-0 w-full h-1 origin-left bg-gradient-to-r from-teal-500 to-sky-500"
+        className="absolute top-0 left-0 w-full h-1 origin-left bg-[#0c4a6e]"
         style={{ scaleX }}
       />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden">
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <Image
-              src="/images/hero-bg/yakin-17.jpg"
-              alt="Hero background"
-              fill
-              className="object-cover"
-              placeholder="blur"
-              blurDataURL={blurDataURL}
-              priority
-            />
-            <div className="absolute inset-0 bg-[#f0fdfa]/50 backdrop-blur-sm pointer-events-none" />
-          </div>
+      <div className="max-w-full mx-auto">
+        <motion.div
+          className="relative z-10 p-6 md:p-8 lg:p-12"
+          initial={reduceMotion ? {} : { opacity: 0, scale: 1.05 }}
+          animate={reduceMotion ? {} : { opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+        >
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+            <div className="flex-1">
+              <h1
+                className={`flex items-center ${lora.className} text-3xl md:text-4xl lg:text-5xl font-bold text-[#0f172a] mb-6`}
+              >
+                {!reduceMotion && (
+                  <motion.span
+                    animate={{ rotate: [0, 15, -15, 0] }}
+                    transition={{ repeat: Infinity, duration: 1 }}
+                  >
+                    <Hand className="w-8 h-8 text-[#0f172a]" />
+                  </motion.span>
+                )}
+                <span className="ml-3">Welcome to Goodlife Consulting Partners.</span>
+              </h1>
 
-          <motion.div
-            className="relative z-10 p-8"
-            initial={reduceMotion ? {} : { opacity: 0, scale: 1.05 }}
-            animate={reduceMotion ? {} : { opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="flex flex-col md:flex-row gap-12">
-              <div className="flex-1 bg-white p-6 rounded-xl">
-                <h1
-                  className={`flex items-center ${lora.className} text-3xl md:text-4xl font-bold text-[#0f172a]`}
-                >
-                  {!reduceMotion && (
-                    <motion.span
-                      animate={{ rotate: [0, 15, -15, 0] }}
-                      transition={{ repeat: Infinity, duration: 1 }}
-                    >
-                      <Hand className="w-8 h-8 text-[#0f172a]" />
-                    </motion.span>
-                  )}
-                  <span className="ml-2">Welcome to Goodlife Consulting Partners.</span>
-                </h1>
-
-                <p className="mt-4 text-lg text-[#0f172a]">
+              <div className="space-y-4 mb-8">
+                <p className="text-lg text-[#0f172a] leading-relaxed">
                   At Goodlife Consulting Partners, we are dedicated to fostering
                   professional growth and development through our comprehensive
                   training programs.
                 </p>
-                <p className="mt-2 text-lg text-[#0f172a]">
+                <p className="text-lg text-[#0f172a] leading-relaxed">
                   Our mission is to equip individuals and organizations with the
-                  skills and knowledge necessary to thrive in today’s competitive
+                  skills and knowledge necessary to thrive in today's competitive
                   landscape.
                 </p>
-                <p className="mt-6 text-lg text-[#0f172a]">
+                <p className="text-lg text-[#0f172a] leading-relaxed">
                   Our corporate training programs and industry professional
                   internships equip teams with the skills they need to excel in
-                  today’s market.
+                  today's market.
                 </p>
-
-                <div className="mt-6 flex flex-wrap gap-2">
-                  <Link href="/blog/practical-projects">
-                    <button className="px-4 py-2 bg-[#0f172a] text-white font-semibold">
-                      Practical Projects
-                    </button>
-                  </Link>
-                  <Link href="/blog/expert-mentors">
-                    <button className="px-4 py-2 bg-[#0f172a] text-white font-semibold">
-                      Expert Mentors
-                    </button>
-                  </Link>
-                </div>
-
-                <div className="mt-6">
-                  <Link href="#programs">
-                    <motion.button
-                      className="inline-flex items-center px-6 py-3 bg-[#0f172a] text-white font-semibold"
-                      whileHover={!reduceMotion && { scale: 1.05 }}
-                      whileTap={!reduceMotion && { scale: 0.95 }}
-                    >
-                      Explore Programs
-                      <ChevronDown className="ml-2 w-4 h-4" />
-                    </motion.button>
-                  </Link>
-                </div>
-
-                <div className="mt-6 flex items-center space-x-4">
-                  <Link href="#" aria-label="Follow on Twitter">
-                    <Twitter className="w-6 h-6 text-[#0f172a] hover:text-[#0f172a]/70 transition" />
-                  </Link>
-                  <Link href="#" aria-label="Follow on LinkedIn">
-                    <Linkedin className="w-6 h-6 text-[#0f172a] hover:text-[#0f172a]/70 transition" />
-                  </Link>
-                  <Link href="#" aria-label="Follow on Facebook">
-                    <Facebook className="w-6 h-6 text-[#0f172a] hover:text-[#0f172a]/70 transition" />
-                  </Link>
-                </div>
               </div>
 
-              <div className="flex-1 flex flex-col relative">
-                <Link href="/signup/trainee">
+              <div className="flex flex-wrap gap-3 mb-8">
+                <Link href="/blog/practical-projects">
+                  <button className="px-5 py-3 bg-[#0f172a] text-white font-semibold hover:bg-[#0c4a6e] transition">
+                    Practical Projects
+                  </button>
+                </Link>
+                <Link href="/blog/expert-mentors">
+                  <button className="px-5 py-3 bg-[#0f172a] text-white font-semibold hover:bg-[#0c4a6e] transition">
+                    Expert Mentors
+                  </button>
+                </Link>
+              </div>
+
+              <div className="mb-8">
+                <Link href="#programs">
                   <motion.button
-                    className="absolute top-4 right-4 z-20 inline-flex items-center px-4 py-2 bg-[#0f172a] text-white font-semibold"
+                    className="inline-flex items-center px-8 py-4 bg-[#0f172a] text-white font-semibold hover:bg-[#0c4a6e] transition"
                     whileHover={!reduceMotion && { scale: 1.05 }}
                     whileTap={!reduceMotion && { scale: 0.95 }}
                   >
-                    Start Your Journey
-                    <ArrowUpRight className="ml-2 w-4 h-4" />
+                    Explore Programs
+                    <ChevronDown className="ml-2 w-4 h-4" />
                   </motion.button>
                 </Link>
+              </div>
 
-                <Slider slide={slide} images={images} setSlide={setSlide} />
-
-                <p className="mt-6 text-lg text-[#0f172a] leading-relaxed">
-                  {images[slide].description}
-                </p>
-
-                <div className="mt-6 inline-flex items-center bg-white/20 px-4 py-1 rounded-full text-[#0f172a] font-medium">
-                  <Image
-                    src="/avatars/user1.jpg"
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                    alt="avatar 1"
-                    placeholder="blur"
-                    blurDataURL={blurDataURL}
-                  />
-                  <Image
-                    src="/avatars/user2.jpg"
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                    alt="avatar 2"
-                    placeholder="blur"
-                    blurDataURL={blurDataURL}
-                  />
-                  <Image
-                    src="/avatars/user3.jpg"
-                    width={32}
-                    height={32}
-                    className="rounded-full"
-                    alt="avatar 3"
-                    placeholder="blur"
-                    blurDataURL={blurDataURL}
-                  />
-                  <span className="ml-3">50+ Organizations Partnered</span>
-                  <span className="mx-2">|</span>
-                  <span>100+ Recent Trainees</span>
-                </div>
+              <div className="flex items-center space-x-5">
+                <Link href="#" aria-label="Follow on Twitter">
+                  <Twitter className="w-6 h-6 text-[#0f172a] hover:text-[#0c4a6e] transition" />
+                </Link>
+                <Link href="#" aria-label="Follow on LinkedIn">
+                  <Linkedin className="w-6 h-6 text-[#0f172a] hover:text-[#0c4a6e] transition" />
+                </Link>
+                <Link href="#" aria-label="Follow on Facebook">
+                  <Facebook className="w-6 h-6 text-[#0f172a] hover:text-[#0c4a6e] transition" />
+                </Link>
               </div>
             </div>
-          </motion.div>
-        </div>
-      </div>
 
-      <motion.div
-        className="hidden md:block absolute bottom-6 left-1/2 -translate-x-1/2"
-        animate={!reduceMotion && { y: [0, -4, 0] }}
-        transition={{ repeat: Infinity, duration: 1 }}
-        aria-label="Scroll down"
-      >
-        <ChevronDown className="w-6 h-6 text-[#0f172a]" />
-      </motion.div>
+            <div className="flex-1 flex flex-col relative">
+              <motion.button
+                onClick={handleStartJourney}
+                className="absolute top-0 right-0 z-20 inline-flex items-center px-5 py-3 bg-[#0f172a] text-white font-semibold hover:bg-[#0c4a6e] transition"
+                whileHover={!reduceMotion && { scale: 1.05 }}
+                whileTap={!reduceMotion && { scale: 0.95 }}
+              >
+                Start Your Journey
+                <ArrowUpRight className="ml-2 w-4 h-4" />
+              </motion.button>
+
+              <Slider slide={slide} images={images} setSlide={setSlide} />
+
+              <p className="text-lg text-[#0f172a] leading-relaxed mb-8">
+                {images[slide].description}
+              </p>
+
+              <div className="inline-flex items-center bg-gray-100 px-4 py-2 rounded-lg text-[#0f172a] font-medium">
+                <div className="flex -space-x-2 mr-3">
+                  <div className="w-8 h-8 bg-[#0c4a6e] rounded-full border-2 border-white"></div>
+                  <div className="w-8 h-8 bg-[#0f172a] rounded-full border-2 border-white"></div>
+                  <div className="w-8 h-8 bg-[#0c4a6e] rounded-full border-2 border-white"></div>
+                </div>
+                <span>50+ Organizations Partnered</span>
+                <span className="mx-3">•</span>
+                <span>100+ Recent Trainees</span>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
     </section>
   );
 }

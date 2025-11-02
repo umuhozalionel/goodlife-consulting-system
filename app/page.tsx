@@ -16,16 +16,18 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Header />
-      <HeroSection />
-      <AboutSection />
-      <TrainingPrograms />
-      <CalendarSection />
-      <LifeAtGoodlife />
-      <WhyChooseUs />
-      <TeamSection />
-      <Testimonials />
-      <ContactSection />
-      <Footer />
+      <div className="pt-20"> {/* Added padding-top to prevent header overlap */}
+        <HeroSection />
+        <AboutSection />
+        <TrainingPrograms />
+        <CalendarSection />
+        <LifeAtGoodlife />
+        <WhyChooseUs />
+        <TeamSection />
+        <Testimonials />
+        <ContactSection />
+        <Footer />
+      </div>
       <ChatWidget />
     </div>
   )

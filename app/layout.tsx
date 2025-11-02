@@ -5,11 +5,11 @@ import Script from 'next/script'
 import ClientToaster from '@/components/client-toaster'
 
 export const metadata: Metadata = {
-  title: 'About – Goodlife Consulting Partners',
+  title: 'Goodlife Consulting Partners',
   description: 'Learn about our mission, vision, impact stats, and sector insights.',
   metadataBase: new URL('https://goodlifeconsultingpartners.org'),
   openGraph: {
-    title: 'About – Goodlife Consulting Partners',
+    title: 'Goodlife Consulting Partners',
     description: 'Learn about our mission, vision, impact stats, and sector insights.',
     url: 'https://goodlifeconsultingpartners.org/about',
     siteName: 'Goodlife Consulting Partners',
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'About – Goodlife Consulting Partners',
+    title: 'Goodlife Consulting Partners',
     description: 'Learn about our mission, vision, impact stats, and sector insights.',
     images: ['https://goodlifeconsultingpartners.org/images/og-about.jpg'],
   },
@@ -44,8 +44,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               '@context': 'https://schema.org',
               '@type': 'Organization',
               name: 'Goodlife Consulting Partners',
-              url: 'https://goodlifeconsultingpartners.org',
-              logo: 'https://goodlifeconsultingpartners.org/images/logo.png',
+              url: '/images/logo.png',
+              logo: '/images/logo.png',
               contactPoint: [
                 {
                   '@type': 'ContactPoint',
