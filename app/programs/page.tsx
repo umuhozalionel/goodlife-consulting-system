@@ -181,7 +181,7 @@ export default function ProgramsPage() {
                         View Details
                       </Button>
                     </Link>
-                    <Link href={`/signup/trainee?program=${prog.slug}`}>
+                    <Link href={`https://goodlifeconsulting.pro/auth?program=${prog.slug}`}>
                       <Button size="sm">Enroll Now</Button>
                     </Link>
                   </div>
