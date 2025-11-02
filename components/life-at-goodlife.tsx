@@ -4,18 +4,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import {
-  ChevronLeft,
-  ChevronRight,
-  X,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, X, ChevronDown, ChevronUp, Play, Pause } from "lucide-react";
 
 type Slide = {
   src: string;
   testimonial: string;
   author: string;
+  role: string;
 };
 
 type Faq = {
@@ -26,137 +21,119 @@ type Faq = {
 export default function LifeAtGoodlife() {
   const slides: Slide[] = [
     {
-      src: "/images/life-20.jpg",
-      testimonial:
-        "“The Child-Parent Career Goal Clash workshop helped me align my aspirations with my family’s expectations. Now, we’re united in my career journey.”",
-      author:
-        "— Harriet Nkurunziza, Participant – Child-Parent Career Goal Clash",
+      src: "/images/life-1.jpg",
+      testimonial: "The Child-Parent Career Goal Clash workshop helped me align my aspirations with my family's expectations.",
+      author: "Harriet Nkurunziza",
+      role: "Career Guidance Participant"
     },
     {
-      src: "/images/life-23.jpg",
-      testimonial:
-        "“The Career Guidance session opened my eyes to all my options. The coaches helped me craft a clear path and boosted my confidence every step of the way.”",
-      author: "— Alex Mukasa, Participant – Career Guidance",
+      src: "/images/life-2.jpg", 
+      testimonial: "The Career Guidance session opened my eyes to all my options and boosted my confidence every step of the way.",
+      author: "Alex Mukasa",
+      role: "Career Development"
     },
     {
-      src: "/images/life-25.jpg",
-      testimonial:
-        "“Understanding the gap between my dream career and reality gave me practical steps. I’m now chasing my dream with realistic goals and renewed energy.”",
-      author:
-        "— Fatima Uwase, Participant – Dream Career vs Reality Career",
-    },
+      src: "/images/life-3.jpg",
+      testimonial: "Understanding the gap between my dream career and reality gave me practical steps with renewed energy.",
+      author: "Fatima Uwase",
+      role: "Professional Development"
+    }
   ];
 
   const faqs: Faq[] = [
     {
       question: "How do I join a Goodlife training program?",
-      answer:
-        "Click the “Browse our community environment” link below, select a session, and complete the registration form. You’ll receive email confirmation with all the details.",
+      answer: "Click the 'Browse our community environment' link below, select a session, and complete the registration form."
     },
     {
       question: "Can I attend sessions online and in-person?",
-      answer:
-        "We offer both live online workshops and in-person trainings at Goodlife Training Center. You can filter by mode when browsing programs.",
+      answer: "We offer both live online workshops and in-person trainings at Goodlife Training Center."
     },
     {
       question: "Will I receive a certificate after completion?",
-      answer:
-        "All trainees who complete our workshops earn a digital certificate, plus ongoing access to community resources and support.",
-    },
+      answer: "All trainees who complete our workshops earn a digital certificate and ongoing community access."
+    }
   ];
 
-  const [current, setCurrent] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [videoOn, setVideoOn] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  const prev = () =>
-    setCurrent((c) => (c === 0 ? slides.length - 1 : c - 1));
-  const next = () =>
-    setCurrent((c) => (c === slides.length - 1 ? 0 : c + 1));
+  const nextSlide = () => setCurrentSlide((c) => (c === slides.length - 1 ? 0 : c + 1));
+  const prevSlide = () => setCurrentSlide((c) => (c === 0 ? slides.length - 1 : c - 1));
 
-  const { testimonial, author } = slides[current];
-
-  // dynamic classes for dark/light mode
-  const headingClass = videoOn ? "text-white" : "text-gray-900";
-  const bodyClass = videoOn ? "text-white" : "text-gray-700";
+  const toggleVideo = () => {
+    const newState = !videoOn;
+    setVideoOn(newState);
+    setIsPlaying(newState);
+  };
 
   return (
-    <section
-      id="life"
-      className="relative py-20 bg-gradient-to-br from-white via-gray-50 to-white transition-colors duration-500"
-    >
-      {/* video background */}
+    <section id="life" className="relative py-20 bg-white overflow-hidden">
+      {/* Video Background */}
       {videoOn && (
-        <div className="absolute inset-0">
+        <div className="absolute inset-0 z-0">
           <video
             autoPlay
-            muted
+            muted={false}
             loop
             playsInline
-            poster="/images/about-hero.jpg"
             className="w-full h-full object-cover"
+            onPlay={() => setIsPlaying(true)}
+            onPause={() => setIsPlaying(false)}
           >
-            <source
-              src="/videos/36c6-5860-4eab-9378-01f509998ae2.mp4"
-              type="video/mp4"
-            />
+            <source src="/videos/36c6-5860-4eab-9378-01f509998ae2.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
       )}
 
-      {/* main content */}
-      <div className="relative z-10 container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* left: testimonial + FAQ */}
+      {/* Main Content */}
+      <div className="relative z-10 max-w-full mx-auto px-6 md:px-8 lg:px-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+          
+          {/* Left Column - Testimonials & FAQ */}
           <div className="space-y-8">
-            <div>
-              <h3 className={`text-3xl font-bold mb-4 ${headingClass}`}>
-                What Our Trainees Say
-              </h3>
-              <p className={`text-lg leading-relaxed ${bodyClass}`}>
-                {testimonial}
-              </p>
-              <p className={`mt-4 font-medium ${bodyClass}`}>{author}</p>
+            {/* Testimonial Section */}
+            <div className={`${videoOn ? 'bg-white/95 backdrop-blur-sm' : 'bg-white'} rounded-2xl p-8 shadow-lg border border-gray-100`}>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-[#0c4a6e] rounded-full flex items-center justify-center">
+                  <span className="text-white font-bold text-lg">"</span>
+                </div>
+                <h3 className={`text-3xl font-bold ${videoOn ? 'text-white' : 'text-[#0f172a]'}`}>What Our Trainees Say</h3>
+              </div>
+              
+              <blockquote className={`text-lg leading-relaxed mb-6 ${videoOn ? 'text-white' : 'text-[#0f172a]'}`}>
+                {slides[currentSlide].testimonial}
+              </blockquote>
+              
+              <div className="border-t border-gray-200 pt-6">
+                <p className={`font-semibold ${videoOn ? 'text-white' : 'text-[#0f172a]'}`}>{slides[currentSlide].author}</p>
+                <p className="text-[#0c4a6e] text-sm">{slides[currentSlide].role}</p>
+              </div>
             </div>
 
-            <div>
-              <h4 className={`text-2xl font-semibold mb-4 ${headingClass}`}>
-                Got questions? We’ve got answers!
-              </h4>
+            {/* FAQ Section */}
+            <div className={`${videoOn ? 'bg-white/95 backdrop-blur-sm' : 'bg-white'} rounded-2xl p-8 shadow-lg border border-gray-100`}>
+              <h4 className={`text-2xl font-bold mb-6 ${videoOn ? 'text-white' : 'text-[#0f172a]'}`}>Got questions? We've got answers!</h4>
+              
               <div className="space-y-4">
                 {faqs.map((faq, idx) => (
-                  <div
-                    key={idx}
-                    className="border border-gray-200 rounded-lg overflow-hidden"
-                  >
+                  <div key={idx} className={`border rounded-xl overflow-hidden transition-all hover:border-[#0c4a6e] ${videoOn ? 'border-gray-300' : 'border-gray-200'}`}>
                     <button
-                      onClick={() =>
-                        setOpenFaq(openFaq === idx ? null : idx)
-                      }
-                      className={`
-                        w-full flex justify-between items-center px-6 py-4 transition
-                        ${videoOn
-                          ? "bg-black/30 hover:bg-black/40 text-white"
-                          : "bg-gray-50 hover:bg-gray-100 text-gray-900"}
-                      `}
+                      onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                      className={`w-full flex justify-between items-center p-6 transition-colors ${videoOn ? 'bg-black/30 hover:bg-black/40 text-white' : 'bg-gray-50 hover:bg-gray-100 text-[#0f172a]'}`}
                     >
-                      <span className="font-medium">{faq.question}</span>
-                      {openFaq === idx ? (
-                        <ChevronUp className="h-5 w-5 text-gray-600" />
-                      ) : (
-                        <ChevronDown className="h-5 w-5 text-gray-600" />
-                      )}
+                      <span className="font-semibold text-left">{faq.question}</span>
+                      <ChevronDown className={`h-5 w-5 text-[#0c4a6e] transition-transform ${openFaq === idx ? 'rotate-180' : ''}`} />
                     </button>
+                    
                     {openFaq === idx && (
-                      <div
-                        className={`px-6 py-4 rounded-b-lg ${
-                          videoOn ? "bg-black/20 text-gray-200" : "bg-white text-gray-700"
-                        }`}
-                      >
-                        {faq.answer}
+                      <div className={`p-6 border-t ${videoOn ? 'bg-black/20 text-gray-200 border-gray-300' : 'bg-white text-[#0f172a] border-gray-200'}`}>
+                        <p className="leading-relaxed">{faq.answer}</p>
                       </div>
                     )}
                   </div>
@@ -165,87 +142,98 @@ export default function LifeAtGoodlife() {
             </div>
           </div>
 
-          {/* right: image slider */}
+          {/* Right Column - Image Slider */}
           <div className="space-y-6">
-            <div className="relative overflow-hidden rounded-xl shadow-lg">
-              <div
-                className="flex transition-transform duration-500"
-                style={{ transform: `translateX(-${current * 100}%)` }}
-              >
+            <div className="relative overflow-hidden rounded-2xl shadow-2xl group">
+              <div className="flex transition-transform duration-500 ease-out" style={{ transform: `translateX(-${currentSlide * 100}%)` }}>
                 {slides.map((slide, idx) => (
-                  <div
-                    key={idx}
-                    className="min-w-full h-60 sm:h-80 md:h-96 cursor-pointer"
-                    onClick={() => setLightboxSrc(slide.src)}
-                  >
-                    <Image
-                      src={slide.src}
-                      alt={`Life at Goodlife ${idx + 1}`}
-                      fill
-                      className="object-cover"
+                  <div key={idx} className="min-w-full aspect-[4/3] relative cursor-pointer" onClick={() => setLightboxSrc(slide.src)}>
+                    <Image 
+                      src={slide.src} 
+                      alt={slide.author} 
+                      fill 
+                      className="object-cover" 
+                      sizes="(max-width: 768px) 100vw, 50vw" 
                     />
+                    <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors" />
                   </div>
                 ))}
               </div>
-              <button
-                onClick={prev}
-                className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-90 p-2 rounded-full shadow hover:bg-opacity-100 transition"
-              >
-                <ChevronLeft className="h-6 w-6 text-gray-800" />
+
+              {/* Navigation Arrows */}
+              <button onClick={prevSlide} className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-all opacity-0 group-hover:opacity-100">
+                <ChevronLeft className="h-6 w-6 text-[#0f172a]" />
               </button>
-              <button
-                onClick={next}
-                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-90 p-2 rounded-full shadow hover:bg-opacity-100 transition"
-              >
-                <ChevronRight className="h-6 w-6 text-gray-800" />
+              <button onClick={nextSlide} className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/90 p-3 rounded-full shadow-lg hover:bg-white transition-all opacity-0 group-hover:opacity-100">
+                <ChevronRight className="h-6 w-6 text-[#0f172a]" />
               </button>
+
+              {/* Slide Indicators */}
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+                {slides.map((_, idx) => (
+                  <button 
+                    key={idx} 
+                    onClick={() => setCurrentSlide(idx)} 
+                    className={`w-3 h-3 rounded-full transition-all ${idx === currentSlide ? 'bg-[#0c4a6e] w-8' : 'bg-white/80'}`} 
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Stats Bar */}
+            <div className="grid grid-cols-3 gap-4 text-center">
+              <div className="bg-[#0f172a] text-white p-4 rounded-xl">
+                <div className="text-2xl font-bold">300+</div>
+                <div className="text-sm opacity-90">Trainees</div>
+              </div>
+              <div className="bg-[#0c4a6e] text-white p-4 rounded-xl">
+                <div className="text-2xl font-bold">95%</div>
+                <div className="text-sm opacity-90">Success Rate</div>
+              </div>
+              <div className="bg-[#0f172a] text-white p-4 rounded-xl">
+                <div className="text-2xl font-bold">50+</div>
+                <div className="text-sm opacity-90">Partners</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* fixed bottom-right link */}
-      <Link
-        href="/community"
-        className="absolute right-6 bottom-6 text-amber-700 font-medium hover:underline z-10"
-      >
-        Browse our community environment →
-      </Link>
-
-      {/* refined toggle button bottom-left */}
-      <button
-        onClick={() => setVideoOn((prev) => !prev)}
-        className="
-          absolute left-6 bottom-6
-          backdrop-blur-md bg-[#0a1932]
-          px-4 py-2 rounded-lg
-          text-lg font-semibold text-white
-          drop-shadow-lg transition hover:bg-[#0a1932]/80
-          z-10
-        "
-      >
-        Thousand hills wonders
-      </button>
-
-      {/* lightbox */}
-      {lightboxSrc && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-          onClick={() => setLightboxSrc(null)}
+      {/* Action Buttons */}
+      <div className="relative z-10 max-w-full mx-auto px-6 md:px-8 lg:px-12 mt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <Link 
+          href="/community" 
+          className="inline-flex items-center gap-2 bg-[#0c4a6e] text-white px-6 py-3 rounded-lg hover:bg-[#0a3d5c] transition-colors font-semibold w-full sm:w-auto justify-center"
         >
-          <button
-            onClick={() => setLightboxSrc(null)}
-            className="absolute top-6 right-6 p-2 rounded-full bg-white bg-opacity-90 hover:bg-opacity-100 transition"
+          Browse Community Environment
+          <ChevronRight className="h-4 w-4" />
+        </Link>
+
+        <button 
+          onClick={toggleVideo}
+          className="inline-flex items-center gap-2 bg-[#0f172a] text-white px-6 py-3 rounded-lg hover:bg-[#1a2438] transition-colors font-semibold w-full sm:w-auto justify-center"
+        >
+          {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+          Thousand Hills Wonders
+        </button>
+      </div>
+
+      {/* Lightbox Modal */}
+      {lightboxSrc && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm" onClick={() => setLightboxSrc(null)}>
+          <button 
+            onClick={() => setLightboxSrc(null)} 
+            className="absolute top-6 right-6 p-3 rounded-full bg-white/90 hover:bg-white transition z-50"
           >
-            <X className="h-6 w-6 text-gray-800" />
+            <X className="h-6 w-6 text-[#0f172a]" />
           </button>
-          <div className="max-w-[90vw] max-h-[90vh] p-4">
-            <Image
-              src={lightboxSrc}
-              alt="Zoomed view"
-              width={1000}
-              height={800}
-              className="rounded-lg shadow-2xl object-contain"
+          <div className="max-w-[90vw] max-h-[90vh] p-4" onClick={(e) => e.stopPropagation()}>
+            <Image 
+              src={lightboxSrc} 
+              alt="Zoomed view" 
+              width={1200} 
+              height={800} 
+              className="rounded-2xl shadow-2xl object-contain" 
             />
           </div>
         </div>

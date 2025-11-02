@@ -4,8 +4,8 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { motion, Variants } from 'framer-motion'
-import { Linkedin, Twitter, Github } from 'lucide-react'
+import { motion, AnimatePresence, Variants } from 'framer-motion'
+import { Linkedin, Twitter, Github, Mail, Award, BookOpen, Users, Star, ChevronRight, X, Play, MapPin, Calendar, ArrowRight } from 'lucide-react'
 
 type PortfolioItem = { title: string; description: string }
 type TeamMember = {
@@ -21,19 +21,20 @@ type TeamMember = {
   linkedin: string | null
   twitter: string | null
   github: string | null
+  location?: string
+  experience?: string
+  specialties?: string[]
 }
 
-/* ---------- Data: board + trainers with honors and credentials ---------- */
+/* ---------- Data: Enhanced team members ---------- */
 const teamMembers: TeamMember[] = [
-  /* board + staff + trainers as provided earlier (kept identical) */
   {
     id: 7,
     name: 'Margaret Jjuuko',
     honorific: 'Professor',
     credentials: 'PhD',
     role: 'Board Member | Governance & Strategic Leadership',
-    bio:
-      'Professor Margaret Jjuuko combines governance and academic leadership with decades of work in media studies and institutional capacity building. She has led departments and multi-country projects, advises regional media initiatives, and champions gender-equitable training and policy.',
+    bio: 'Professor Margaret Jjuuko combines governance and academic leadership with decades of work in media studies and institutional capacity building. She has led departments and multi-country projects, advises regional media initiatives, and champions gender-equitable training and policy.',
     portfolio: [
       { title: 'Academic Leadership', description: 'Led journalism and communication programs across multiple universities.' },
       { title: 'Capacity Building', description: 'Developed large-scale training initiatives focused on gender equity and institutional growth.' },
@@ -51,6 +52,9 @@ const teamMembers: TeamMember[] = [
     linkedin: '#',
     twitter: null,
     github: null,
+    location: 'Kampala, Uganda',
+    experience: '20+ years',
+    specialties: ['Strategic Leadership', 'Media Ethics', 'Capacity Building', 'Academic Governance']
   },
   {
     id: 8,
@@ -66,6 +70,9 @@ const teamMembers: TeamMember[] = [
     linkedin: '#',
     twitter: null,
     github: null,
+    location: 'Kigali, Rwanda',
+    experience: '11+ years',
+    specialties: ['HR Strategy', 'Organizational Development', 'Training Design', 'Talent Management']
   },
   {
     id: 9,
@@ -73,8 +80,7 @@ const teamMembers: TeamMember[] = [
     honorific: 'Dr.',
     credentials: 'PhD',
     role: 'Managing Director | Trainer & Coach',
-    bio:
-      'Dr. Kirabo Joyce is Managing Director of Goodlife Company Limited. She combines academic rigour with practical program design to deliver high-impact, contextual training that opens career pathways for participants.',
+    bio: 'Dr. Kirabo Joyce is Managing Director of Goodlife Company Limited. She combines academic rigour with practical program design to deliver high-impact, contextual training that opens career pathways for participants.',
     portfolio: [
       { title: 'Strategic Leadership', description: 'Directed organizational strategy and training excellence across East Africa.' },
       { title: 'Training Impact', description: 'Designed signature courses that opened new career pathways for participants.' },
@@ -87,68 +93,17 @@ const teamMembers: TeamMember[] = [
     linkedin: '#',
     twitter: null,
     github: null,
+    location: 'Kampala, Uganda',
+    experience: '15+ years',
+    specialties: ['Business Strategy', 'Program Design', 'Leadership Coaching', 'Impact Evaluation']
   },
-  {
-    id: 4,
-    name: 'Paul Habimana',
-    role: 'Data & Impact Analyst',
-    bio: 'Paul leads measurement and evaluation—collecting feedback, analyzing outcomes, and reporting impact metrics to stakeholders.',
-    portfolio: [{ title: 'Impact Dashboard', description: 'Built BI dashboards delivering real-time training metrics to funders.' }],
-    honors: ['Built donor-ready dashboards and automated reporting pipelines.'],
-    imageSrc: '/team/paul-habimana.jpg',
-    linkedin: '#',
-    twitter: null,
-    github: '#',
-  },
-  {
-    id: 5,
-    name: 'Mary Jane',
-    role: 'Communications Strategist',
-    bio: 'Mary crafts messaging, case studies, and thought leadership content ensuring programs resonate with practitioners and funders.',
-    portfolio: [{ title: 'Case Study Series', description: 'Authored 10+ case studies showcasing program impact across Africa.' }],
-    honors: ['Lead author on program impact case studies and communications strategies.'],
-    imageSrc: '/team/mary-jane.jpg',
-    linkedin: '#',
-    twitter: '#',
-    github: null,
-  },
-  {
-    id: 6,
-    name: 'John Doe',
-    role: 'Tech Lead',
-    bio: 'John architects dashboards, portals, and integrations—ensuring a friction-free digital experience for trainers and participants.',
-    portfolio: [{ title: 'Dashboard Revamp', description: 'Led a UI overhaul boosting user satisfaction by 40%.' }],
-    honors: ['Led platform migrations and developer experience improvements.'],
-    imageSrc: '/team/john-doe.jpg',
-    linkedin: '#',
-    twitter: null,
-    github: '#',
-  },
-  {
-    id: 10,
-    name: 'Umuhoza Lionel',
-    role: 'Trainer | IT, Cloud Architecture & Developer Experience',
-    bio:
-      'Lionel brings hands-on expertise in AWS architecture, full-stack development, and UI/UX engineering. He leads practical labs on cloud fundamentals, deployment practices, and developer workflows.',
-    portfolio: [
-      { title: 'Cloud Labs', description: 'Hands-on AWS and cloud pattern workshops with real-world exercises.' },
-      { title: 'Developer Experience', description: 'Built developer tooling and CI/CD flows that reduced onboarding time.' },
-    ],
-    honors: ['AWS cloud labs lead; built reproducible developer workflows and training labs.'],
-    imageSrc: '/team/umuhake-lionel.jpg',
-    linkedin: '#',
-    twitter: null,
-    github: null,
-  },
-  // Lead trainers
   {
     id: 101,
     name: 'Margaret Jjuuko',
     honorific: 'Professor',
     credentials: 'PhD',
     role: 'Trainer | Communication, Management & Ethical Leadership',
-    bio:
-      'Margaret Jjuuko is a distinguished scholar and international trainer in communication, management, ethical standards, and soft skills development. She leads regional and global initiatives to strengthen professional excellence and integrity in media and education, champions capacity building and ethical leadership, and guides institutional growth through strategic and ethical governance.',
+    bio: 'Margaret Jjuuko is a distinguished scholar and international trainer in communication, management, ethical standards, and soft skills development. She leads regional and global initiatives to strengthen professional excellence and integrity in media and education.',
     portfolio: [
       { title: 'International Training', description: 'Led regional workshops and ethics-focused training programs.' },
       { title: 'Research Leadership', description: 'Principal Investigator on NORHED II and other capacity-building grants.' },
@@ -166,14 +121,16 @@ const teamMembers: TeamMember[] = [
     linkedin: '#',
     twitter: null,
     github: null,
+    location: 'Kampala, Uganda',
+    experience: '20+ years',
+    specialties: ['Communication', 'Ethical Leadership', 'Media Training', 'Academic Excellence']
   },
   {
     id: 102,
     name: 'Ernest Safari',
     credentials: 'PhD',
     role: 'Trainer | Tourism, Hospitality & SME Growth',
-    bio:
-      'Ernest Safari is a seasoned trainer, researcher and coach guiding institutional growth through strategic and ethical leadership. With a doctorate in Tourism and Hospitality Management and extensive curriculum development experience for RTB and GIZ, he delivers practical solutions in tour planning, promotion, and logistics for vocational and industry training.',
+    bio: 'Ernest Safari is a seasoned trainer, researcher and coach guiding institutional growth through strategic and ethical leadership. With a doctorate in Tourism and Hospitality Management and extensive curriculum development experience for RTB and GIZ.',
     portfolio: [
       { title: 'Curriculum Development', description: 'RTB and GIZ curriculum contributions for tourism and vocational training.' },
       { title: 'Tourism Practice', description: 'Workshops on itinerary design, promotion and logistics.' },
@@ -187,6 +144,9 @@ const teamMembers: TeamMember[] = [
     linkedin: '#',
     twitter: null,
     github: null,
+    location: 'Kigali, Rwanda',
+    experience: '12+ years',
+    specialties: ['Tourism Development', 'Hospitality', 'SME Growth', 'Vocational Training']
   },
   {
     id: 103,
@@ -194,8 +154,7 @@ const teamMembers: TeamMember[] = [
     honorific: 'Dr.',
     credentials: 'PhD',
     role: 'Trainer | Leadership, Counselling & Soft Skills',
-    bio:
-      'Joyce Kirabo leads Goodlife with strategic leadership and international training excellence. Holder of a PhD in Business Administration and masters in Counselling Psychology and Project Management, she designs transformative training that blends international best practices with local insights to open lasting opportunities for participants.',
+    bio: 'Joyce Kirabo leads Goodlife with strategic leadership and international training excellence. Holder of a PhD in Business Administration and masters in Counselling Psychology and Project Management.',
     portfolio: [
       { title: 'Therapeutic Counselling', description: 'International counselling practice and coaching.' },
       { title: 'Leadership Programmes', description: 'Design and facilitation of leadership and soft skills curricula.' },
@@ -209,13 +168,15 @@ const teamMembers: TeamMember[] = [
     linkedin: '#',
     twitter: null,
     github: null,
+    location: 'Kampala, Uganda',
+    experience: '15+ years',
+    specialties: ['Leadership', 'Counselling', 'Soft Skills', 'Project Management']
   },
   {
     id: 104,
     name: 'Junior Mugisha',
     role: 'Trainer | IT Manager, Systems & Infrastructure',
-    bio:
-      'Junior Mugisha manages IT systems and infrastructure, specialising in network management, systems administration, and practical lab environments for hybrid trainings. He supports trainers with hands-on technical setups and operational reliability.',
+    bio: 'Junior Mugisha manages IT systems and infrastructure, specialising in network management, systems administration, and practical lab environments for hybrid trainings. He supports trainers with hands-on technical setups and operational reliability.',
     portfolio: [
       { title: 'Infrastructure Management', description: 'Maintained training infrastructure and lab environments.' },
       { title: 'Technical Support', description: 'Provided on-ground technical support for hybrid trainings.' },
@@ -228,268 +189,567 @@ const teamMembers: TeamMember[] = [
     linkedin: '#',
     twitter: null,
     github: null,
+    location: 'Kigali, Rwanda',
+    experience: '8+ years',
+    specialties: ['IT Infrastructure', 'Network Management', 'Technical Support', 'Hybrid Training']
   },
+  {
+    id: 10,
+    name: 'Umuhoza Lionel',
+    role: 'Trainer | IT, Cloud Architecture & Developer Experience',
+    bio: 'Lionel brings hands-on expertise in AWS architecture, full-stack development, and UI/UX engineering. He leads practical labs on cloud fundamentals, deployment practices, and developer workflows.',
+    portfolio: [
+      { title: 'Cloud Labs', description: 'Hands-on AWS and cloud pattern workshops with real-world exercises.' },
+      { title: 'Developer Experience', description: 'Built developer tooling and CI/CD flows that reduced onboarding time.' },
+    ],
+    honors: ['AWS cloud labs lead; built reproducible developer workflows and training labs.'],
+    imageSrc: '/team/umuhake-lionel.jpg',
+    linkedin: '#',
+    twitter: null,
+    github: null,
+    location: 'Kigali, Rwanda',
+    experience: '6+ years',
+    specialties: ['Cloud Architecture', 'Full-Stack Development', 'UI/UX', 'DevOps']
+  }
 ]
 
-/* ---------- Animation variants ---------- */
-const containerVariants: Variants = { hidden: {}, visible: { transition: { staggerChildren: 0.06 } } }
-const cardVariants: Variants = { hidden: { opacity: 0, y: 6 }, visible: { opacity: 1, y: 0, transition: { duration: 0.28 } } }
-
-/* ---------- Visual constants ---------- */
-const MAIN = '#0f766e'
-const ACCENT = '#ff6b6b'
-const LATTE = '#FFF3ED'
-
-/* ---------- Modal focus-trap helper ---------- */
-function useModalFocusTrap(active: boolean, containerRef: React.RefObject<HTMLElement>, onClose: () => void) {
-  useEffect(() => {
-    if (!active || !containerRef.current) return
-    const el = containerRef.current
-    const focusable = el.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])')
-    const first = focusable[0]
-    const last = focusable[focusable.length - 1]
-    first?.focus()
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault()
-        onClose()
-      } else if (e.key === 'Tab') {
-        if (!first || !last) return
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault()
-          last.focus()
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault()
-          first.focus()
-        }
-      }
+/* ---------- Animation Variants ---------- */
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
     }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-  }, [active, containerRef, onClose])
+  }
 }
 
-/* ---------- Expanded detail (full bio + honors, no name repeat) ---------- */
-function ExpandedDetail({ trainer }: { trainer: TeamMember }): JSX.Element {
-  return (
-    <div>
-      <p className="text-gray-800 mb-4 leading-7">{trainer.bio}</p>
-
-      <h4 className="font-semibold mb-2">Honors and Accolades</h4>
-      <ul className="list-disc list-inside space-y-2 text-gray-800 mb-4">
-        {trainer.honors?.map((h, i) => (<li key={i}>{h}</li>))}
-      </ul>
-    </div>
-  )
+const cardVariants: Variants = {
+  hidden: { 
+    opacity: 0, 
+    y: 20,
+    scale: 0.95
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 15
+    }
+  }
 }
 
-/* ---------- Modal detail (canonical full profile) ---------- */
-function ModalDetail({ trainer }: { trainer: TeamMember }): JSX.Element {
-  return (
-    <div>
-      <h2 id="profile-title" className="text-2xl font-bold mb-2" style={{ color: MAIN }}>
-        {trainer.honorific ? `${trainer.honorific} ${trainer.name}` : trainer.name}
-        {trainer.credentials ? `, ${trainer.credentials}` : ''}
-      </h2>
-      <p className="text-sm mb-4" style={{ color: ACCENT }}>{trainer.role}</p>
-      <div className="text-gray-800 mb-4"><p>{trainer.bio}</p></div>
-
-      <div className="mb-4">
-        <h4 className="font-semibold mb-2">Portfolio</h4>
-        <ul className="list-disc list-inside space-y-2 text-gray-800">
-          {trainer.portfolio.map((p, i) => (<li key={i}><strong>{p.title}:</strong> {p.description}</li>))}
-        </ul>
-      </div>
-
-      <div className="mb-4">
-        <h4 className="font-semibold mb-2">Honors and Accolades</h4>
-        <ul className="list-disc list-inside space-y-2 text-gray-800">
-          {trainer.honors?.map((h, i) => (<li key={i}>{h}</li>))}
-        </ul>
-      </div>
-
-      <div className="flex gap-3 items-center mt-3">
-        {trainer.linkedin && <a href={trainer.linkedin} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md" style={{ background: MAIN, color: '#fff' }} aria-label="LinkedIn"><Linkedin className="h-5 w-5" /><span className="text-sm">LinkedIn</span></a>}
-        {trainer.twitter && <a href={trainer.twitter} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border" style={{ borderColor: MAIN }} aria-label="Twitter"><Twitter className="h-5 w-5" /><span className="text-sm">Twitter</span></a>}
-        {trainer.github && <a href={trainer.github} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border" style={{ borderColor: MAIN }} aria-label="GitHub"><Github className="h-5 w-5" /><span className="text-sm">GitHub</span></a>}
-      </div>
-    </div>
-  )
+const modalVariants: Variants = {
+  hidden: { 
+    opacity: 0,
+    scale: 0.8,
+    y: 20
+  },
+  visible: { 
+    opacity: 1,
+    scale: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 100,
+      damping: 20
+    }
+  },
+  exit: {
+    opacity: 0,
+    scale: 0.8,
+    y: -20,
+    transition: {
+      duration: 0.2
+    }
+  }
 }
 
-/* ---------- Main component ---------- */
-export default function TeamSection(): JSX.Element {
-  const [expandedId, setExpandedId] = useState<number | null>(null)
-  const [modalTrainer, setModalTrainer] = useState<TeamMember | null>(null)
-  const modalRef = useRef<HTMLDivElement | null>(null)
-  const openerRefs = useRef<Record<number, HTMLElement | null>>({})
-  const prefersReducedMotionRef = useRef<boolean>(false)
+/* ---------- Color Constants ---------- */
+const COLORS = {
+  primary: '#0f172a',
+  secondary: '#0c4a6e',
+  accent: '#dc2626',
+  background: '#ffffff',
+  lightBg: '#f8fafc'
+}
 
-  const boardMembers = useMemo(() => teamMembers.filter((m) => [7, 8, 9].includes(m.id)), [])
-  const leadTeam = useMemo(() => [101, 102, 103, 104, 10].map((id) => teamMembers.find((m) => m.id === id)!).filter(Boolean), [])
-
-  useEffect(() => {
-    prefersReducedMotionRef.current = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  }, [])
-
-  useModalFocusTrap(Boolean(modalTrainer), modalRef, () => setModalTrainer(null))
-
-  const toggleExpand = (id: number) => setExpandedId((s) => (s === id ? null : id))
-  const openModal = (t: TeamMember) => setModalTrainer(t)
+/* ---------- Profile Card Component ---------- */
+const ProfileCard = ({ member, onViewProfile }: { member: TeamMember; onViewProfile: (member: TeamMember) => void }) => {
+  const [isHovered, setIsHovered] = useState(false)
 
   return (
-    <section id="team" className="py-20" style={{ background: 'linear-gradient(180deg,#f6fffb,#ffffff)' }}>
-      <div className="container mx-auto px-4 lg:px-8">
-        <div className="text-center mb-10 max-w-2xl mx-auto">
-          <h2 className="text-4xl font-bold" style={{ color: MAIN }}>Our Team</h2>
-          <div className="w-24 h-1 mx-auto mb-5 rounded" style={{ background: `linear-gradient(90deg, ${MAIN}, ${ACCENT})` }} />
-          <p className="text-lg text-gray-700">Meet the passionate experts driving our mission. Click Read more to reveal trainer details below each card.</p>
+    <motion.div
+      variants={cardVariants}
+      className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100"
+      onHoverStart={() => setIsHovered(true)}
+      onHoverEnd={() => setIsHovered(false)}
+      whileHover={{ y: -8 }}
+    >
+      {/* Background Gradient Effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-white opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      
+      {/* Image Container */}
+      <div className="relative h-64 overflow-hidden">
+        <Image
+          src={member.imageSrc}
+          alt={member.name}
+          fill
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+        
+        {/* Overlay Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />
+        
+        {/* Experience Badge */}
+        <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-full px-3 py-1 shadow-lg">
+          <div className="flex items-center gap-1 text-xs font-semibold text-gray-700">
+            <Calendar className="h-3 w-3" />
+            <span>{member.experience}</span>
+          </div>
         </div>
 
-        {/* Board members */}
-        <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-10" initial={false} variants={containerVariants}>
-          {boardMembers.map((m) => (
-            <motion.article key={m.id} variants={cardVariants} initial={false} className="relative rounded-xl overflow-hidden shadow-lg">
-              <div className="relative min-h-[260px] rounded-xl overflow-hidden group">
-                <Image src={m.imageSrc} alt={m.name} fill style={{ objectFit: 'cover' }} sizes="(max-width: 1024px) 50vw, 33vw" priority />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.54))' }} />
-                <div className="absolute left-0 right-0 bottom-0 z-10 p-5">
-                  <div className="flex items-start md:items-center justify-between gap-4">
-                    <div>
-                      <h3 className="text-lg font-semibold text-white drop-shadow-sm">{m.name}</h3>
-                      <p className="text-sm text-white/95 drop-shadow-sm">{m.role}</p>
-                    </div>
+        {/* Specialties Tags */}
+        <div className="absolute top-4 right-4 flex flex-wrap gap-1 justify-end max-w-[60%]">
+          {member.specialties?.slice(0, 2).map((specialty, index) => (
+            <span
+              key={index}
+              className="bg-white/90 backdrop-blur-sm rounded-full px-2 py-1 text-xs font-medium text-gray-700 shadow-lg"
+            >
+              {specialty}
+            </span>
+          ))}
+        </div>
 
-                    <motion.button whileHover={!prefersReducedMotionRef.current ? { scale: 1.03, translateY: -2 } : {}} whileTap={{ scale: 0.98 }} onClick={() => setModalTrainer(m)} className="inline-flex items-center gap-3 px-4 py-2 rounded-full font-medium shadow-lg focus:outline-none focus:ring-4" style={{ background: 'linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06))', color: '#fff', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.18)' }} aria-label={`View profile for ${m.name}`}>
-                      <span className="inline-flex items-center justify-center w-3 h-3 rounded-full" style={{ background: 'linear-gradient(90deg, rgba(255,107,107,1), rgba(15,118,110,1))' }} aria-hidden="true" />
-                      <span className="text-sm">View profile</span>
-                    </motion.button>
+        {/* View Profile Button */}
+        <motion.button
+          onClick={() => onViewProfile(member)}
+          className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-white/90 backdrop-blur-sm text-gray-800 px-6 py-2 rounded-full font-semibold shadow-lg hover:bg-white transition-all duration-300 opacity-0 group-hover:opacity-100"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          View Profile
+        </motion.button>
+      </div>
+
+      {/* Content */}
+      <div className="relative p-6">
+        <div className="mb-3">
+          <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-300">
+            {member.honorific && <span className="text-gray-600">{member.honorific} </span>}
+            {member.name}
+            {member.credentials && <span className="text-gray-600">, {member.credentials}</span>}
+          </h3>
+          <p className="text-gray-600 text-sm mt-1">{member.role}</p>
+        </div>
+
+        <p className="text-gray-700 text-sm leading-relaxed line-clamp-3">
+          {member.bio.split('.').slice(0, 2).join('.')}.
+        </p>
+
+        {/* Location */}
+        {member.location && (
+          <div className="flex items-center gap-2 mt-3 text-gray-600 text-sm">
+            <MapPin className="h-4 w-4" />
+            <span>{member.location}</span>
+          </div>
+        )}
+
+        {/* Social Links */}
+        <div className="flex gap-3 mt-4 pt-4 border-t border-gray-100">
+          {member.linkedin && (
+            <motion.a
+              href={member.linkedin}
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.9 }}
+              className="p-2 bg-gray-100 rounded-lg hover:bg-blue-100 hover:text-blue-600 transition-colors duration-300"
+            >
+              <Linkedin className="h-4 w-4" />
+            </motion.a>
+          )}
+          {member.twitter && (
+            <motion.a
+              href={member.twitter}
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.9 }}
+              className="p-2 bg-gray-100 rounded-lg hover:bg-blue-100 hover:text-blue-600 transition-colors duration-300"
+            >
+              <Twitter className="h-4 w-4" />
+            </motion.a>
+          )}
+          {member.github && (
+            <motion.a
+              href={member.github}
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.9 }}
+              className="p-2 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-300"
+            >
+              <Github className="h-4 w-4" />
+            </motion.a>
+          )}
+        </div>
+      </div>
+
+      {/* Hover Border Effect */}
+      <div className="absolute inset-0 rounded-2xl border-2 border-transparent group-hover:border-blue-200 transition-all duration-500 pointer-events-none" />
+    </motion.div>
+  )
+}
+
+/* ---------- Profile Modal Component ---------- */
+const ProfileModal = ({ member, isOpen, onClose }: { member: TeamMember; isOpen: boolean; onClose: () => void }) => {
+  const modalRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'hidden'
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen, onClose])
+
+  if (!isOpen) return null
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+        onClick={onClose}
+      >
+        <motion.div
+          ref={modalRef}
+          variants={modalVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className="relative w-full max-w-6xl max-h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {/* Close Button */}
+          <button
+            onClick={onClose}
+            className="absolute top-6 right-6 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-lg hover:bg-white transition-colors duration-300"
+          >
+            <X className="h-6 w-6 text-gray-700" />
+          </button>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 h-full">
+            {/* Left Column - Image & Basic Info */}
+            <div className="relative lg:col-span-1">
+              <div className="relative h-80 lg:h-full">
+                <Image
+                  src={member.imageSrc}
+                  alt={member.name}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 33vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                
+                {/* Basic Info Overlay */}
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                  <h2 className="text-2xl font-bold mb-2">
+                    {member.honorific && <span>{member.honorific} </span>}
+                    {member.name}
+                    {member.credentials && <span>, {member.credentials}</span>}
+                  </h2>
+                  <p className="text-blue-200 text-lg mb-4">{member.role}</p>
+                  
+                  <div className="flex items-center gap-4 text-sm">
+                    {member.location && (
+                      <div className="flex items-center gap-1">
+                        <MapPin className="h-4 w-4" />
+                        <span>{member.location}</span>
+                      </div>
+                    )}
+                    {member.experience && (
+                      <div className="flex items-center gap-1">
+                        <Calendar className="h-4 w-4" />
+                        <span>{member.experience}</span>
+                      </div>
+                    )}
                   </div>
+                </div>
+              </div>
+            </div>
 
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {m.portfolio.map((p, i) => (
-                      <span key={i} className="px-3 py-1 rounded-full text-sm font-medium" style={{ background: '#fff', color: '#111827' }}>{p.title}</span>
+            {/* Right Column - Detailed Information */}
+            <div className="lg:col-span-2 p-8 overflow-y-auto max-h-[80vh] lg:max-h-[90vh]">
+              {/* Bio */}
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <Users className="h-5 w-5 text-blue-600" />
+                  Professional Bio
+                </h3>
+                <p className="text-gray-700 leading-relaxed">{member.bio}</p>
+              </div>
+
+              {/* Specialties */}
+              {member.specialties && (
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <Star className="h-5 w-5 text-blue-600" />
+                    Areas of Expertise
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {member.specialties.map((specialty, index) => (
+                      <span
+                        key={index}
+                        className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+                      >
+                        {specialty}
+                      </span>
                     ))}
                   </div>
                 </div>
-              </div>
-            </motion.article>
-          ))}
-        </motion.div>
+              )}
 
-        {/* Trainer Team list */}
-        <div className="max-w-6xl mx-auto mb-16">
-          <h3 className="text-3xl font-bold text-center mb-6" style={{ color: MAIN }}>Trainer Team</h3>
-
-          <div className="rounded-xl shadow-lg overflow-hidden" style={{ background: 'linear-gradient(180deg,#e9f9f5,#f5fffb)', border: `1px solid rgba(15,118,110,0.06)` }}>
-            <div className="p-6">
-              <h4 className="text-xl font-semibold mb-3" style={{ color: MAIN }}>Our Lead Trainers</h4>
-              <p className="text-gray-700 mb-6">A compact list of lead trainers. Click Read more to load details below each card.</p>
-
-              <div className="space-y-6">
-                {leadTeam.map((t) => {
-                  // stable preview: first sentence only
-                  const preview = t.bio.split('.').slice(0, 1).join('.').trim() + '.'
-                  const isExpanded = expandedId === t.id
-                  return (
-                    <motion.div key={t.id} variants={cardVariants} initial={false} className="bg-white rounded-lg shadow-sm overflow-hidden">
-                      <div className="flex flex-col lg:flex-row">
-                        {/* Left: title (preserve honorific/credentials), role, preview */}
-                        <div className="lg:w-2/3 p-5">
-                          <div id={`trainer-card-title-${t.id}`} className="text-lg font-semibold" style={{ color: MAIN }}>
-                            {t.honorific ? `${t.honorific} ${t.name}` : t.name}
-                            {t.credentials ? `, ${t.credentials}` : ''}
-                          </div>
-                          <div className="text-sm text-gray-600 mb-3">{t.role}</div>
-                          <p className="text-gray-700 leading-6">{preview}</p>
-
-                          <div className="mt-4 flex flex-wrap gap-2">
-                            {t.portfolio.map((p, i) => (
-                              <span key={i} className="px-3 py-1 rounded-full text-xs" style={{ background: LATTE, color: '#2b2b2b' }}>{p.title}</span>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Right: picture with Read more overlay */}
-                        <div className="lg:w-1/3 relative min-h-[200px]">
-                          <Image src={t.imageSrc} alt={`${t.honorific ? `${t.honorific} ${t.name}` : t.name}${t.credentials ? `, ${t.credentials}` : ''}`} fill style={{ objectFit: 'cover' }} sizes="(max-width: 1024px) 100vw, 33vw" priority={false} />
-                          <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.0), rgba(0,0,0,0.12))' }} />
-
-                          <div className="absolute bottom-3 right-3">
-                            <button
-                              ref={(el) => (openerRefs.current[t.id] = el)}
-                              onClick={() => toggleExpand(t.id)}
-                              className="backdrop-blur-sm bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-md border border-white/20 focus:outline-none focus:ring-2"
-                              style={{ minHeight: 40 }}
-                              aria-expanded={isExpanded}
-                              aria-controls={`trainer-expanded-${t.id}`}
-                              aria-label={`Read more for ${t.name}`}
-                            >
-                              Read more
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Expanded area: text-only, full bio + honors, action buttons */}
-                      {isExpanded && (
-                        <div id={`trainer-expanded-${t.id}`} role="region" aria-labelledby={`trainer-card-title-${t.id}`} className="p-5 border-t bg-gray-50">
-                          <ExpandedDetail trainer={t} />
-
-                          <div className="mt-6 flex items-center justify-between">
-                            <div>
-                              {t.linkedin && (
-                                <a href={t.linkedin} className="inline-flex items-center gap-2 px-3 py-2 rounded-md" style={{ background: MAIN, color: '#fff' }}>
-                                  <Linkedin className="h-5 w-5" />
-                                  <span className="text-sm">LinkedIn</span>
-                                </a>
-                              )}
-                            </div>
-
-                            <div>
-                              <button onClick={() => openModal(t)} className="inline-block px-4 py-2 rounded-md text-white" style={{ background: ACCENT }}>
-                                View profile
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </motion.div>
-                  )
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Modal: full profile (focus-trap active via hook) */}
-      {modalTrainer && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="profile-title" ref={modalRef} onClick={(e) => { if (e.target === modalRef.current) setModalTrainer(null) }}>
-          <motion.div initial={false} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.18 }} className="relative w-full max-w-4xl rounded-lg overflow-hidden shadow-2xl bg-white" role="document">
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="relative min-h-[320px]">
-                <Image src={modalTrainer.imageSrc} alt={modalTrainer.name} fill style={{ objectFit: 'cover' }} sizes="(max-width: 1024px) 100vw, 50vw" priority />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg, rgba(0,0,0,0.42), rgba(0,0,0,0.02))' }} />
+              {/* Portfolio */}
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <BookOpen className="h-5 w-5 text-blue-600" />
+                  Key Achievements
+                </h3>
+                <div className="grid gap-4">
+                  {member.portfolio.map((item, index) => (
+                    <div key={index} className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      <h4 className="font-semibold text-gray-900 mb-2">{item.title}</h4>
+                      <p className="text-gray-700 text-sm">{item.description}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
 
-              <div className="p-6 bg-white relative">
-                <button onClick={() => setModalTrainer(null)} className="absolute top-4 right-4 text-2xl text-gray-700" aria-label="Close profile">&times;</button>
+              {/* Honors & Awards */}
+              {member.honors && member.honors.length > 0 && (
+                <div className="mb-8">
+                  <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <Award className="h-5 w-5 text-blue-600" />
+                    Honors & Recognition
+                  </h3>
+                  <ul className="space-y-3">
+                    {member.honors.map((honor, index) => (
+                      <li key={index} className="flex items-start gap-3 text-gray-700">
+                        <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 flex-shrink-0" />
+                        <span>{honor}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
-                <ModalDetail trainer={modalTrainer} />
-
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="ml-auto">
-                    <Link href="/contact" className="inline-block px-4 py-2 rounded-md text-white" style={{ background: ACCENT }}>
-                      Contact
-                    </Link>
-                  </div>
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-4 pt-6 border-t border-gray-200">
+                <motion.a
+                  href="/contact"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+                >
+                  <Mail className="h-4 w-4" />
+                  Contact {member.name.split(' ')[0]}
+                </motion.a>
+                
+                <div className="flex gap-3">
+                  {member.linkedin && (
+                    <motion.a
+                      href={member.linkedin}
+                      whileHover={{ scale: 1.1, y: -2 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="p-3 bg-gray-100 rounded-lg hover:bg-blue-100 hover:text-blue-600 transition-colors duration-300"
+                    >
+                      <Linkedin className="h-5 w-5" />
+                    </motion.a>
+                  )}
+                  {member.twitter && (
+                    <motion.a
+                      href={member.twitter}
+                      whileHover={{ scale: 1.1, y: -2 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="p-3 bg-gray-100 rounded-lg hover:bg-blue-100 hover:text-blue-600 transition-colors duration-300"
+                    >
+                      <Twitter className="h-5 w-5" />
+                    </motion.a>
+                  )}
+                  {member.github && (
+                    <motion.a
+                      href={member.github}
+                      whileHover={{ scale: 1.1, y: -2 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="p-3 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-300"
+                    >
+                      <Github className="h-5 w-5" />
+                    </motion.a>
+                  )}
                 </div>
               </div>
             </div>
-          </motion.div>
-        </div>
-      )}
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
+/* ---------- Main Team Section Component ---------- */
+export default function TeamSection(): JSX.Element {
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null)
+  const [activeFilter, setActiveFilter] = useState<'all' | 'board' | 'trainers'>('all')
+
+  const boardMembers = useMemo(() => teamMembers.filter((m) => [7, 8, 9].includes(m.id)), [])
+  const trainers = useMemo(() => teamMembers.filter((m) => [101, 102, 103, 104, 10].includes(m.id)), [])
+  
+  const filteredMembers = useMemo(() => {
+    switch (activeFilter) {
+      case 'board': return boardMembers
+      case 'trainers': return trainers
+      default: return [...boardMembers, ...trainers]
+    }
+  }, [activeFilter, boardMembers, trainers])
+
+  const openProfile = (member: TeamMember) => setSelectedMember(member)
+  const closeProfile = () => setSelectedMember(null)
+
+  return (
+    <section id="team" className="relative py-20 bg-gradient-to-br from-slate-50 via-white to-blue-50 overflow-hidden">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
+      <div className="absolute top-0 left-0 w-72 h-72 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob" />
+      <div className="absolute top-0 right-0 w-72 h-72 bg-slate-100 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000" />
+      
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 mb-6">
+            Meet Our 
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-slate-800"> Team</span>
+          </h2>
+          <div className="w-24 h-1.5 bg-gradient-to-r from-blue-600 to-slate-800 rounded-full mx-auto mb-6" />
+          <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+            Discover the passionate experts and industry leaders driving our mission forward. 
+            Each team member brings unique expertise and dedication to empower Rwanda's future leaders.
+          </p>
+        </motion.div>
+
+        {/* Filter Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="flex flex-wrap justify-center gap-4 mb-12"
+        >
+          {[
+            { key: 'all', label: 'All Team Members', count: boardMembers.length + trainers.length },
+            { key: 'board', label: 'Board & Leadership', count: boardMembers.length },
+            { key: 'trainers', label: 'Expert Trainers', count: trainers.length }
+          ].map((filter) => (
+            <motion.button
+              key={filter.key}
+              onClick={() => setActiveFilter(filter.key as any)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 flex items-center gap-3 ${
+                activeFilter === filter.key
+                  ? 'bg-blue-600 text-white shadow-lg'
+                  : 'bg-white text-slate-700 shadow-md hover:shadow-lg border border-slate-200'
+              }`}
+            >
+              <span>{filter.label}</span>
+              <span className={`px-2 py-1 rounded-full text-sm ${
+                activeFilter === filter.key
+                  ? 'bg-white/20 text-white'
+                  : 'bg-slate-100 text-slate-600'
+              }`}>
+                {filter.count}
+              </span>
+            </motion.button>
+          ))}
+        </motion.div>
+
+        {/* Team Grid */}
+        <motion.div
+          key={activeFilter}
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
+          {filteredMembers.map((member) => (
+            <ProfileCard
+              key={member.id}
+              member={member}
+              onViewProfile={openProfile}
+            />
+          ))}
+        </motion.div>
+
+        {/* CTA Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="text-center mt-16"
+        >
+          <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 rounded-3xl p-12 text-center relative overflow-hidden">
+            <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
+            <div className="relative z-10">
+              <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                Ready to Work With Our Experts?
+              </h3>
+              <p className="text-xl text-blue-100 max-w-2xl mx-auto mb-8 leading-relaxed">
+                Connect with our team of industry leaders and expert trainers to transform your career or organization.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <motion.a
+                  href="/contact"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center bg-white text-slate-900 px-8 py-4 rounded-xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 group"
+                >
+                  Get In Touch
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </motion.a>
+                <motion.a
+                  href="/programs"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center border-2 border-white text-white px-8 py-4 rounded-xl font-bold hover:bg-white hover:text-slate-900 transition-all duration-300 group backdrop-blur-sm"
+                >
+                  <BookOpen className="mr-2 h-5 w-5 group-hover:scale-110 transition-transform" />
+                  Browse Programs
+                </motion.a>
+              </div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Profile Modal */}
+      <ProfileModal
+        member={selectedMember!}
+        isOpen={!!selectedMember}
+        onClose={closeProfile}
+      />
     </section>
   )
 }

@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "goodlife-consulting"
-  }
+    "default": "goodlife-consulting",
+    "goodlifepartners": "goodlife-consulting"
+  },
+  "targets": {},
+  "etags": {}
 }
