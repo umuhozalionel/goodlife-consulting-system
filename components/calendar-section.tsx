@@ -12,7 +12,7 @@ const upcomingTrainings = [
   { 
     id: 1, 
     title: 'Leadership Excellence Workshop',     
-    date: '2025-01-15', 
+    date: '2026-01-15', 
     time: '09:00 - 17:00', 
     location: 'Goodlife Training Center', 
     mode: 'Physical',  
@@ -26,7 +26,7 @@ const upcomingTrainings = [
   { 
     id: 2, 
     title: 'Digital Marketing Fundamentals',      
-    date: '2025-01-20', 
+    date: '2026-01-20', 
     time: '14:00 - 16:00', 
     location: 'Goodlife Training Center', 
     mode: 'Physical',  
@@ -40,7 +40,7 @@ const upcomingTrainings = [
   { 
     id: 3, 
     title: 'Public Speaking Mastery',             
-    date: '2025-01-25', 
+    date: '2026-01-25', 
     time: '10:00 - 15:00', 
     location: 'Goodlife Training Center', 
     mode: 'Physical',  

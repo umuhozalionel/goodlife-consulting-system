@@ -7,7 +7,7 @@ import ClientToaster from '@/components/client-toaster'
 const SITE_URL = 'https://goodlife.partners'
 const SITE_NAME = 'Goodlife Consulting Partners'
 const SITE_DESCRIPTION =
-  'Learn about our mission, vision, impact stats, and sector insights.'
+  'Welcome to Goodlife consultin partners website. Learn about our mission, vision, impact stats, and sector insights.'
 const OG_IMAGE = `${SITE_URL}/images/og-why-choose-us.jpg`
 const LOGO = `${SITE_URL}/images/logo.png`
 

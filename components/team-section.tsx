@@ -52,7 +52,7 @@ const teamMembers: TeamMember[] = [
     linkedin: '#',
     twitter: null,
     github: null,
-    location: 'Kampala, Uganda',
+    location: 'Kigali, Rwanda',
     experience: '20+ years',
     specialties: ['Strategic Leadership', 'Media Ethics', 'Capacity Building', 'Academic Governance']
   },
@@ -89,11 +89,11 @@ const teamMembers: TeamMember[] = [
       'PhD in Business Administration; multiple Masters degrees.',
       'Designed national curricula and led impact evaluations demonstrating measurable outcomes.',
     ],
-    imageSrc: '/team/kirabo-joyce.jpg',
+    imageSrc: '/kirabo/kirabo-joyce.jpg',
     linkedin: '#',
     twitter: null,
     github: null,
-    location: 'Kampala, Uganda',
+    location: 'Kigali, Rwanda',
     experience: '15+ years',
     specialties: ['Business Strategy', 'Program Design', 'Leadership Coaching', 'Impact Evaluation']
   },
@@ -121,7 +121,7 @@ const teamMembers: TeamMember[] = [
     linkedin: '#',
     twitter: null,
     github: null,
-    location: 'Kampala, Uganda',
+    location: 'Kigali, Rwanda',
     experience: '20+ years',
     specialties: ['Communication', 'Ethical Leadership', 'Media Training', 'Academic Excellence']
   },
@@ -168,7 +168,7 @@ const teamMembers: TeamMember[] = [
     linkedin: '#',
     twitter: null,
     github: null,
-    location: 'Kampala, Uganda',
+    location: 'Kigali, Rwanda',
     experience: '15+ years',
     specialties: ['Leadership', 'Counselling', 'Soft Skills', 'Project Management']
   },
@@ -176,7 +176,7 @@ const teamMembers: TeamMember[] = [
     id: 104,
     name: 'Junior Mugisha',
     role: 'Trainer | IT Manager, Systems & Infrastructure',
-    bio: 'Junior Mugisha manages IT systems and infrastructure, specialising in network management, systems administration, and practical lab environments for hybrid trainings. He supports trainers with hands-on technical setups and operational reliability.',
+    bio: 'Junior Mugisha manages IT systems and infrastructure, specialising in IOT, network management, systems administration, and practical lab environments for hybrid trainings. He supports trainers with hands-on technical setups and operational reliability.',
     portfolio: [
       { title: 'Infrastructure Management', description: 'Maintained training infrastructure and lab environments.' },
       { title: 'Technical Support', description: 'Provided on-ground technical support for hybrid trainings.' },
@@ -197,7 +197,7 @@ const teamMembers: TeamMember[] = [
     id: 10,
     name: 'Umuhoza Lionel',
     role: 'Trainer | IT, Cloud Architecture & Developer Experience',
-    bio: 'Lionel brings hands-on expertise in AWS architecture, full-stack development, and UI/UX engineering. He leads practical labs on cloud fundamentals, deployment practices, and developer workflows.',
+    bio: 'Lionel brings hands-on expertise in Cloud architecture, full-stack development, and UI/UX engineering. He leads practical labs on cloud fundamentals, deployment practices, and developer workflows.',
     portfolio: [
       { title: 'Cloud Labs', description: 'Hands-on AWS and cloud pattern workshops with real-world exercises.' },
       { title: 'Developer Experience', description: 'Built developer tooling and CI/CD flows that reduced onboarding time.' },

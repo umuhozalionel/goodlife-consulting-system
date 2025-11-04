@@ -23,7 +23,7 @@ const features: Feature[] = [
     icon: Briefcase,
     title: 'Industry-Integrated Internships',
     description: 'Gain hands-on professional experience through our corporate partnerships, accelerating your career trajectory and employability quotient.',
-    imgSrc: '/community/community-1.jpg',
+    imgSrc: '/community/startup-business-people-working-laptop.jpg',
     imgAlt: 'Professional workplace environment at GoodLife',
     stats: '95% Placement Success'
   },
@@ -31,7 +31,7 @@ const features: Feature[] = [
     icon: BookOpen,
     title: 'Comprehensive Skill Development',
     description: 'Master cutting-edge competencies through our curated curriculum, delivered by industry practitioners and subject matter experts.',
-    imgSrc: '/community/community-2.jpg',
+    imgSrc: '/community/life-10.jpg',
     imgAlt: 'Interactive training session at GoodLife',
     stats: '1,200+ Learning Modules'
   },
@@ -39,7 +39,7 @@ const features: Feature[] = [
     icon: Users,
     title: 'Personalized Mentorship',
     description: 'Receive tailored career guidance from seasoned professionals to navigate your professional development journey successfully.',
-    imgSrc: '/community/community-3.jpg',
+    imgSrc: '/community/man-participation-training-after-being-hired-his-new-office-job.jpg',
     imgAlt: 'Mentorship sessions at GoodLife',
     stats: '50+ Industry Mentors'
   },
@@ -47,7 +47,7 @@ const features: Feature[] = [
     icon: Globe,
     title: 'Global Competency Building',
     description: 'Develop cross-cultural business acumen through international projects and global partnership initiatives.',
-    imgSrc: '/community/community-4.jpg',
+    imgSrc: '/community/beginner-average-skilled-expert-productivity.jpg',
     imgAlt: 'Global learning environment at GoodLife',
     stats: '15+ Countries Network'
   },
@@ -79,12 +79,12 @@ const ImageSlider = () => {
       description: 'State-of-the-art facilities designed for professional development'
     },
     {
-      image: '/community/community-6.jpg',
+      image: '/community/life-24.jpg',
       title: 'Interactive Workshop Sessions',
       description: 'Practical skill-building in collaborative settings'
     },
     {
-      image: '/community/community-7.jpg',
+      image: '/community/medium-shot-smiley-colleagues-working-office.jpg',
       title: 'Professional Networking Events',
       description: 'Connecting talent with industry opportunities'
     },
@@ -94,12 +94,12 @@ const ImageSlider = () => {
       description: 'Building strong professional relationships'
     },
     {
-      image: '/community/community-9.jpg',
+      image: '/community/beginner-average-skilled-expert-productivity.jpg',
       title: 'Modern Learning Spaces',
       description: 'Innovative environments for growth'
     },
     {
-      image: '/community/community-10.jpg',
+      image: '/community/cheerful-mood-group-people-business-conference-modern-classroom-daytime.jpg',
       title: 'Career Development Workshops',
       description: 'Hands-on career preparation sessions'
     }
@@ -408,12 +408,12 @@ export default function WhyChooseUsPage(): JSX.Element {
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                 {[
-                  { src: '/community/community-11.jpg', title: 'Collaborative Workspaces', desc: 'Modern environments for team projects', color: '#1b6981' },
-                  { src: '/community/community-12.jpg', title: 'Networking Events', desc: 'Building professional relationships', color: '#769f3f' },
-                  { src: '/community/community-13.jpg', title: 'Learning Sessions', desc: 'Interactive knowledge sharing', color: '#d25c27' },
-                  { src: '/community/community-14.jpg', title: 'Career Workshops', desc: 'Practical skill development', color: '#dd8426' },
-                  { src: '/community/community-15.jpg', title: 'Community Gatherings', desc: 'Building strong connections', color: '#1b6981' },
-                  { src: '/community/community-16.jpg', title: 'Professional Development', desc: 'Continuous growth opportunities', color: '#769f3f' }
+                  { src: '/community/life-20.jpg', title: 'Collaborative Workspaces', desc: 'Modern environments for team projects', color: '#1b6981' },
+                  { src: '/community/life-22.jpg', title: 'Networking Events', desc: 'Building professional relationships', color: '#769f3f' },
+                  { src: '/community/corporate-business-people-meeting-boardroom-african-manager-brainstorming-with-colleagues-discussing-strategy-sharing-problem-solving-ideas-collaborating-conference-room-company.jpg', title: 'Learning Sessions', desc: 'Interactive knowledge sharing', color: '#d25c27' },
+                  { src: '/community/life-11.jpg', title: 'Career Workshops', desc: 'Practical skill development', color: '#dd8426' },
+                  { src: '/community/community-6.jpg', title: 'Community Gatherings', desc: 'Building strong connections', color: '#1b6981' },
+                  { src: '/community/life-231.jpg', title: 'Professional Development', desc: 'Continuous growth opportunities', color: '#769f3f' }
                 ].map((item, index) => (
                   <motion.div
                     key={index}
@@ -453,7 +453,7 @@ export default function WhyChooseUsPage(): JSX.Element {
                 className="text-center"
               >
                 <Link
-                  href="/gallery"
+                  href="/why-choose-us"
                   className="inline-flex items-center bg-gradient-to-r from-[#1b6981] to-[#769f3f] text-white px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 group"
                 >
                   Explore Our Community Gallery
@@ -544,7 +544,7 @@ export default function WhyChooseUsPage(): JSX.Element {
                 </div>
 
                 <div className="mt-8 text-white/80 text-base font-medium">
-                  ⚡ Next cohort starts: March 15, 2024 • Limited enrollment available
+                  ⚡ Next cohort starts: January 15, 2025 • enrollment Still ongoing!
                 </div>
               </motion.div>
             </div>
