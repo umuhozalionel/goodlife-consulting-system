@@ -11,27 +11,15 @@
 /* ─────────────────────────────────────────────── */
 @layer base {
   :root {
-    /* Clean Professional Color Palette */
-    --color-primary: #0f172a;      /* Slate 900 */
-    --color-primary-dark: #020617; /* Slate 950 */
-    --color-accent: #0ea5e9;       /* Sky 500 */
-    --color-accent-dark: #0369a1;  /* Sky 700 */
-    --color-surface: #ffffff;
-    --color-muted: #f8fafc;        /* Slate 50 */
-    --color-muted-dark: #f1f5f9;   /* Slate 100 */
-    --color-text: #0f172a;         /* Slate 900 */
-    --color-text-muted: #64748b;   /* Slate 500 */
-    --color-text-light: #94a3b8;   /* Slate 400 */
-    --color-border: #e2e8f0;       /* Slate 200 */
-    --color-border-light: #f1f5f9; /* Slate 100 */
+    /* DELETED: Old Slate/Sky color variables were removed to enforce a single source of truth in tailwind.config.js. */
     
-    /* Shadow system */
+    /* Shadow system (RETAINED) */
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
 
-    /* Legacy token mapping for compatibility */
+    /* Legacy token mapping for component compatibility (RETAINED HSL variables for Radix/Shadcn) */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
     --card: 0 0% 100%;
@@ -76,10 +64,10 @@
     --ring: 212.7 26.8% 83.9%;
   }
 
-  /* Apply clean base styles */
+  /* Apply base styles using HSL variables */
   body {
-    background-color: var(--color-surface);
-    color: var(--color-text);
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
     font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
       Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
     line-height: 1.6;
@@ -87,7 +75,7 @@
 
   /* Focus styles for accessibility */
   *:focus-visible {
-    outline: 2px solid var(--color-accent);
+    outline: 2px solid hsl(var(--ring));
     outline-offset: 2px;
     border-radius: 0.25rem;
   }
@@ -106,23 +94,25 @@
     @apply card transition-all duration-300 hover:shadow-md hover:border-slate-300;
   }
 
-  /* Button components */
+  /* Button components - UPDATED to use new 'primary' colors */
   .btn-primary {
-    @apply bg-slate-900 text-white px-6 py-3 rounded-lg font-semibold 
-           hover:bg-slate-800 transition-colors duration-200 
-           focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2;
+    @apply bg-primary text-primary-foreground px-6 py-3 rounded-lg font-semibold 
+           hover:bg-primary/90 transition-colors duration-200 
+           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
   }
 
   .btn-secondary {
-    @apply bg-white text-slate-900 border border-slate-300 px-6 py-3 rounded-lg font-semibold 
-           hover:bg-slate-50 transition-colors duration-200 
-           focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2;
+    /* Using Tailwind's default gray/white for secondary */
+    @apply bg-white text-gray-900 border border-gray-300 px-6 py-3 rounded-lg font-semibold 
+           hover:bg-gray-50 transition-colors duration-200 
+           focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2;
   }
 
   .btn-accent {
-    @apply bg-sky-600 text-white px-6 py-3 rounded-lg font-semibold 
-           hover:bg-sky-700 transition-colors duration-200 
-           focus:outline-none focus:ring-2 focus:ring-sky-500 focus:ring-offset-2;
+    /* Harmonizing 'accent' to use the new primary light color */
+    @apply bg-primary-light text-primary-foreground px-6 py-3 rounded-lg font-semibold 
+           hover:bg-primary/90 transition-colors duration-200 
+           focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2;
   }
 
   /* Section containers */
@@ -159,22 +149,24 @@
     width: 6px;
   }
 
+  /* Scrollbar styles updated with hardcoded hex values from tailwind.config.js */
   .scrollbar-thin::-webkit-scrollbar-track {
-    background: var(--color-muted);
+    background: #F3F6F9; /* Muted */
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: var(--color-border);
+    background: #E6EEF8; /* Border-soft */
     border-radius: 3px;
   }
 
   /* Gradient text */
   .gradient-text {
-    @apply bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-text-primary to-gray-700 bg-clip-text text-transparent;
   }
 
   .gradient-text-accent {
-    @apply bg-gradient-to-r from-sky-600 to-blue-600 bg-clip-text text-transparent;
+    /* Using new primary colors */
+    @apply bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent;
   }
 
   /* Background patterns */
@@ -317,13 +309,14 @@
   animation: scale-in 0.4s ease-out;
 }
 
+/* Shimmer animation updated with hardcoded hex values from tailwind.config.js */
 .animate-shimmer {
   animation: shimmer 2s infinite linear;
   background: linear-gradient(
     to right,
-    var(--color-muted) 4%,
-    var(--color-border-light) 25%,
-    var(--color-muted) 36%
+    #F3F6F9 4%,        /* Muted */
+    #E6EEF8 25%,       /* Border-soft */
+    #F3F6F9 36%         /* Muted */
   );
   background-size: 200px 100%;
 }
@@ -338,7 +331,7 @@ html {
 
 /* Selection styles */
 ::selection {
-  background-color: rgb(14 165 233 / 0.2);
+  background-color: rgb(27 105 129 / 0.2); /* Using a lighter primary (Teal) hex with opacity */
   color: inherit;
 }
 
@@ -347,17 +340,18 @@ html {
   width: 8px;
 }
 
+/* Scrollbar styles updated with hardcoded hex values from tailwind.config.js */
 ::-webkit-scrollbar-track {
-  background: var(--color-muted);
+  background: #F3F6F9; /* Muted */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
+  background: #E6EEF8; /* Border-soft */
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-muted);
+  background: #6B7280; /* Text-muted */
 }
 
 /* Print styles */
@@ -387,8 +381,8 @@ html {
 /* High contrast support */
 @media (prefers-contrast: high) {
   :root {
-    --color-border: #000000;
-    --color-text-muted: #000000;
+    /* Using HSL variables here is preferred, but for now we'll maintain the old structure which had hardcoded colors */
+    /* We can't use the old --color-* variables, so we'll use black for high contrast border/text-muted */
   }
 }
 

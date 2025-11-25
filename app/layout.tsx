@@ -7,7 +7,7 @@ import ClientToaster from '@/components/client-toaster'
 const SITE_URL = 'https://goodlife.partners'
 const SITE_NAME = 'Goodlife Consulting Partners'
 const SITE_DESCRIPTION =
-  'Welcome to Goodlife consultin partners website. Learn about our mission, vision, impact stats, and sector insights.'
+  "Welcome to Goodlife consultin partners website. Learn about our mission, vision, impact stats, and sector insights."
 const OG_IMAGE = `${SITE_URL}/images/og-why-choose-us.jpg`
 const LOGO = `${SITE_URL}/images/logo.png`
 
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+<html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="canonical" href={SITE_URL} />

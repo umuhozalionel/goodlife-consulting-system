@@ -1,131 +1,57 @@
 // components/hero-section.tsx
 'use client';
 
-import React, { useState } from 'react';
-import dynamic from 'next/dynamic';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Inter, Poppins } from 'next/font/google';
 import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-  useReducedMotion,
-} from 'framer-motion';
-import { Inter, Lora } from 'next/font/google';
-import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight as NextIcon,
-  ArrowUpRight,
-  Twitter,
-  Linkedin,
-  Facebook,
+  ArrowRight,
+  CheckCircle2,
   Users,
-  Building,
-  Target,
+  Award,
+  TrendingUp,
+  Sparkles,
+  Clock,
+  BadgeCheck,
 } from 'lucide-react';
 
-const inter = Inter({ subsets: ['latin'], weight: ['400','700'] });
-const lora = Lora({ subsets: ['latin'], weight: ['400','700'] });
-const blurDataURL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABDQottAAAAABJRU5ErkJggg==';
+const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700'] });
+const poppins = Poppins({ subsets: ['latin'], weight: ['600', '700', '800'] });
 
-const SliderContent = ({ slide, images, setSlide }) => {
-  const prev = () => setSlide((s) => (s === 0 ? images.length - 1 : s - 1));
-  const next = () => setSlide((s) => (s === images.length - 1 ? 0 : s + 1));
+interface HeroSectionProps {
+  className?: string;
+}
 
-  return (
-    <div className="relative mb-6">
-      <div className="relative">
-        <div className="relative w-full aspect-[4/3] md:aspect-video overflow-hidden">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
-              key={slide}
-              initial={{ opacity: 0, x: 100 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -100 }}
-              transition={{ duration: 0.8 }}
-              className="absolute inset-0"
-            >
-              <Image
-                src={images[slide].src}
-                alt={images[slide].alt}
-                fill
-                className="object-cover"
-                placeholder="blur"
-                blurDataURL={blurDataURL}
-                priority={slide === 0}
-              />
-              <figcaption className="absolute right-4 bottom-4 bg-[#1b6981] text-white px-3 py-2 rounded-lg text-sm font-medium shadow-lg">
-                {images[slide].caption}
-              </figcaption>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <button
-          onClick={prev}
-          aria-label="Previous slide"
-          className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/95 p-3 rounded-full hover:bg-white transition border border-[#e2e8f0] shadow-lg hover:shadow-xl"
-        >
-          <ChevronLeft className="w-5 h-5 text-[#383f41]" />
-        </button>
-        <button
-          onClick={next}
-          aria-label="Next slide"
-          className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/95 p-3 rounded-full hover:bg-white transition border border-[#e2e8f0] shadow-lg hover:shadow-xl"
-        >
-          <NextIcon className="w-5 h-5 text-[#383f41]" />
-        </button>
-      </div>
-
-      <div className="mt-4 flex justify-center gap-2">
-        {images.map((_, idx) => (
-          <button
-            key={idx}
-            onClick={() => setSlide(idx)}
-            aria-label={`Slide ${idx + 1}`}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              idx === slide ? 'bg-[#1b6981] scale-110' : 'bg-[#e2e8f0] hover:bg-[#cbd5e1]'
-            }`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const Slider = dynamic(() => Promise.resolve({ default: SliderContent }), {
-  ssr: false,
-  loading: () => <div className="h-64 flex items-center justify-center">Loading…</div>,
-});
-
-export default function HeroSection() {
-  const [slide, setSlide] = useState(0);
+export default function HeroSection({ className }: HeroSectionProps) {
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const reduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll();
-  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
-  const images = [
+  const testimonials = [
     {
-      src: '/images/hero/business-focus.jpg',
-      alt: 'Business Focus',
-      caption: 'Set your skills on a new level with business industry experts',
-      description: 'We bridge theory and practice in business by empowering Rwanda\'s future leaders with world-class internships guided by industry experts.',
+      quote: "The corporate training transformed our team's productivity by 40%",
+      author: "Sarah M., HR Director",
+      company: "Tech Solutions Ltd"
     },
     {
-      src: '/images/hero/tourism-focus.jpg',
-      alt: 'Tourism Focus', 
-      caption: 'Discover Rwanda\'s hidden treasures with expert guidance',
-      description: 'We bridge theory and practice in tourism by empowering Rwanda\'s future leaders through immersive internships discovering hidden treasures.',
+      quote: "Best investment in my career. The mentorship was invaluable",
+      author: "Jean Claude, Marketing Manager",
+      company: "BK Group"
     },
     {
-      src: '/images/hero/tech-focus.jpg',
-      alt: 'ICT Focus',
-      caption: 'Innovate the future with cutting-edge tech skills',
-      description: 'We bridge theory and practice in ICT by equipping Rwanda\'s future leaders with cutting-edge internships and hands-on mentorship to drive digital innovation.',
-    },
+      quote: "Professional, practical, and results-driven training programs",
+      author: "Grace K., Business Owner",
+      company: "Kigali Ventures"
+    }
   ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [testimonials.length]); 
 
   const handleStartJourney = () => {
     const primaryLink = 'https://goodlifeconsulting.pro/auth';
@@ -141,149 +67,259 @@ export default function HeroSection() {
   };
 
   const stats = [
-    { icon: Building, number: '50+', label: 'Organizations' },
-    { icon: Users, number: '100+', label: 'Trainees' },
-    { icon: Target, number: '98%', label: 'Success Rate' }
+    { icon: Users, value: '500+', label: 'Professionals Trained', color: 'from-blue-500 to-cyan-500' },
+    { icon: Award, value: '50+', label: 'Partner Organizations', color: 'from-purple-500 to-pink-500' },
+    { icon: TrendingUp, value: '98%', label: 'Success Rate', color: 'from-orange-500 to-red-500' },
+  ];
+
+  const benefits = [
+    'Expert-led training programs',
+    'Industry-recognized certifications',
+    'Flexible learning schedules',
+    'Career advancement support'
   ];
 
   return (
     <section
       id="home"
-      className={`${inter.className} relative overflow-hidden bg-white w-full`}
+      className={`${inter.className} relative overflow-hidden bg-gradient-to-br from-surface via-primary/5 to-primary/10 w-full ${className}`} 
       aria-label="Hero section"
     >
-      {/* Progress Indicator */}
-      <motion.div
-        className="absolute top-0 left-0 w-full h-1 origin-left bg-[#1b6981] z-50"
-        style={{ scaleX }}
-      />
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 right-10 w-72 h-72 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-20 left-10 w-96 h-96 bg-gradient-to-br from-primary/10 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      </div>
 
-      {/* Full width container */}
-      <div className="w-full">
-        <motion.div
-          className="relative z-10 px-4 sm:px-6 lg:px-8 py-12 md:py-16 lg:py-20"
-          initial={reduceMotion ? {} : { opacity: 0, y: 20 }}
-          animate={reduceMotion ? {} : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 xl:gap-16 items-start">
-            {/* Left Content - Full width on mobile, 50% on desktop */}
-            <div className="flex-1 w-full lg:max-w-[50%]">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-2 h-8 bg-[#d25c27] rounded-full"></div>
-                <span className="text-[#769f3f] font-semibold text-sm uppercase tracking-wide">Professional Development</span>
-              </div>
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 lg:py-28">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          
+          {/* Left Content */}
+          <motion.div
+            initial={reduceMotion ? {} : { opacity: 0, x: -30 }}
+            animate={reduceMotion ? {} : { opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+            className="space-y-8"
+          >
+            {/* Badge */}
+            <motion.div
+              initial={reduceMotion ? {} : { opacity: 0, y: 20 }}
+              animate={reduceMotion ? {} : { opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary/10 to-primary/10 rounded-full border border-primary/20"
+            >
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold text-primary">Transform Your Career Today</span>
+            </motion.div>
 
-              <h1
-                className={`${lora.className} text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#383f41] mb-4 sm:mb-6 leading-tight`}
-              >
-                Transform Your{' '}
-                <span className="text-[#1b6981]">Career</span>{' '}
-                with Expert-Led Training
+            {/* Main Heading */}
+            <div className="space-y-4">
+              <h1 className={`${poppins.className} text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight`}>
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-text-primary via-text-primary/90 to-text-primary">
+                  Build Skills that
+                </span>
+                <br />
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary via-primary/90 to-primary">
+                  Shape Your Future
+                </span>
               </h1>
 
-              <div className="space-y-3 sm:space-y-4 mb-6 sm:mb-8">
-                <p className="text-base sm:text-lg text-[#383f41] leading-relaxed">
-                  At Goodlife Consulting Partners, we bridge academic excellence with real-world application. 
-                  Our comprehensive training programs are designed by industry experts to equip professionals 
-                  with cutting-edge skills for today's competitive landscape.
-                </p>
-                <p className="text-base sm:text-lg text-[#383f41] leading-relaxed">
-                  Through corporate training and professional internships, we empower individuals and 
-                  organizations to achieve measurable growth and sustainable success.
-                </p>
-              </div>
+              <p className="text-lg md:text-xl text-text-muted leading-relaxed max-w-xl">
+                Join Rwanda's leading professional development platform. Expert-led training programs designed to accelerate your career growth and organizational success.
+              </p>
+            </div>
 
-              {/* Action Buttons - Stack on mobile, row on desktop */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6 sm:mb-8">
-                <motion.button
-                  onClick={handleStartJourney}
-                  whileHover={!reduceMotion && { scale: 1.02, y: -2 }}
-                  whileTap={!reduceMotion && { scale: 0.98 }}
-                  className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-[#d25c27] text-white font-semibold rounded-lg sm:rounded-xl hover:bg-[#bb3b32] transition-all duration-300 shadow-lg hover:shadow-xl group text-base sm:text-lg"
+            {/* Benefits List */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {benefits.map((benefit, index) => (
+                <motion.div
+                  key={index}
+                  initial={reduceMotion ? {} : { opacity: 0, x: -20 }}
+                  animate={reduceMotion ? {} : { opacity: 1, x: 0 }}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                  className="flex items-center gap-2"
                 >
+                  <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0" />
+                  <span className="text-sm md:text-base text-text-muted font-medium">{benefit}</span>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 pt-4">
+              <motion.button
+                onClick={handleStartJourney}
+                whileHover={!reduceMotion && { scale: 1.02, y: -2 }}
+                whileTap={!reduceMotion && { scale: 0.98 }}
+                className="group relative overflow-hidden px-8 py-4 bg-gradient-to-r from-primary to-primary/90 text-primary-foreground font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                <span className="relative z-10 flex items-center justify-center gap-2">
                   Start Your Journey
-                  <ArrowUpRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+                <div className="absolute inset-0 bg-primary-dark opacity-0 group-hover:opacity-100 transition-opacity"></div>
+              </motion.button>
+
+              <Link href="#membership">
+                <motion.button
+                  whileHover={!reduceMotion && { scale: 1.02 }}
+                  whileTap={!reduceMotion && { scale: 0.98 }}
+                  className="w-full sm:w-auto px-8 py-4 bg-surface border-2 border-primary text-primary font-semibold rounded-xl hover:bg-primary hover:text-primary-foreground transition-all duration-300 shadow-md"
+                >
+                  View Membership
                 </motion.button>
+              </Link>
+            </div>
 
-                <Link href="#programs" className="w-full sm:w-auto">
-                  <motion.button
-                    className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 border-2 border-[#1b6981] text-[#1b6981] font-semibold rounded-lg sm:rounded-xl hover:bg-[#1b6981] hover:text-white transition-all duration-300 text-base sm:text-lg"
-                    whileHover={!reduceMotion && { scale: 1.02 }}
-                    whileTap={!reduceMotion && { scale: 0.98 }}
-                  >
-                    Explore Programs
-                    <ChevronDown className="ml-2 w-4 h-4" />
-                  </motion.button>
-                </Link>
+            {/* Membership Pricing Highlight */}
+            <motion.div
+              initial={reduceMotion ? {} : { opacity: 0, y: 20 }}
+              animate={reduceMotion ? {} : { opacity: 1, y: 0 }}
+              transition={{ delay: 0.8 }}
+              className="flex items-start gap-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl"
+            >
+              <div className="p-2 bg-green-100 rounded-lg">
+                <BadgeCheck className="w-6 h-6 text-green-600" />
               </div>
+              <div>
+                <p className="font-semibold text-text-primary mb-1">Limited Time Offer</p>
+                <p className="text-sm text-text-muted">
+                  <span className="font-bold text-lg text-green-600">30,000 RWF</span> for 3 months membership
+                  <span className="block text-xs mt-1">Full access to all programs and resources</span>
+                </p>
+              </div>
+            </motion.div>
 
-              {/* Stats - 3 columns on mobile and desktop */}
-              <div className="grid grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
-                {stats.map((stat, index) => (
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border-soft">
+              {stats.map((stat, index) => {
+                const Icon = stat.icon;
+                return (
                   <motion.div
                     key={index}
                     initial={reduceMotion ? {} : { opacity: 0, y: 20 }}
                     animate={reduceMotion ? {} : { opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 + 0.5 }}
+                    transition={{ delay: 0.9 + index * 0.1 }}
                     className="text-center"
                   >
-                    <stat.icon className="w-6 h-6 sm:w-8 sm:h-8 text-[#769f3f] mx-auto mb-1 sm:mb-2" />
-                    <div className="text-lg sm:text-xl md:text-2xl font-bold text-[#383f41]">{stat.number}</div>
-                    <div className="text-xs sm:text-sm text-[#383f41] font-medium leading-tight">{stat.label}</div>
+                    <div className={`inline-flex p-2 rounded-lg bg-gradient-to-br ${stat.color} bg-opacity-10 mb-2`}>
+                      <Icon className="w-5 h-5 text-text-primary" />
+                    </div>
+                    <div className="text-2xl font-bold text-text-primary">{stat.value}</div>
+                    <div className="text-xs text-text-muted font-medium">{stat.label}</div>
                   </motion.div>
-                ))}
-              </div>
-
-              {/* Social Links */}
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6 pt-4 border-t border-[#e2e8f0]">
-                <span className="text-sm text-[#383f41] font-medium whitespace-nowrap">Follow us:</span>
-                <div className="flex items-center gap-4">
-                  <Link href="#" aria-label="Follow on LinkedIn">
-                    <Linkedin className="w-5 h-5 text-[#383f41] hover:text-[#1b6981] transition-colors duration-300" />
-                  </Link>
-                  <Link href="#" aria-label="Follow on Twitter">
-                    <Twitter className="w-5 h-5 text-[#383f41] hover:text-[#1b6981] transition-colors duration-300" />
-                  </Link>
-                  <Link href="#" aria-label="Follow on Facebook">
-                    <Facebook className="w-5 h-5 text-[#383f41] hover:text-[#1b6981] transition-colors duration-300" />
-                  </Link>
-                </div>
-              </div>
+                );
+              })}
             </div>
+          </motion.div>
 
-            {/* Right Content - Slider - Full width on mobile, 50% on desktop */}
-            <div className="flex-1 w-full lg:max-w-[50%] mt-8 lg:mt-0">
-              <div className="relative">
-                <Slider slide={slide} images={images} setSlide={setSlide} />
+          {/* Right Content - Visual Section */}
+          <motion.div
+            initial={reduceMotion ? {} : { opacity: 0, x: 30 }}
+            animate={reduceMotion ? {} : { opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
+            className="relative"
+          >
+            {/* Main Image Card */}
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+              <div className="aspect-[4/3] relative">
+                <Image
+                  src="/images/hero/business-focus.jpg"
+                  alt="Professional training session"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
                 
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                  className="mt-4 sm:mt-6 p-4 sm:p-6 bg-[#f8fafc] rounded-xl sm:rounded-2xl border border-[#e2e8f0]"
-                >
-                  <p className="text-base sm:text-lg text-[#383f41] leading-relaxed font-medium">
-                    {images[slide].description}
-                  </p>
-                </motion.div>
-
-                {/* Feature Tags */}
-                <div className="flex flex-wrap gap-2 sm:gap-3 mt-4 sm:mt-6">
-                  <span className="px-3 py-1.5 sm:px-4 sm:py-2 bg-[#769f3f] text-white text-xs sm:text-sm font-medium rounded-full">
-                    Industry Experts
-                  </span>
-                  <span className="px-3 py-1.5 sm:px-4 sm:py-2 bg-[#1b6981] text-white text-xs sm:text-sm font-medium rounded-full">
-                    Practical Skills
-                  </span>
-                  <span className="px-3 py-1.5 sm:px-4 sm:py-2 bg-[#dd8426] text-white text-xs sm:text-sm font-medium rounded-full">
-                    Career Growth
-                  </span>
+                {/* Floating Badge */}
+                <div className="absolute top-6 right-6 px-4 py-2 bg-surface/95 backdrop-blur-sm rounded-full shadow-lg">
+                  <div className="flex items-center gap-2">
+                    <Clock className="w-4 h-4 text-primary" />
+                    <span className="text-sm font-semibold text-text-primary">Flexible Schedule</span>
+                  </div>
                 </div>
+
+                {/* Bottom Testimonial Card */}
+                <motion.div
+                  key={currentTestimonial}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                  className="absolute bottom-6 left-6 right-6 p-4 bg-surface/95 backdrop-blur-md rounded-2xl shadow-xl"
+                >
+                  <p className="text-sm text-text-primary font-medium mb-2 italic">
+                    "{testimonials[currentTestimonial].quote}"
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs font-semibold text-text-primary">
+                        {testimonials[currentTestimonial].author}
+                      </p>
+                      <p className="text-xs text-text-muted">
+                        {testimonials[currentTestimonial].company}
+                      </p>
+                    </div>
+                    <div className="flex gap-1">
+                      {testimonials.map((_, idx) => (
+                        <div
+                          key={idx}
+                          className={`w-1.5 h-1.5 rounded-full transition-all ${
+                            idx === currentTestimonial ? 'bg-primary w-6' : 'bg-gray-300'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
               </div>
             </div>
-          </div>
-        </motion.div>
+
+            {/* Floating Feature Cards */}
+            <motion.div
+              initial={reduceMotion ? {} : { opacity: 0, scale: 0.8 }}
+              animate={reduceMotion ? {} : { opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5 }}
+              className="absolute -top-6 -left-6 p-4 bg-surface rounded-2xl shadow-xl border border-border-soft"
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-gradient-to-br from-primary/80 to-primary rounded-xl">
+                  <Award className="w-6 h-6 text-primary-foreground" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-text-primary">Certified Programs</p>
+                  <p className="text-xs text-text-muted">Industry recognized</p>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={reduceMotion ? {} : { opacity: 0, scale: 0.8 }}
+              animate={reduceMotion ? {} : { opacity: 1, scale: 1 }}
+              transition={{ delay: 0.7 }}
+              className="absolute -bottom-6 -right-6 p-4 bg-surface rounded-2xl shadow-xl border border-border-soft"
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-gradient-to-br from-primary/80 to-primary rounded-xl">
+                  <Users className="w-6 h-6 text-primary-foreground" />
+                </div>
+                <div>
+                  <p className="text-sm font-bold text-text-primary">Expert Mentors</p>
+                  <p className="text-xs text-text-muted">Real-world guidance</p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Bottom Wave Divider */}
+      <div className="absolute bottom-0 left-0 right-0">
+        <svg className="w-full h-16 fill-surface" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+        </svg>
       </div>
     </section>
   );

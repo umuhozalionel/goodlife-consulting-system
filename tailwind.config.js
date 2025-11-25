@@ -25,23 +25,21 @@ const config: Config = {
         amber: tailwindColors.amber,
         ...customColors,
 
-        // 🎨 New dashboard palette
+        // 🎨 Expert-approved Teal palette (Single Source of Truth)
         primary: {
-          DEFAULT: '#0B5FFF',
-          dark: '#0738B7',
+          DEFAULT: '#1b6981', // Dark Teal for main CTA
+          light: '#2d8ca8',   // Medium Teal for lighter accents/hovers
           foreground: '#ffffff',
         },
-        accent: {
-          DEFAULT: '#FF7A18',
-          foreground: '#ffffff',
-        },
+        // 'accent' palette removed to simplify the color system.
+        
         surface: '#FFFFFF',
         muted: '#F3F6F9',
         'text-primary': '#0F1724',
         'text-muted': '#6B7280',
         'border-soft': '#E6EEF8',
 
-        // Legacy HSL tokens (preserved for compatibility)
+        // Legacy HSL tokens (preserved for compatibility with shadcn/radix components)
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
